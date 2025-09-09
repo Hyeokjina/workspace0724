@@ -1,0 +1,409 @@
+------------------------------------------------------관리자모드로 진행--------------
+
+-- 사용자 계정 생성
+CREATE USER c##TEST1 IDENTIFIED BY TEST;
+
+
+-- 접속 권한 및 테이블 생성 권한 부여
+GRANT CONNECT, RESOURCE TO c##TEST1;
+
+--문제풀기용 트리거 권한주기
+GRANT CREATE TRIGGER TO C##TEST1;
+
+-- 테이블스페이스 설정
+ALTER USER C##TEST1 DEFAULT TABLESPACE USERS QUOTA UNLIMITED ON USERS;
+
+
+------------------------------------------------------TEST1모드로 진행--------------
+
+--TEACHER테이블 생성 코멘트,제약조건
+CREATE TABLE TEACHER (
+        TEACHER_ID      NUMBER CONSTRAINT TEACHER_ID_PK PRIMARY KEY,
+        NAME            VARCHAR2(30),
+        EMAIL           VARCHAR2(30) CONSTRAINT ATTACT_UQ UNIQUE,
+        HIRE_DATE       DATE,
+        SUBJECT         VARCHAR2(30)
+);
+COMMENT ON COLUMN TEACHER.TEACHER_ID IS '강사고유번호';
+COMMENT ON COLUMN TEACHER.NAME IS       '강사 이름';
+COMMENT ON COLUMN TEACHER.EMAIL IS      '이메일';
+COMMENT ON COLUMN TEACHER.HIRE_DATE IS  '입사일';
+COMMENT ON COLUMN TEACHER.SUBJECT IS    '전공 분야 ';
+
+
+
+INSERT INTO TEACHER(
+    TEACHER_ID,
+    NAME,
+    EMAIL,
+    HIRE_DATE ,
+    SUBJECT
+)VALUES(
+    01,
+    '이순신',
+    'AAAA@NAVER.COM',
+    '15/08/20',
+    '국어');
+    
+INSERT INTO TEACHER(
+    TEACHER_ID,
+    NAME,
+    EMAIL,
+    HIRE_DATE ,
+    SUBJECT
+)VALUES(
+    02,
+    '김유신',
+    'BBBB@NAVER.COM',
+    '14/08/28',
+    '수학');
+    
+INSERT INTO TEACHER(
+    TEACHER_ID,
+    NAME,
+    EMAIL,
+    HIRE_DATE ,
+    SUBJECT
+)VALUES(
+    03,
+    '김춘추',
+    'CCCC@NAVER.COM',
+    '11/11/10',
+    '사회');
+
+INSERT INTO TEACHER(
+    TEACHER_ID,
+    NAME,
+    EMAIL,
+    HIRE_DATE ,
+    SUBJECT
+)VALUES(
+    04,
+    '혁거세',
+    'DDDD@NAVER.COM',
+    '19/04/20',
+    '과학');
+
+INSERT INTO TEACHER(
+    TEACHER_ID,
+    NAME,
+    EMAIL,
+    HIRE_DATE ,
+    SUBJECT
+)VALUES(
+    05,
+    '이황',
+    'EEEE@NAVER.COM',
+    '10/01/02',
+    '국어');
+
+
+
+--LECTURE 테이블 생성, 코멘트, 제약조건
+CREATE TABLE LECTURE (
+        LECTURE_ID      NUMBER CONSTRAINT LECTURE_ID_PK PRIMARY KEY,
+        TITLE           VARCHAR2(30),
+        TEACHER_ID      NUMBER CONSTRAINT TEACHER_ID_FK REFERENCES TEACHER(TEACHER_ID) ,
+        INDEX_COUNT     NUMBER DEFAULT 0,
+        CATEGORY        VARCHAR2(30),
+        START_DATE      DATE,
+        END_DATE        DATE
+);
+COMMENT ON COLUMN LECTURE.LECTURE_ID IS  '강의 고유번호';
+COMMENT ON COLUMN LECTURE.TITLE IS       '강의 제목';
+COMMENT ON COLUMN LECTURE.TEACHER_ID IS  '강의 담당 강사의 ID';
+COMMENT ON COLUMN LECTURE.INDEX_COUNT IS ' 수강인원';
+COMMENT ON COLUMN LECTURE.CATEGORY  IS   '강의 분류';
+COMMENT ON COLUMN LECTURE.START_DATE IS   '강의 시작일';
+COMMENT ON COLUMN LECTURE.END_DATE IS       '강의 종료일 ';
+
+INSERT INTO LECTURE(
+    LECTURE_ID,
+    TITLE,
+    TEACHER_ID,
+    INDEX_COUNT,
+    CATEGORY,
+    START_DATE,
+    END_DATE
+)VALUES(
+    11,
+    '한자와 한글',
+    01,
+    30,
+    '한글',
+    '20/08/05',
+    '20/11/05');
+    
+INSERT INTO LECTURE(
+    LECTURE_ID,
+    TITLE,
+    TEACHER_ID,
+    INDEX_COUNT,
+    CATEGORY,
+    START_DATE,
+    END_DATE
+)VALUES(
+    22,
+    '도형의 넓이와 둘레',
+    02,
+    40,
+    '수학계산',
+    '20/02/11',
+    '20/05/06');
+    
+INSERT INTO LECTURE(
+    LECTURE_ID,
+    TITLE,
+    TEACHER_ID,
+    INDEX_COUNT,
+    CATEGORY,
+    START_DATE,
+    END_DATE
+)VALUES(
+    33,
+    '석기시대의 모습',
+    03,
+    20,
+    '과거의 역사',
+    '20/04/21',
+    '20/07/22');
+
+INSERT INTO LECTURE(
+    LECTURE_ID,
+    TITLE,
+    TEACHER_ID,
+    INDEX_COUNT,
+    CATEGORY,
+    START_DATE,
+    END_DATE
+)VALUES(
+    44,
+    '지구의 모습',
+    04,
+    30,
+    '지구과학',
+    '20/03/18',
+    '20/05/21');
+
+INSERT INTO LECTURE(
+    LECTURE_ID,
+    TITLE,
+    TEACHER_ID,
+    INDEX_COUNT,
+    CATEGORY,
+    START_DATE,
+    END_DATE
+)VALUES(
+    55,
+    '듣고말하기',
+    05,
+    35,
+    '의사소통',
+    '20/11/05',
+    '20/12/30');
+    
+    
+    
+--STUDENT 테이블 생성, 코멘트, 제약조건
+CREATE TABLE STUDENT (
+        STUDENT_ID      NUMBER CONSTRAINT STUDENT_ID_PK PRIMARY KEY,
+        NAME            VARCHAR2(30),
+        GRADE           NUMBER,
+        EMAIL           VARCHAR2(30),
+        JOIN_DATE       DATE
+);
+COMMENT ON COLUMN STUDENT.STUDENT_ID IS '수강생 고유번호';
+COMMENT ON COLUMN STUDENT.NAME IS '수강생 이름 ';
+COMMENT ON COLUMN STUDENT.GRADE IS '년 또는 수강 등급';
+COMMENT ON COLUMN STUDENT.EMAIL IS '수강생 이메일 ';
+COMMENT ON COLUMN STUDENT.JOIN_DATE IS '등록일  ';
+
+INSERT INTO STUDENT(
+    STUDENT_ID,
+    NAME,
+    GRADE,
+    EMAIL,
+    JOIN_DATE
+)VALUES(
+    990,
+    '김하나',
+    4,
+    'FFFF@NAVER.COM',
+    '19/12/30');
+
+INSERT INTO STUDENT(
+    STUDENT_ID,
+    NAME,
+    GRADE,
+    EMAIL,
+    JOIN_DATE
+)VALUES(
+    991,
+    '박이연',
+    3,
+    'GGGG@NAVER.COM',
+    '20/01/30');
+    
+INSERT INTO STUDENT(
+    STUDENT_ID,
+    NAME,
+    GRADE,
+    EMAIL,
+    JOIN_DATE
+)VALUES(
+    992,
+    '정연정',
+    2,
+    'HHHH@NAVER.COM',
+    '19/10/10');
+
+INSERT INTO STUDENT(
+    STUDENT_ID,
+    NAME,
+    GRADE,
+    EMAIL,
+    JOIN_DATE
+)VALUES(
+    993,
+    '문정수',
+    1,
+    'IIII@NAVER.COM',
+    '19/11/06');
+INSERT INTO STUDENT(
+    STUDENT_ID,
+    NAME,
+    GRADE,
+    EMAIL,
+    JOIN_DATE
+)VALUES(
+    994,
+    '김민석',
+    2,
+    'JJJJ@NAVER.COM',
+    '19/12/22');
+    
+INSERT INTO STUDENT(
+    STUDENT_ID,
+    NAME,
+    GRADE,
+    EMAIL,
+    JOIN_DATE
+)VALUES(
+    995,
+    '강현수',
+    1,
+    'KKKK@NAVER.COM',
+    '19/11/05');
+
+--ENROLLMENT 테이블 생성, 코멘트, 제약조건
+CREATE TABLE ENROLLMENT (
+        ENROLL_ID       NUMBER CONSTRAINT ENROLL_ID_PK PRIMARY KEY,
+        STUDENT_ID      NUMBER CONSTRAINT STUDENT_ID_FK REFERENCES STUDENT(STUDENT_ID),
+        LECTURE_ID      NUMBER CONSTRAINT LECTURE_ID_FK REFERENCES LECTURE(LECTURE_ID),
+        ENROLL_DATE     DATE,
+        STATUS          CHAR(1)CONSTRAINT STATUS_CK CHECK (STATUS IN('Y','N')),
+        GRADE_SCORE     NUMBER
+);
+COMMENT ON COLUMN ENROLLMENT.ENROLL_ID IS '수강기록 고유번호';
+COMMENT ON COLUMN ENROLLMENT.STUDENT_ID IS '수강생 ID';
+COMMENT ON COLUMN ENROLLMENT.LECTURE_ID IS '강의 ID';
+COMMENT ON COLUMN ENROLLMENT.ENROLL_DATE IS '수강 등록일';
+COMMENT ON COLUMN ENROLLMENT.STATUS IS '수강 상태';
+COMMENT ON COLUMN ENROLLMENT.GRADE_SCORE IS '성적 점수';
+
+INSERT INTO ENROLLMENT(
+    ENROLL_ID,
+    STUDENT_ID,
+    LECTURE_ID,
+    ENROLL_DATE,
+    STATUS,
+    GRADE_SCORE
+)VALUES(
+    11111,
+    990,
+    11,
+    '20/07/02',
+    'Y',
+    90);
+
+INSERT INTO ENROLLMENT(
+    ENROLL_ID,
+    STUDENT_ID,
+    LECTURE_ID,
+    ENROLL_DATE,
+    STATUS,
+    GRADE_SCORE
+)VALUES(
+    11112,
+    991,
+    22,
+    '20/01/23',
+    'Y',
+    80);
+    
+INSERT INTO ENROLLMENT(
+    ENROLL_ID,
+    STUDENT_ID,
+    LECTURE_ID,
+    ENROLL_DATE,
+    STATUS,
+    GRADE_SCORE
+)VALUES(
+    11113,
+    992,
+    33,
+    '20/03/12',
+    'N',
+    NULL);
+    
+INSERT INTO ENROLLMENT(
+    ENROLL_ID,
+    STUDENT_ID,
+    LECTURE_ID,
+    ENROLL_DATE,
+    STATUS,
+    GRADE_SCORE
+)VALUES(
+    11114,
+    993,
+    44,
+    '20/01/01',
+    'Y',
+    75);
+INSERT INTO ENROLLMENT(
+    ENROLL_ID,
+    STUDENT_ID,
+    LECTURE_ID,
+    ENROLL_DATE,
+    STATUS,
+    GRADE_SCORE
+)VALUES(
+    11115,
+    994,
+    55,
+    '20/07/08',
+    'Y',
+    90);
+    
+INSERT INTO ENROLLMENT(
+    ENROLL_ID,
+    STUDENT_ID,
+    LECTURE_ID,
+    ENROLL_DATE,
+    STATUS,
+    GRADE_SCORE
+)VALUES(
+    11116,
+    995,
+    22,
+    '20/08/12',
+    'Y',
+    70);
+
+
+
+
+
+
+
+

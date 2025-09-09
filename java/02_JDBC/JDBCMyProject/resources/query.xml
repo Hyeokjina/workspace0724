@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<entry key="insertUser"> INSERT INTO USERINFO VALUES(SEQ_USERNO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, SYSDATE) </entry>
+<entry key="loginUser"> SELECT USER_ID, USER_PWD FROM USERINFO WHERE USER_ID = ? AND USER_PWD = ? </entry>
+<entry key="updateUser"> UPDATE USERINFO SET USER_NAME = ?, GENDER = ?, AGE = ?, EMAIL = ?, PHONE=? WHERE USER_ID=? AND USER_PWD=? </entry>
+<entry key="deleteUser"> DELETE FROM USERINFO WHERE USER_ID = ? AND USER_PWD=? </entry>
+<entry key="selectUserAllList"> SELECT * FROM USERINFO </entry>
+<entry key="selectUserById"> SELECT * FROM USERINFO WHERE USER_ID = ? </entry>
+
+<entry key="selectHighScore">SELECT HIGH_SCORE FROM USER_SCORE WHERE USER_ID = ?</entry>
+<entry key="insertHighScore">INSERT INTO USER_SCORE (USER_ID, HIGH_SCORE) VALUES (?, ?)</entry>
+<entry key="updateHighScore">UPDATE USER_SCORE SET HIGH_SCORE = ? WHERE USER_ID = ?</entry>
+<entry key="selectAllScores">SELECT USER_ID, HIGH_SCORE FROM USER_SCORE ORDER BY HIGH_SCORE DESC</entry>
+
+
+</properties>

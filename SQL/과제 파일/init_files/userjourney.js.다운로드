@@ -1,0 +1,385 @@
+// 페이지 시작 시간 (전역 변수)
+let startTime = Date.now(); 
+// userJourney 쿠키 데이터 parse (전역 변수)
+let userJourney = loadJourneyDataFromCookie();
+// hostname (전역 변수)
+let domain = window.location.hostname;
+// pathname (전역 변수)
+let pageURL = window.location.pathname;
+
+//현재 시간을 "HH:mm:ss" 포맷으로 반환하는 함수
+function getCurrentTimeString() {
+    let now = new Date();
+    return now.toTimeString().split(" ")[0]; // "17:37:01" 형식
+}
+
+// 유저가 떠나는 시간을 쿠키에 저장
+function setLeaveTimeCookie() {
+    let leaveTime = getCurrentTimeString();
+    document.cookie = `leave_time=${encodeURIComponent(leaveTime)}; path=/;`;
+}
+
+// 쿠키값 확인
+function getCookieValue(cookieName) {
+    const name = cookieName + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(';');
+    for (let i = 0; i < cookieArray.length; i++) {
+        let cookie = cookieArray[i];
+        while (cookie.charAt(0) == ' ') {
+            cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) == 0) {
+            return cookie.substring(name.length, cookie.length);
+        }
+    }
+    return "";
+}
+
+// 쿠키 삭제
+function deleteUserJourneyCookie() {
+    document.cookie = "userJourney=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    console.log("userJourney 쿠키 삭제됨");
+}
+
+// userJourney 쿠키 데이터 parse 
+function loadJourneyDataFromCookie() {
+    let journeyCookie = document.cookie
+        .split('; ')
+        .find(row => row.startsWith("userJourney="));
+
+	// userJourney 쿠키 데이터 있을 경우 parse 
+    if (journeyCookie) {
+        try {
+            let parsedData = JSON.parse(decodeURIComponent(journeyCookie.split('=')[1]));
+            return parsedData;
+        } catch (error) {
+            console.error("Error parsing userJourney cookie:", error);
+            return [];
+        }
+    }
+}
+
+// userJourney 쿠키 데이터 업데이트 
+function saveJourneyData(domain, pageURL, scrollPercentage) {
+    let userJourney = loadJourneyDataFromCookie();
+
+    // userJourney가 배열인지 확인
+    if (!Array.isArray(userJourney)) {
+        console.error("userJourney is not an array. Resetting to empty array.");
+        userJourney = [];
+    }
+
+    // userJourney 쿠키 데이터 현재 hostname, 현재 pathname과 동일한지 여부 확인
+    let existingData = userJourney.find(journey => 
+        journey.pageURL === pageURL && journey.domain === domain
+    );
+
+    // 현재 머문시간 계산(초 단위)
+    let duration = Math.round((Date.now() - startTime) / 1000);
+
+    // existingData가 true일 경우 머문 시간만 업데이트
+    if (existingData) {
+        existingData.scrollPosition = `${Math.round(scrollPercentage)}%`;
+        existingData.duration = duration;
+    } else {
+    	// existingData가 false일 경우(새로운 페이지 방문) hostname, path, scrollpostion, duration 모두 저장
+        userJourney.push({
+            domain: domain,
+            pageURL: pageURL,
+            scrollPosition: scrollPercentage ? `${Math.round(scrollPercentage)}%` : "0%",
+            duration: duration // 새로운 방문 기록 추가 시에도 duration 저장
+        });
+    }
+    // userJourney 쿠키에 데이터 저장
+    saveJourneyDataToCookie(userJourney);
+}
+
+// userJourney 쿠키에 데이터 저장
+function saveJourneyDataToCookie(userJourney) {
+    // userJourney 데이터를 JSON으로 변경
+    let jsonString = encodeURIComponent(JSON.stringify(userJourney));
+    // 쿠키에 저장
+    // document.cookie = `userJourney=${jsonString}; path=/; max-age=86400`; // 1일 유지
+    document.cookie = `userJourney=${jsonString}; path=/;`;
+}
+
+// userJourney 쿠키 데이터 DB에 저장
+function sendJourneyDataToBackend() {
+    console.log("sendJourneyDataToBackend.");
+    
+    // 유저가 떠나는 시간 쿠키 저장
+    setLeaveTimeCookie();
+    
+    // userJourney 쿠키 데이터 가져오기
+    let journeyData = loadJourneyDataFromCookie();
+    
+    // 빈 데이터면 빈 배열([]) 전송
+    if (journeyData === null || (Array.isArray(journeyData) && journeyData.length === 0)) {
+        console.warn("userJourney 데이터가 비어 있어 빈 배열([])을 전송.");
+        journeyData = []; // 빈 객체 대신 빈 배열 전송
+    }
+    
+    // Beacon API 지원 여부 확인
+    if (navigator.sendBeacon) {
+        // FormData 객체 생성
+        const data = new FormData();
+        data.append('userJourney', JSON.stringify(journeyData));
+        
+        // sendBeacon으로 데이터 전송
+        const success = navigator.sendBeacon('/main/saveUserJourney.kh', data);
+        
+        if (success) {
+            console.log("Beacon 전송 성공");
+            deleteUserJourneyCookie();
+        } else {
+            console.log("Beacon 전송 실패");
+        }
+        return success;
+    } else {
+        // fallback: 기존 fetch 방식 사용
+        return fetch("/main/saveUserJourney.kh", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+            	userJourney: JSON.stringify(journeyData)
+            }),
+            keepalive: true
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("서버 응답:", data);
+            if (data && data.success === true) {
+                deleteUserJourneyCookie();
+                console.log("데이터 저장 성공, 쿠키 삭제됨");
+                return true;
+            } else {
+                console.log("데이터 저장 실패:", data.message);
+                return false;
+            }
+        })
+        .catch(error => {
+            console.error("Failed to send request:", error);
+            return false;
+        });
+    }
+}
+
+// 페이지 로드되자마자 `userJourney`에 저장
+document.addEventListener("DOMContentLoaded", function() {
+    saveJourneyData(domain, pageURL, 0); // 방문 즉시 저장, hostname/pathname/scrollpostion
+});
+
+// 스크롤할 때 userJourney 쿠키 데이터 업데이트
+$(window).on("scroll", function() {
+    let scrollHeight = $(document).height();
+    let scrollPosition = $(window).scrollTop() + $(window).height();
+    let scrollPercentage = (scrollPosition / scrollHeight) * 100;
+
+    if (!Array.isArray(userJourney)) {
+        console.error("userJourney is not an array. Resetting to empty array.");
+        userJourney = [];
+    }
+    // 현재 페이지 url에 있고, userJourney 쿠키가 데이터가 있는경우 
+    let existingData = userJourney.find(journey => 
+        journey.pageURL === pageURL && journey.domain === domain
+    );
+    // 머문시간 (초단위)
+    let duration = Math.round((Date.now() - startTime) / 1000);
+    // 쿠키값이 존재하고, 현재 페이지에 있을 경우 -> 스크롤 포지션 + 머문시간만 업데이트
+    if (existingData) {
+        existingData.scrollPosition = `${Math.round(scrollPercentage)}%`;
+        existingData.duration = duration; // ✅ 스크롤 이벤트에서도 머문 시간 업데이트
+    } else {
+    	// 쿠키값이 존재하고, 현재 페이지에 있지 않을 경우 -> hostname + pathname + 스크롤 포지션 + 머문시간  push
+        userJourney.push({
+            domain: domain,
+            pageURL: pageURL,
+            scrollPosition: `${Math.round(scrollPercentage)}%`,
+            duration: duration // ✅ 새로운 방문 기록에 머문 시간 추가
+        });
+    }
+    // userJourney 쿠키에 데이터 저장
+    saveJourneyDataToCookie(userJourney);
+});
+
+//전역 플래그 선언
+let isInternalNavigation = false;
+// 전역 변수 선언: 마지막으로 클릭한 요소 저장 -> Reason for Declaring is a 링크 테그에 href 없고 , onlick 함수로 링크 이동하는 경우 대비 
+let lastClickedElement = null;
+document.addEventListener("click", function(event) {
+    let path = event.composedPath ? event.composedPath() : [];
+    // 이벤트 경로를 순회하면서, onclick 속성이 있거나 a 태그인 첫 번째 요소를 선택
+    for (let el of path) {
+        if (el instanceof HTMLElement) {
+            if (el.tagName.toLowerCase() === "a" || el.hasAttribute("onclick")) {
+                lastClickedElement = el;
+                console.log("선택된 요소:", lastClickedElement);
+                break;
+            }
+        }
+    }
+}, true);  // 캡처링 단계에서 실행
+
+// 사용자가 페이지를 벗어날 때 userJourney 쿠키 조작
+window.addEventListener("beforeunload", function(event) {
+    let nextURL = "";
+    
+    // 마지막으로 클릭한 요소에서 다음 URL 추출
+    if (lastClickedElement instanceof HTMLElement) {
+        if (lastClickedElement.hasAttribute("onclick")) {
+            let onclickValue = lastClickedElement.getAttribute("onclick");
+            let match = onclickValue.match(/location\.href\s*=\s*['"]([^'"]+)['"]/);
+            if (match && match[1]) {
+                nextURL = match[1];
+            }
+        }
+        let anchorElement = lastClickedElement.closest("a");
+        if (!anchorElement) {
+            anchorElement = lastClickedElement.querySelector("a");
+        }
+        if (anchorElement && anchorElement.href) {
+            nextURL = anchorElement.href;
+        }
+    }
+
+    if (!nextURL) {
+        nextURL = document.activeElement?.href || "";
+    }
+
+    // 내부 페이지 이동 체크
+    let isInternalNavigation = nextURL && (
+        nextURL.startsWith("/") || 
+        nextURL.startsWith(window.location.origin) ||
+        nextURL.startsWith(window.location.hostname) ||
+        nextURL.startsWith("javascript:") // javascript: 함수 호출도 내부 이동으로 간주
+    );
+
+    // Navigation Type 체크 (새로고침, 뒤로가기/앞으로가기)
+    let isRefresh = false;
+    let isBackForward = false;
+    
+    try {
+        // 최신 Navigation API 사용 시도
+        const navEntry = performance.getEntriesByType("navigation")[0];
+        if (navEntry) {
+            isRefresh = navEntry.type === "reload";
+            isBackForward = navEntry.type === "back_forward";
+        }
+        
+        // 이전 버전 API로 추가 체크 (브라우저 호환성을 위해)
+        if (!isBackForward && performance.navigation) {
+            isBackForward = performance.navigation.type === 2; // 2는 back/forward
+            if (!isRefresh) {
+                isRefresh = performance.navigation.type === 1; // 1은 reload
+            }
+        }
+    } catch (e) {
+        console.error("Navigation Timing API error:", e);
+    }
+
+    // 내부 이동이거나 새로고침, 뒤로가기/앞으로가기인 경우 return
+    if (nextURL && isInternalNavigation) {
+        console.log("내부 페이지 이동 감지, 데이터 저장하지 않음");
+        return;
+    }
+    if (isRefresh) {
+        console.log("페이지 새로고침 감지, 데이터 저장하지 않음");
+        return;
+    }
+    if (isBackForward) {
+        console.log("뒤로가기/앞으로가기 감지, 데이터 저장하지 않음");
+        return;
+    }
+
+});
+
+// pagehide 이벤트로 브라우저 닫기 감지 (모바일 사파리 대응)
+window.addEventListener("pagehide", function(event) {
+    let nextURL = "";
+    
+    // 마지막으로 클릭한 요소에서 다음 URL 추출
+    if (lastClickedElement instanceof HTMLElement) {
+        if (lastClickedElement.hasAttribute("onclick")) {
+            let onclickValue = lastClickedElement.getAttribute("onclick");
+            let match = onclickValue.match(/location\.href\s*=\s*['"]([^'"]+)['"]/);
+            if (match && match[1]) {
+                nextURL = match[1];
+            }
+        }
+        let anchorElement = lastClickedElement.closest("a");
+        if (!anchorElement) {
+            anchorElement = lastClickedElement.querySelector("a");
+        }
+        if (anchorElement && anchorElement.href) {
+            nextURL = anchorElement.href;
+        }
+    }
+
+    if (!nextURL) {
+        nextURL = document.activeElement?.href || "";
+    }
+
+    // 내부 페이지 이동 체크
+    let isInternalNavigation = nextURL && (
+        nextURL.startsWith("/") || 
+        nextURL.startsWith(window.location.origin) ||
+        nextURL.startsWith(window.location.hostname) ||
+        nextURL.startsWith("javascript:") // javascript: 함수 호출도 내부 이동으로 간주
+    );
+
+    // Navigation Type 체크 (새로고침, 뒤로가기/앞으로가기)
+    let isRefresh = false;
+    let isBackForward = false;
+    
+    try {
+        // 최신 Navigation API 사용 시도
+        const navEntry = performance.getEntriesByType("navigation")[0];
+        if (navEntry) {
+            isRefresh = navEntry.type === "reload";
+            isBackForward = navEntry.type === "back_forward";
+        }
+        
+        // 이전 버전 API로 추가 체크 (브라우저 호환성을 위해)
+        if (!isBackForward && performance.navigation) {
+            isBackForward = performance.navigation.type === 2; // 2는 back/forward
+            if (!isRefresh) {
+                isRefresh = performance.navigation.type === 1; // 1은 reload
+            }
+        }
+    } catch (e) {
+        console.error("Navigation Timing API error:", e);
+    }
+
+    // 내부 이동이거나 새로고침, 뒤로가기/앞으로가기인 경우 return
+    if (nextURL && isInternalNavigation) {
+        console.log("내부 페이지 이동 감지, 데이터 저장하지 않음");
+        return;
+    }
+    if (isRefresh) {
+        console.log("페이지 새로고침 감지, 데이터 저장하지 않음");
+        return;
+    }
+    if (isBackForward) {
+        console.log("뒤로가기/앞으로가기 감지, 데이터 저장하지 않음");
+        return;
+    }
+
+    let journeyData = loadJourneyDataFromCookie();
+    // 데이터 저장
+    saveJourneyDataToCookie(journeyData);
+
+    try {
+        sendJourneyDataToBackend();
+    } catch (error) {
+        console.error("Failed to save journey data:", error);
+    }
+});
+
