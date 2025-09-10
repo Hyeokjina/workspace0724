@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미디어 관련 태그</title>
+</head>
+<body>
+    <h1>이미지 관련 태그</h1>
+    <!--<img src="추가하려는 이미지 경로" [alt="이미지 설명문구"] width="가로길이(px/%)" height="세로길이(px/%)">-->
+    
+    <h3>src속성</h3>
+    <p>불러올 이미지 리소스의 경로를 나타냄</p>
+    <img src="./images/sample.jpg" alt="">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQb93sjSI5hrWVQzD3NoQ1fU3M3xQtWPKACw&s" alt="">
+
+    <h3>alt속성</h3>
+    <p>
+        - 이미지의 경로가 잘못되었거나 이미지를 제대로 불러올수 없을 때 대체 텍스트로 사용 <br>
+        - 시각장애인들을 위한 스크린리더에서 이미지를 읽어주는 설명문구
+    </p>
+
+    <h3> width속성 height속성</h3>
+    <h4>고정길이단위(px) : 화면사이즈와 상관없이 이미지크기는 고정되어 있음</h4>
+    <img src="./images/sample.jpg" 
+                alt="네이버" width="200px" height="150px">
+    <img src="./images/sample.jpg" 
+                alt="네이버" width="200px" height="100px">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQb93sjSI5hrWVQzD3NoQ1fU3M3xQtWPKACw&s" 
+                alt="네이버" width="100px" height="100px">
+
+
+    <h4>가변길이단위(%) : 화면사이지 또는 부모요소 사이즈에 따라 이미지 크기가 변경</h4>
+    <img src="./images/sample.jpg" 
+                alt="네이버" width="10%" height="150px">
+    <img src="./images/sample.jpg" 
+                alt="네이버" width="20%" height="150px">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQb93sjSI5hrWVQzD3NoQ1fU3M3xQtWPKACw&s" 
+                alt="네이버" width="30%" height="150px">
+
+    <hr>
+
+    <h1>오디오 관련 테그</h1>
+    <!--
+        <audio src="오디오파일경로" controls autoplay loop></audio>
+        controls : 재생도구 출력여부
+        autoplay : 자동재생(브라우저별로 지원 X)
+        loop : 반복재생
+    -->
+    <audio src=""></audio>
+    <br>
+
+    <h1>비디오 관련 태그</h1>
+    <!--<video src="비디오파일 경로" controls autoplay loop width="300" height=" 200" poster="썸네일 경로"></video>-->
+    <video src="비디오파일 경로" controls autoplay loop width="300" height=" 200" poster="./images/sample.jpg"></video>
+</body>
+</html>

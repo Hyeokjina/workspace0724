@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+        }
+        span{
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <!--
+        블럭요소 : 한줄 단위로 영역을 차지함
+                   줄바꿈이 적용되며 이미 존재하는 테그에 다음줄에 다음영역이 잡힘.
+                   (p, pre, div, h...)
+        인라인요소 : content(내용) 영역에 해당하는 부분만 영역을 차지하는 요소
+                    줄바꿈이 적용되지 않아서 다음영역이 바로 옆으로 잡힘
+                    (b, mark, img, span...) 
+    -->
+    <h1>영역관련 태그</h1>
+    <h2>div태그와 span태그의 차이점1 : 줄바꿈처리</h2>
+
+    <div style="background: red;">첫번쨰 영역</div>
+    <div style="background: orange;">두번쨰 영역</div>
+    <div style="background: yellow;">세번쨰S 영역</div>
+
+    <h3>span태그</h3>
+    <p>span태그는 인라인 요소로 content영역만 차지(줄바꿈발생 X)</p>
+    <span style="background: red;">첫번째 영역</span>
+    <span style="background: orange;">두번째 영역</span>
+    <span style="background: yellow;">세번째 영역</span>
+
+    <h2>div태그와 span태그의 차이점 2 : 영역지정방식</h2>
+    <h3>div태그 : 사각형 박스로 영역을 지정.</h3>
+    <div style="height:  auto;">
+        '포스테코글루 감독은 브리즈번 로어와 요코하마 F. 마리노스에서 각각 리그 우승을 차지했고 2021년 6월 셀틱의 감독으로 부임해 글래스고에서의 성공적인 재임기 동안 스코틀랜드 첫 시즌 더블, 두 번째 시즌 트레블을 달성하며 2023년 국제축구연맹(FIFA) 올해의 감독 후보에 오르는 영예를 안았다'고 감독 커리어를 소상히 소개했다. 이어 '토트넘의 지휘봉을 잡은 포스테코글루 감독은 첫 시즌 5위에 이어 두 번째 시즌인 2024~2025 시즌 유로파리그 우승을 이끌며 17년 만의 메이저 트로피를 안겼고 팀을 유럽챔피언스리그 진출권으로 이끌었다'고 업적을 기술했다.
+    </div>
+    <h3>span태그 : 문장단위로 영역을 지정</h3>
+    <span style="height:  auto;">
+        '포스테코글루 감독은 브리즈번 로어와 요코하마 F. 마리노스에서 각각 리그 우승을 차지했고 2021년 6월 셀틱의 감독으로 부임해 글래스고에서의 성공적인 재임기 동안 스코틀랜드 첫 시즌 더블, 두 번째 시즌 트레블을 달성하며 2023년 국제축구연맹(FIFA) 올해의 감독 후보에 오르는 영예를 안았다'고 감독 커리어를 소상히 소개했다. 이어 '토트넘의 지휘봉을 잡은 포스테코글루 감독은 첫 시즌 5위에 이어 두 번째 시즌인 2024~2025 시즌 유로파리그 우승을 이끌며 17년 만의 메이저 트로피를 안겼고 팀을 유럽챔피언스리그 진출권으로 이끌었다'고 업적을 기술했다.
+    </span>
+
+    <hr>
+
+    <h1>iframe</h1>
+    <p>웹문서 안에 다른 웹페이지를 추가하는 태그(인라인요소)</p>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/TwcIxKLCnRk?si=fYNpjCh8S8pilENB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>    
+    </html>
+</body>
+
