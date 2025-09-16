@@ -26,8 +26,8 @@
     </p>
 
     <script>
-        //alert("출력")
-        console.log("콘솔에 출력");
+        alert("출력")
+        console.log("콘솔에 출력1");
     </script>
 
     <!-- 버튼에 함수 연결 -->
@@ -72,8 +72,8 @@
             divE1.className = "wrap";
 
             //선택한요소의 컨텐츠를 가져오기(해당요소 태그내부의 있는값)
-            console.log(divE1.innerHTML); //요소내부의 content영역의 모든 HTML코드
-            console.log(divE1.innerText);
+            console.log(divE1.innerHTML); //요소내부의 content영역의 모든 HTML코드 출력
+            console.log(divE1.innerText); //요소내부의 content영역의 모든 Text 출력
 
             // 실제 변경 예시
             divE1.innerHTML = "<b>이 텍스트는 innerHTML로 변경됨</b>";
@@ -83,7 +83,7 @@
     </script>
 
     <button onclick="testPrompt()">proppt버튼</button>
-    <div id="area3"></div>
+    <div id="area3">hi</div>
     <script>
         function testPrompt(){
             //질문내용을 입력하면 답을 입력할수 있는 텍스트상자와
@@ -118,6 +118,6 @@
         let resultInput = document.querySelector("#result");
         resultInput.value = `아이디 : ${idInput.value}, 비밀번호 : ${pwdInput.value}`;
     }
-</script>
+    </script>
 </body>
 </html>

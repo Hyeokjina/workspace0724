@@ -88,7 +88,7 @@ console.log(age3 === "55");
 //boolean 타입
 const isTrue2 = true;
 const isFalse = false;
-console.log(typeof isTrue)
+console.log(typeof isTrue2)
 
 /**
  * undefined
@@ -117,7 +117,7 @@ console.log(init2);
 /**
  * Symbol 타입
  * 
- * 유일무이한 값을 생성하는 타압
+ * 유일무이한 값을 생성하는 타입
  * 다른 원시값들과는 다르게 symbol함수를 호출해서 사용
  */
 
@@ -139,7 +139,7 @@ console.log("symbol1 === symbol2 :", symbol1 === symbol2); // false
  * key : value -> map의 구조
  * 
  * 예: DOM에 <input type="text" sytle="color:red;"/>
- * {}
+ * {
  *      element : input,
  *      type : text,
  *      style : color
