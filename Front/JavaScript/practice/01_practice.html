@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .box{
+        border: 1px solid black;
+        width: 100px;
+        height: 100px;
+    }
+    #change{
+        width: 50px;
+        cursor: pointer;
+    }
+    #sizeBox{
+        background: black;
+    }
+</style>
+<body>
+    <div>
+        <p><b>문제1. 색상 선택 후 변경 버튼을 클릭하면 색상이 변경되도록 만들어라</b></p>
+
+        <div id="colorBox" class="box"></div>
+        <input type="color" id="color">
+        <input type="button" id="change" value="변경" onclick ="colorChange()">
+        
+        <script>
+            function colorChange(){
+                const cc1 = document.getElementById('colorBox');
+                const selectcc1 = document.getElementById('color').value;
+
+                cc1.style.background = selectcc1
+            }
+        </script>
+    </div> 
+    
+    <br>
+
+    <div>
+        <p><b>문제2. 버튼의 따른 크기조절이 가능하게 만들어 보세요 </b></p>
+
+        <div id="sizeBox" class="box"></div>
+        <input type="button" id="change" value="50X50" onclick ="sizechange(50, 50)">
+        <input type="button" id="change" value="100X100" onclick ="sizechange(100, 100)">
+        <input type="button" id="change" value="200X200" onclick ="sizechange(200, 200)">
+        
+        <script>
+            function sizechange(width, height){
+                const sc1 = document.getElementById('sizeBox');
+
+                sc1.style.width= width +"px";
+                sc1.style.height= height + "px";
+            }
+        </script>
+    </div>
+    
+</body>
+</html>

@@ -94,7 +94,7 @@
                     age : 55
                 }
 
-                callback(serverReturnInfo);
+                callback(serverInfo);
           }, 3000) //첫번째 인자로 전달된 함수는 두번째 인자의 시간(ms)만큼 딜레이 후 실행됨.
           console.log('함수 실행 후');
         }
@@ -108,6 +108,77 @@
             console.log(userInfo);
         });
         
+    </script>
+
+    <br>
+
+    <!-- 스코프 : 이름을 어디서 찾을 것인가? -->
+
+    <!-- this : 사용시점의 스코프를 가르킴(나를 누가 호출했는가?) -->
+    <!-- inline에서의 this를 사용시 사용한 태그요소를 객체로 전달 -->
+    <button onclick="test4(this)">1</button> <!-- 인라인 이벤트에서 this를 사용시 항상 현재 요소 자신을 가르킨다. -->
+    <button onclick="test4(this.innerHTML)">2</button>
+    <input type="button" value="3" onclick="test4(this.value)">
+    <button onclick="test4(this.id)" id="btn-4">4</button>
+
+
+    <script>
+        //console.log(this)
+        function test4(_this){
+            console.log("_this : " ,_this);
+            console.log("his : ", this);
+        }
+
+        test4();
+
+        const btn4 = document.getElementById('btn-4');
+        btn4.onclick = function(){
+            console.log(this);
+        }
+    
+    </script>
+
+    <button onclick="test5(this)">클릭</button>
+    <script>
+        function test5(_btn){
+            if(_btn.style.background !== "red"){
+                _btn.style.background = 'red';
+            } else {
+                _btn.style.background ='white';
+            }
+        }
+    </script>
+
+    <br><br>
+
+    <h2>함수의 리턴</h2>
+    <h3>일반적인 값 리턴</h3>
+
+    <button onclick="test6()">실행</button>
+    <div id="area5" class="area"></div>
+    <script>
+        function run(){
+            const value = parseInt(Math.random() * 100 +1);
+            console.log(value);
+            return value;
+        }
+
+        function test6(){
+            document.getElementById('area5').innerHTML += ('랜덤 값 : ' + run() + "<br>");
+        }
+    </script>
+
+    <h3>함수를 리턴</h3>
+    이름 : <input type="text" id="user-name"> 
+    <button onclick="test7()()">실행</button>
+    <script>
+        function test7(){
+            const inputEl = document.getElementById('user-name');
+
+            return function(){
+                alert(inputEl.value);
+            }
+        }
     </script>
 </body>
 </html>
