@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .buyInfo{
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 700px;
+    }
+    #output-result{
+        border: 1px solid black;
+        width: 500px;
+        height: 300px;
+
+    }
+    #amount{width: 70px;}
+    #textbox{width: 300px; height: 100px;}
+    #result{cursor: pointer;}
+
+
+</style>
+<body>
+    <h1>Practice4</h1><br>
+
+    <div class="buyInfo">
+        <fieldset>
+            <legend>구매정보 </legend>
+            <ul>
+                <li>
+                    구매자 :
+                    <input type="text" id="name" class="info" placeholder="구매자의 이름을 입력하세요">
+                </li>
+                <li>
+                    상품명 :
+                    <input type="text" id="product" class="info" placeholder="상품명을 입력하세요">
+                </li>
+                <li>
+                    가격 :
+                    <input type="number" id="price" class="info" placeholder="구매 가격을 입력하세요">
+                </li>
+                <li>
+                    구매 수량 :
+                    <input type="number" id="amount" class="info" placeholder="최소 10" min="10" max="100" step="10">
+                </li>
+                <li>
+                    납품 등급 :
+                    <input type="range" id="grad" class="info" min="1" max="10" step="2" name="info" >
+                </li>
+                <li>
+                    기타 사항 :
+                    <textarea  id="textbox" class="info"></textarea>
+                </li>
+            </ul>
+        </fieldset>
+    </div><br>
+
+    <button id="result" onclick="output()">입력 값 출력하기</button><br>
+
+    <br>
+    <div id="output-result"></div>
+
+    <script>
+        function output() {
+            const info = document.querySelectorAll('.info');
+            const amount = document.getElementById('amount').value;
+            
+            if(amount <10 || amount > 100 || amount % 10 !==0){
+                alert("구매수량은 최소 10개부터 100개까지이며 10개 단위로 입력해야합니다.");
+                amountInput.focus();
+                return;
+            }
+
+            let str = "";
+            let arr1 =["구매자 명 : ", "상품 명 : ", "가격 : ", "구매 수량 : ", "납품등급 : ", "기타사항 : "]
+            let arr2 =["님", " ", "만원", "개", "등급", " "]
+            for(let i=0; i<info.length; i++){
+                str += arr1[i] + info[i].value + arr2[i] + "\n "
+            }
+            const outputinfo = document.getElementById('output-result');
+            outputinfo.innerText = str;
+        }
+
+
+
+    </script>
+</body>
+</html>
