@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    #outline{
+        width: 500px;
+    }
+    #text1{
+        text-align: center;
+    }
+    .radio-group{
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+    }
+    .upResult{
+        background: rgb(218, 217, 217);
+        width: 500px;
+        min-height: 50px; /* 최소 높이 지정 */
+        padding: 10px;
+    }
+
+</style>
+<body>
+    <h1>Practice5</h1>
+    <div id="outline">
+    <fieldset>
+        <legend id="text1">검색할 항목을 선택하세요.</legend>
+        <div class="radio-group">
+            <label><input type="radio" name="btn" id="title" onclick="titleSearch()">제목</label>
+            <label><input type="radio" name="btn" id="date" onclick="dateSearch()">날짜</label>
+            <label><input type="radio" name="btn" id="person" onclick="personSearch()">작성자</label>
+        </div>
+    </fieldset>
+
+    <br>
+
+    <div id="result"></div>
+    </div>
+
+    <script>
+        function titleSearch(){
+        const resultDiv = document.getElementById('result');
+        resultDiv.className = "upResult";
+        resultDiv.innerHTML = `
+            검색할 제목을 입력하세요 : <br>
+            <input type="text" id="searchText"> 
+            <button type="button">검색</button>`;
+    }
+
+    </script>
+</body>
+</html>
