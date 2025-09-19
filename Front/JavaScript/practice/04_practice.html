@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .join_form{
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>practice4</h1>
+    <form action="">
+        <fieldset>
+            <legend>회원가입</legend>
+            <div class="join-form">
+                <div>아이디 : <input type="text" onkeyup="checkId(this, event)"></div>
+                <div>비밀번호 : <input type="password"></div>
+                <div>비밀번호 확인: <input type="password"></div>
+                <div>이름 : <input type="text"></div>
+                <button>회원가입</button>
+            </div>
+        </fieldset>
+    </form>
+
+    <script>
+        function checkId(_this, ev){
+            console.log(_this.value);
+            console.log(ev.target.value);
+        }
+    </script>
+</body>
+</html>
