@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
 </head>
 <style>
     *{
@@ -32,12 +36,20 @@
         <input type="color" id="color">
         <input type="button" id="change" value="변경" onclick ="colorChange()">
         
+        <!-- 
         <script>
             function colorChange(){
                 const cc1 = document.getElementById('colorBox');
                 const selectcc1 = document.getElementById('color').value;
 
                 cc1.style.background = selectcc1
+            }
+        </script>-->
+
+        <script>
+            function colorChange(){
+                const selectcc1 = $('#color').val();
+                $('#colorBox').css('background', selectcc1);
             }
         </script>
     </div> 
@@ -52,12 +64,21 @@
         <input type="button" id="change" value="100X100" onclick ="sizechange(100, 100)">
         <input type="button" id="change" value="200X200" onclick ="sizechange(200, 200)">
         
-        <script>
+        <!-- <script>
             function sizechange(width, height){
                 const sc1 = document.getElementById('sizeBox');
 
                 sc1.style.width= width +"px";
                 sc1.style.height= height + "px";
+            }
+        </script> -->
+
+        <script>
+            function sizechange(width1,height1){
+                $('#sizeBox').css({
+                    width : width1 + "px",
+                    height : height1 + "px"
+                })
             }
         </script>
     </div>

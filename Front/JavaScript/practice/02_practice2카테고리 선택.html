@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+     <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
     <style>
         .area{
             border: 1px solid red;
@@ -109,36 +113,56 @@
   <div class="area" id="select-result"></div>
 
   <script>
+    //  function selectCatrgory(){
+//     const hobbyCheckBoxList = document.querySelectorAll('input[name=hobby]');
+//     let str = "";
+//     for(let i=0; i<hobbyCheckBoxList.length; i++){
+//         const box = hobbyCheckBoxList[i];
+//          if(box.checked) 
+//             str += box.value + " ";
+//         }
+//     }
+//     const resultEl = document.getElementById('select-result');
+//     resultEl.innerText = str;
+//     }
+
+    //     const resultEl = document.getElementById('select-result');
+    //     resultEl.innerText = str;
+    // } 
+
+    //jauery에서 배열.each(function(인덱스, 요소){반복할 코드})
     function selectCatrgory(){
-        //하단 네모에 선택한 카테고리(checkbox가 checked인 것) 출력
-        const hobbyCheckBoxList = document.querySelectorAll('input[name=hobby]');
-        console.log(hobbyCheckBoxList);
+         let str = "";
 
-        let str = "";
-        for(let i=0; i<hobbyCheckBoxList.length; i++){
-            const box = hobbyCheckBoxList[i];
-            if(box.checked) { //체크된 박스인지 검사
-                  str += (box.value + " "); //체크된 박스의 value값을 전부 str에 더함.
-            }
-        }
+         $('input[name=hobby]:checked').each(function(idx, el){
+             str += el.value + " ";
+         });
 
-        const resultEl = document.getElementById('select-result');
-        resultEl.innerText = str;
+         $('#select-result').text(str);
+
     }
+
+
+    // function allCheck(_allCheckBox){
+    //     const isChecked = _allCheckBox.checked; //전체선택 체크박스가 true(체크됨), false(체크안됨)에 따라서 나머지 체크박스의 check상태도 변경
+        
+    //     //모든 체크박스 가져오기
+    //     const hobbyCheckBoxList = document.querySelectorAll('input[name=hobby]');
+    //     //모든체크박스를 반복하며
+    //     for(let i=0; i<hobbyCheckBoxList.length; i++){
+    //         //체크박스의 check상태를 전체선택 체크박스의 상태와 동일하게 적용
+    //         hobbyCheckBoxList[i].checked = isChecked;
+    //     }
+    // }
 
     function allCheck(_allCheckBox){
-        const isChecked = _allCheckBox.checked; //전체선택 체크박스가 true(체크됨), false(체크안됨)에 따라서 나머지 체크박스의 check상태도 변경
-        
-        //모든 체크박스 가져오기
-        const hobbyCheckBoxList = document.querySelectorAll('input[name=hobby]');
-        //모든체크박스를 반복하며
-        for(let i=0; i<hobbyCheckBoxList.length; i++){
-            //체크박스의 check상태를 전체선택 체크박스의 상태와 동일하게 적용
-            hobbyCheckBoxList[i].checked = isChecked;
-        }
+        const isChecked = $(_allCheckBox).prop('checked'); // 전체 체크박스 상태 가져오기
+        $('input[name="hobby"]').prop('checked', isChecked); // 모든 체크박스 상태 변경
     }
 
-    function changeAllCheckBox(){
+
+
+    /*function changeAllCheckBox(){
         //모든체크박스를 가져와서
         const hobbyCheckBoxList = document.querySelectorAll('input[name=hobby]');
 
@@ -156,12 +180,30 @@
         // if(!hobbyCheckBoxList[i].checked)조건에 만족하는 결과값을 찾았다면 -> isChecked = false;
         const allCheckBox = document.getElementById('all-hobby-check');
         allCheckBox.checked = isChecked;
-    }
+    }*/
 
-    const hobbyCheckBoxList = document.querySelectorAll('input[name=hobby]');
+    function changeAllCheckBox(){
+    const $checkBoxList = $("input[name=hobby]");
+    let isChecked = true; 
+    
+    $checkBoxList.each(function(idx, el){
+        if(!el.checked) {
+            isChecked = false;
+            return false;
+        }
+    });
+
+    $("#all-hobby-check").prop("checked", isChecked); // id 오타 & prop 문법 수정
+}
+
+
+    /*const hobbyCheckBoxList = document.querySelectorAll('input[name=hobby]');
     for(let i=0; i<hobbyCheckBoxList.length; i++){
         hobbyCheckBoxList[i].onchange = changeAllCheckBox;
-    }
+    }*/
+
+    $('input[name=hobby]').change(changeAllCheckBox);
+
     
   </script>
 </body>
