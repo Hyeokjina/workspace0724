@@ -25,8 +25,17 @@
     .upResult{
         background: rgb(218, 217, 217);
         width: 500px;
-        min-height: 50px; /* 최소 높이 지정 */
+        min-height: 50px;
         padding: 10px;
+    }
+    #searchText1{
+        width: 400px;
+    }
+    #searchText4{
+        width: 200px;
+    }
+    .btn{
+        width: 40px;
     }
 
 </style>
@@ -36,9 +45,10 @@
     <fieldset>
         <legend id="text1">검색할 항목을 선택하세요.</legend>
         <div class="radio-group">
-            <label><input type="radio" name="btn" id="title" onclick="titleSearch()">제목</label>
-            <label><input type="radio" name="btn" id="date" onclick="dateSearch()">날짜</label>
-            <label><input type="radio" name="btn" id="person" onclick="personSearch()">작성자</label>
+            <label><input type="radio" name="radiobtn" id="title" onclick="titleSearch()">제목</label>
+            <label><input type="radio" name="radiobtn" id="date" onclick="dateSearch()">날짜</label>
+            <label><input type="radio" name="radiobtn" id="person" onclick="personSearch()">작성자</label>
+
         </div>
     </fieldset>
 
@@ -53,9 +63,30 @@
         resultDiv.className = "upResult";
         resultDiv.innerHTML = `
             검색할 제목을 입력하세요 : <br>
-            <input type="text" id="searchText"> 
-            <button type="button">검색</button>`;
+            <input type="text" id="searchText1"> 
+            <button type="button" class="btn">검색</button>`;
     }
+
+        function dateSearch(){
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = "upResult";
+            resultDiv.innerHTML = `
+                검색할 날짜를 입력하세요 : <br>
+                <input type="date" id="searchText2"> - 
+                <input type="date" id="searchText3">
+                <button type="button" class="btn">검색</button>`;
+        }
+
+        function personSearch(){
+            const resultDiv = document.getElementById('result');
+            resultDiv.className = "upResult";
+            resultDiv.innerHTML = `
+                검색할 작성자 아이디를 입력하세요 : <br>
+                <input type="text" id="searchText4"> 
+                <button type="button" class="btn">검색</button>`;
+        }
+
+
 
     </script>
 </body>
