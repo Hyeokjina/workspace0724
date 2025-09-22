@@ -56,10 +56,14 @@ var i = 1000;
 for(var i=0; i<10; i++){
     console.log(i);
 }
-console.log("i = " + i)
+console.log("i = " + i);
 
 let j =1000;
 for(let j=0; j<10; j++){
     console.log(j);
 }
-console.log("j = " + j)
+console.log("j = " + j);
+
+//var는 함수 스코프이기 때무에 for문내에 새로운 i가 생기지않고 전역에 i를 저장함. for문이 종료되어도 전역 i는 그대로 유지됨.
+//let, const는 블록 스코프이기 때문에 for문내에서 스코프를 만들고 j를 해당 스코프에 저장해 상요한 뒤 for문이 종료되면
+//별개로 전역에 있는 j는 그대로 전역변수 사용됨.

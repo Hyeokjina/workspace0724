@@ -76,3 +76,14 @@ store.set(100);
 console.log(store.get());
 //외부에서 value직접 접근 부가 -> 메서드로만 조작(캡슐화)
 
+function attachOnce(el, msg){
+    let clicked = false;
+
+    el.addEventListener("click", function(){
+        if(clicked) return;//클릭한 적이 있냐?
+        clicked = true; //클로저에 있는 clicked -> true
+        console.log(msg); //클릭시 하고자하는 동작을 수행
+    })
+}
+
+//el를 눌러도 처음 한번만 msg출력
