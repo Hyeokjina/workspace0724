@@ -12,6 +12,11 @@
         gap: 12px;
         width: 700px;
     }
+    .button{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
     #output-result{
         border: 1px solid black;
         width: 500px;
@@ -23,45 +28,49 @@
     #result{cursor: pointer;}
 
 
+
 </style>
 <body>
     <h1>Practice4</h1><br>
 
     <div class="buyInfo">
-        <fieldset>
-            <legend>구매정보 </legend>
-            <ul>
-                <li>
-                    구매자 :
-                    <input type="text" id="name" class="info" placeholder="구매자의 이름을 입력하세요">
-                </li>
-                <li>
-                    상품명 :
-                    <input type="text" id="product" class="info" placeholder="상품명을 입력하세요">
-                </li>
-                <li>
-                    가격 :
-                    <input type="number" id="price" class="info" placeholder="구매 가격을 입력하세요">
-                </li>
-                <li>
-                    구매 수량 :
-                    <input type="number" id="amount" class="info" placeholder="최소 10" min="10" max="100" step="10">
-                </li>
-                <li>
-                    납품 등급 :
-                    <input type="range" id="grad" class="info" min="1" max="10" step="2" name="info" >
-                </li>
-                <li>
-                    기타 사항 :
-                    <textarea  id="textbox" class="info"></textarea>
-                </li>
-            </ul>
-        </fieldset>
-    </div><br>
+        <form id="buyForm">
+            <fieldset>
+                <legend>구매정보 </legend>
+                <ul>
+                    <li>
+                        구매자 :
+                        <input type="text" id="name" class="info" placeholder="구매자의 이름을 입력하세요">
+                    </li>
+                    <li>
+                        상품명 :
+                        <input type="text" id="product" class="info" placeholder="상품명을 입력하세요">
+                    </li>
+                    <li>
+                        가격 :
+                        <input type="number" id="price" class="info" placeholder="구매 가격을 입력하세요">
+                    </li>
+                    <li>
+                        구매 수량 :
+                        <input type="number" id="amount" class="info" placeholder="최소 10" min="10" max="100" step="10">
+                    </li>
+                    <li>
+                        납품 등급 :
+                        <input type="range" id="grad" class="info" min="1" max="10" step="2" name="info" >
+                    </li>
+                    <li>
+                        기타 사항 :
+                        <textarea  id="textbox" class="info"></textarea>
+                    </li>
+                </ul>
+            </fieldset>
 
-    <button id="result" onclick="output()">입력 값 출력하기</button><br>
+            <div class="button">
+                <button id="result" type="button" onclick="output()">입력 값 출력하기</button>
+                <button type="reset">reset</button>
+            </div>
 
-    <br>
+            <br>
     <div id="output-result"></div>
 
     <script>
@@ -88,5 +97,10 @@
 
 
     </script>
+        </form>
+    </div>
+
+
+    
 </body>
 </html>
