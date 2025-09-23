@@ -172,3 +172,28 @@ header h1{
     font-size: 16px;
     font-weight: 600;
 }
+
+.filter-buttons{
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    border-bottom: 1px solid rgb(224, 224, 224);
+    gap: 10px;
+}
+
+.filter-buttons button{
+    padding: 8px 16px;
+    border: 2px solid rgb(224, 224, 224);
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.filter-buttons button:hover,
+.filter-buttons button.active{
+    background: #5D688A;
+    color: white;
+    border-color: #5d688a;
+}

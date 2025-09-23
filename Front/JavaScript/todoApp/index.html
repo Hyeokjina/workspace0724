@@ -26,9 +26,13 @@
             <button id="todo-add-btn">추가</button>
          </div>
 
-         <ul id="todo-list" class="todo-list">
-           
-         </ul>
+         <div class="filter-buttons">
+            <button data-filter="all" class="active">전체</button>
+            <button data-filter="active">진행중</button>
+            <button data-filter="completed">완료</button>
+         </div>
+
+         <ul id="todo-list" class="todo-list"></ul>
 
          <div class="todo-footer">
             <span id="todo-count">1개 남음</span>
