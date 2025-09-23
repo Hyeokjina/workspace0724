@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List App</title>
+
+    <!-- 외부라이브러리 -->
+    <!-- google web font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- 내부import -->
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더영역 -->
+         <header>   
+            <h1>Todo List</h1>
+         </header>
+
+         <div class="todo-input">
+            <input type="text" placeholder="새로운 할일을 입력하세요.">
+            <button>추가</button>
+         </div>
+
+         <ul class="todo-list">
+            <li class="todo-item">
+                <div class="todo-checkbox"></div>
+                <span>자바 복습하기</span>
+                <button class="delete-btn">삭제</button>
+            </li>
+            <li class="todo-item">
+                <div class="todo-checkbox checked"></div>
+                <span>블로그 회고록 작성하기</span>
+                <button class="delete-btn">삭제</button>
+            </li>
+         </ul>
+
+         <div class="todo-footer">
+            <span>1개 남음</span>
+            <button class="delete-btn">완료된 항목 삭제</button>
+         </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
