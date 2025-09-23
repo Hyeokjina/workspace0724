@@ -22,26 +22,17 @@
          </header>
 
          <div class="todo-input">
-            <input type="text" placeholder="새로운 할일을 입력하세요.">
-            <button>추가</button>
+            <input id="todo-input" type="text" placeholder="새로운 할일을 입력하세요.">
+            <button id="todo-add-btn">추가</button>
          </div>
 
-         <ul class="todo-list">
-            <li class="todo-item">
-                <div class="todo-checkbox"></div>
-                <span>자바 복습하기</span>
-                <button class="delete-btn">삭제</button>
-            </li>
-            <li class="todo-item">
-                <div class="todo-checkbox checked"></div>
-                <span>블로그 회고록 작성하기</span>
-                <button class="delete-btn">삭제</button>
-            </li>
+         <ul id="todo-list" class="todo-list">
+           
          </ul>
 
          <div class="todo-footer">
-            <span>1개 남음</span>
-            <button class="delete-btn">완료된 항목 삭제</button>
+            <span id="todo-count">1개 남음</span>
+            <button class="delete-btn" id="clear-completed-btn">완료된 항목 삭제</button>
          </div>
     </div>
 

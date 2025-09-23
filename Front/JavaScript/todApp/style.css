@@ -94,6 +94,15 @@ header h1{
     background: #fff6f4;
 }
 
+.todo-item.completed{
+    opacity: 0.6;
+}
+
+.todo-item.completed > span{
+    text-decoration: line-through;
+    color: #5D688A;
+}
+
 .todo-item > span{
     flex: 1;
     font-size: 16px;
@@ -154,4 +163,12 @@ header h1{
     line-height: 33px;
     font-size: 18px;
     font-weight: 600; 
+}
+
+.empty-state{
+    text-align: center;
+    padding: 40px 20px;
+    color: #5d688a;
+    font-size: 16px;
+    font-weight: 600;
 }
