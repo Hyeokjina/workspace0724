@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더영역 -->
+         <header>   
+            <h1 id="title">가계부</h1>
+            <p id="p-text">현재 잔액</p>
+            <h1 id="price">100,0000원</h1>
+         </header>
+
+         <div class="input-all">
+            <div class="input-content">
+               <input id="input-text" type="text" placeholder="내용을 입력하세요 (예 점심값, 월급)">
+               <input id="input-price" type="text" placeholder="금액을 입력하세요"> 
+            </div>
+            <div class="input-button">
+                <button id="input-income">수입</button>
+                <button id="input-spend">지출</button>
+            </div>
+            <button id="input-data">추가하기</button>      
+         </div>
+
+         <div class="filter-buttons">
+            <button data-filter="all" class="filter-btn">전체</button>
+            <button data-filter="income" class="filter-btn">수입</button>
+            <button data-filter="spend" class="filter-btn">지출</button>
+         </div>
+
+         <div class="result">
+            <div class="all-incom">
+                <p>총 수입</p>
+                <span>1,000,000원</span>
+            </div>
+            <div class="all-spend">
+                <p>총 지출</p>
+                <span id="span-spend">15,000원</span>
+            </div>
+            <div class="all-incom">
+                <p>잔액</p>
+                <span>985,000원</span>
+            </div>
+         </div>
+
+         <!-- <ul id="history-list" class="history-list">
+            <div class="box1">
+                <input type="text" id="date" value="2025년 9월 22일">
+                <input type="text" id="text" value="급여">
+            </div>
+            <div class="box2">
+                <input type="text" id="price-text" value="+1,000,000원">
+                <input type="button" id="delete-btn" value="삭제">
+            </div>
+         </ul> -->
+
+
+    </div>
+
+    <script src="./script.js"></script>
+    
+</body>
+</html>

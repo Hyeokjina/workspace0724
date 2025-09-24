@@ -1,0 +1,257 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    
+}
+
+body{
+    min-height: 100vh;
+    min-width: 600px;
+    font-family: "Noto Sans KR", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 400;
+    background: linear-gradient(135deg, #8188f5, #7d2bad);
+    padding: 20px;
+}
+
+button{
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.container{
+    max-width: 600px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    background: linear-gradient(135deg, #8188f5, #7d2bad);
+    color: white;
+    padding:30px 0;
+    border-radius: 9px 10px 0 0;
+}
+
+#title{
+    font-size: 25px;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+#p-text{
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    padding-top: 15px;
+}
+
+#price{
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: -1px;
+    color: rgb(25, 165, 25);
+}
+
+.input-all{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-content{
+    display: flex;
+    gap: 10px;
+    padding-top: 20px;
+}
+
+.input-content > input{
+    width: 270px;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid rgb(216, 209, 209);
+    padding-left: 15px;
+    
+}
+
+.input-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+.input-button > button{
+    width: 70px;
+    height: 35px;
+    background: #ffffff;
+    border-radius: 30px;
+    border:1px solid rgb(216, 209, 209);
+}
+
+#input-income{
+    color: rgb(25, 165, 25);
+    font-weight: 700;
+}
+
+#input-spend{
+    color: rgb(231, 36, 36);
+    font-weight: 700;
+}
+
+#input-income-income{
+    color: white;
+    background:rgb(25, 165, 25);
+    font-weight: 700;
+}
+
+#input-spend-spend{
+    color: white;
+    background:rgb(231, 36, 36);
+    font-weight: 700;
+}
+
+#input-data{
+    width: 550px;
+    height: 40px;
+    background: linear-gradient(135deg, #8188f5, #7d2bad);
+    color: white;
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+.filter-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding-top: 40px;
+    padding-bottom: 30px;
+}
+
+.filter-buttons > button{
+    width: 55px;
+    height: 35px;
+    background: #ffffff;
+    border-radius: 15px;
+    border:1px solid rgb(216, 209, 209);
+    font-weight: 500;
+    color:black;
+}
+
+.filter-btn-btn{
+    width: 55px;
+    height: 35px;
+    background: linear-gradient(135deg, #8188f5, #7d2bad);
+    border-radius: 15px;
+    border:1px solid rgb(216, 209, 209);
+    color: white;
+}
+
+.filter-buttons button:hover,
+.filter-buttons button.active{
+    background: linear-gradient(135deg, #8188f5, #7d2bad);
+    color: white;
+    border-color: #8188f5;
+}
+
+.result{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+}
+
+.result > div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700; 
+    font-size: 13px;
+    padding-bottom: 30px;
+}
+
+.result > div > span{
+    font-size: 18px;
+    color: rgb(25, 165, 25);
+}
+
+#span-spend{
+    color: rgb(231, 36, 36);
+}
+
+.history-list{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 260px;
+    border: none;
+    padding-bottom: 10px;
+}
+
+.box1{
+    display: flex;
+    flex-direction: column;
+}
+
+#date{
+    font-size: 10px;
+    color: gray;
+    width: 100px;
+    border: none;
+}
+
+#text{
+    font-size: 15px;
+    color: black;
+    width: 100px;
+    border: none;
+}
+
+.box2{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+#price-text{
+    font-size: 17px;
+    font-weight: 700;
+    width: 150px;
+    border: none;
+    text-align: right;
+    color: rgb(25, 165, 25);
+}
+#price-text-text{
+    font-size: 17px;
+    font-weight: 700;
+    width: 150px;
+    border: none;
+    text-align: right;
+    color: rgb(231, 36, 36);
+}
+
+#delete-btn{
+    width: 50px;
+    height: 30px;
+    background: rgb(247, 81, 16);
+    color: white;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
