@@ -192,6 +192,7 @@ header {
     padding-bottom: 20px;
     border: 1px solid  #8b8b8b;
     border-radius: 5px;
+    min-width: 100px;
 }
 
 .all-spend > span{
