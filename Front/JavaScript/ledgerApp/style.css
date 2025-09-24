@@ -185,13 +185,19 @@ header {
     padding-bottom: 30px;
 }
 
-.result > div > span{
+.all-spend > span{
+    font-size: 18px;
+    color: rgb(231, 36, 36);
+}
+
+.all-incom> span{
     font-size: 18px;
     color: rgb(25, 165, 25);
 }
 
-.all-spend > span{
-    color: rgb(231, 36, 36);
+.all-balance> span{
+    font-size: 18px;
+    color: rgb(25, 165, 25);
 }
 
 .history-list{

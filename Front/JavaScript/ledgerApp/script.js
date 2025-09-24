@@ -14,8 +14,7 @@ const allIncomeSpan = document.querySelector('.all-incom span');
 const allSpendSpan = document.querySelector('.all-spend span');
 const balanceSpan = document.querySelector('.all-balance sapn');
 
-const historyList = document.createElement('ul');
-historyList.className = 'history-list';
+const historyList = document.getElementById('history-list');
 document.querySelector('.container').appendChild(historyList);
 
 // ===== 초기화 함수 =====
