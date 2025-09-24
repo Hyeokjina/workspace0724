@@ -14,6 +14,8 @@ const allIncomeSpan = document.querySelector('.all-incom span');
 const allSpendSpan = document.querySelector('.all-spend span');
 const balanceSpan = document.querySelector('.all-balance span');
 
+const outputTotal = document.getElementById('total');
+
 const historyList = document.getElementById('history-list');
 document.querySelector('.container').appendChild(historyList);
 
@@ -100,7 +102,7 @@ function getFilteredRecords(){
 
 // ===== 화면 렌더링 =====
 function render(){
-    // history 초기화
+
     historyList.innerHTML = '';
 
     const filtered = getFilteredRecords();
@@ -177,17 +179,23 @@ function updateSummary(){
     allIncomeSpan.textContent = totalIncome.toLocaleString() + '원';
     allSpendSpan.textContent = totalSpend.toLocaleString() + '원';
     balanceSpan.textContent = (totalIncome - totalSpend).toLocaleString() + '원';
+
+    outputTotal.textContent= (totalIncome - totalSpend).toLocaleString() + '원';
 }
 
 // ===== 수입/지출 버튼 토글 =====
 inputIncomeBtn.addEventListener('click', function(){
     inputIncomeBtn.id = 'input-income-income';
     inputSpendBtn.id = 'input-spend';
+    inputIncomeBtn.classList.add('active');
+    inputSpendBtn.classList.remove('active');
 });
 
 inputSpendBtn.addEventListener('click', function(){
     inputSpendBtn.id = 'input-spend-spend';
     inputIncomeBtn.id = 'input-income';
+    inputSpendBtn.classList.add('active');
+    inputIncomeBtn.classList.remove('active');
 });
 
 // ===== 초기화 =====
