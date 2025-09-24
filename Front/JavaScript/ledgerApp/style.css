@@ -190,18 +190,27 @@ header {
     color: rgb(25, 165, 25);
 }
 
-#span-spend{
+.all-spend > span{
     color: rgb(231, 36, 36);
 }
 
 .history-list{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 260px;
+    gap: 10px;
     border: none;
     padding-bottom: 10px;
+    list-style: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.box{
+    display: flex;
+    flex-direction: row;
+    gap: 230px;
 }
 
 .box1{
