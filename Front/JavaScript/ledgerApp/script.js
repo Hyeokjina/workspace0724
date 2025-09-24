@@ -12,7 +12,7 @@ const inputAddBtn = document.getElementById('input-data');
 const filterBtns = document.querySelectorAll('.filter-buttons button');
 const allIncomeSpan = document.querySelector('.all-incom span');
 const allSpendSpan = document.querySelector('.all-spend span');
-const balanceSpan = document.querySelector('.all-balance sapn');
+const balanceSpan = document.querySelector('.all-balance span');
 
 const historyList = document.getElementById('history-list');
 document.querySelector('.container').appendChild(historyList);
@@ -25,7 +25,9 @@ function init() {
 
 // ===== 이벤트 바인딩 =====
 function bindEvents() {
-    inputAddBtn.addEventListener('click', addRecord);
+    inputAddBtn.addEventListener('click', function(){
+        addRecord();
+    });
 
     inputText.addEventListener('keydown', function(e){
         if(e.key === 'Enter') addRecord();
@@ -35,7 +37,7 @@ function bindEvents() {
         if(e.key === 'Enter') addRecord();
     });
 
-    filterBtns.forEach(btn => {
+    filterBtns.forEach(function(btn){
         btn.addEventListener('click', function(){
             setFilter(btn.dataset.filter);
         });
@@ -45,16 +47,16 @@ function bindEvents() {
 // ===== 데이터 조작 함수 =====
 function addRecord() {
     const text = inputText.value.trim();
-    const price = parseInt(inputPrice.value.replace(/,/g, ''), 10);
+    const price = Number(inputPrice.value);
     const type = inputIncomeBtn.classList.contains('active') ? 'income' : 'spend';
 
     if(!text || isNaN(price)) return alert("내용과 금액을 올바르게 입력하세요.");
 
     const record = {
         id: Date.now(),
-        text,
-        price,
-        type,
+        text: text,
+        price: price,
+        type: type,
         createdAt: new Date().toLocaleString()
     };
 
@@ -67,7 +69,9 @@ function addRecord() {
 }
 
 function deleteRecord(id){
-    records = records.filter(r => r.id !== id);
+    records = records.filter(function(r){
+        return r.id !== id;
+    });
     saveRecords();
     render();
 }
@@ -80,7 +84,7 @@ function saveRecords(){
 function setFilter(filter){
     filterState = filter;
 
-    filterBtns.forEach(btn => {
+    filterBtns.forEach(function(btn){
         btn.className = btn.dataset.filter === filter ? 'filter-btn active' : 'filter-btn';
     });
 
@@ -89,7 +93,9 @@ function setFilter(filter){
 
 function getFilteredRecords(){
     if(filterState === 'all') return records;
-    return records.filter(r => r.type === filterState);
+    return records.filter(function(r){
+        return r.type === filterState;
+    });
 }
 
 // ===== 화면 렌더링 =====
@@ -104,7 +110,9 @@ function render(){
         emptyEl.textContent = '기록이 없습니다.';
         historyList.appendChild(emptyEl);
     } else {
-        filtered.forEach(record => renderRecord(record));
+        filtered.forEach(function(record){
+            renderRecord(record);
+        });
     }
 
     updateSummary();
@@ -143,7 +151,9 @@ function renderRecord(record){
     deleteBtn.type = 'button';
     deleteBtn.id = 'delete-btn';
     deleteBtn.value = '삭제';
-    deleteBtn.addEventListener('click', () => deleteRecord(record.id));
+    deleteBtn.addEventListener('click', function(){
+        deleteRecord(record.id);
+    });
 
     box2.appendChild(priceInput);
     box2.appendChild(deleteBtn);
@@ -159,9 +169,9 @@ function updateSummary(){
     let totalIncome = 0;
     let totalSpend = 0;
 
-    for(let r of records){
-        if(r.type === 'income') totalIncome += r.price;
-        else totalSpend += r.price;
+    for(let i = 0; i < records.length; i++){
+        if(records[i].type === 'income') totalIncome += records[i].price;
+        else totalSpend += records[i].price;
     }
 
     allIncomeSpan.textContent = totalIncome.toLocaleString() + '원';
@@ -170,17 +180,17 @@ function updateSummary(){
 }
 
 // ===== 수입/지출 버튼 토글 =====
-inputIncomeBtn.addEventListener('click', () => {
-    // 선택 상태 클래스 적용
-    inputIncomeBtn.id = 'input-income-income';  // 선택된 스타일
-    inputSpendBtn.id = 'input-spend';           // 선택되지 않은 스타일
+inputIncomeBtn.addEventListener('click', function(){
+    inputIncomeBtn.id = 'input-income-income';
+    inputSpendBtn.id = 'input-spend';
 });
 
-inputSpendBtn.addEventListener('click', () => {
-    // 선택 상태 클래스 적용
-    inputSpendBtn.id = 'input-spend-spend';     // 선택된 스타일
-    inputIncomeBtn.id = 'input-income';         // 선택되지 않은 스타일
+inputSpendBtn.addEventListener('click', function(){
+    inputSpendBtn.id = 'input-spend-spend';
+    inputIncomeBtn.id = 'input-income';
 });
 
 // ===== 초기화 =====
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', function(){
+    init();
+});
