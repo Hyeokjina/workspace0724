@@ -2,8 +2,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-
-    
 }
 
 body{
@@ -39,11 +37,21 @@ header {
     color: white;
     padding:30px 0;
     border-radius: 9px 10px 0 0;
+    border: 1px solid #7d2bad;
+    border-bottom: none;
+}
+
+#money-icon {
+    align-self: flex-start;
+    margin-top: -20px;
+    margin-left: 8px;
+    width: 20px;
+    height: 20px;
 }
 
 #title{
     font-size: 25px;
-    font-weight: 300;
+    font-weight: 500;
     letter-spacing: 2px;
 }
 
@@ -146,7 +154,7 @@ header {
     height: 35px;
     background: #ffffff;
     border-radius: 15px;
-    border:1px solid rgb(216, 209, 209);
+    border:1px solid #7d2bad;
     font-weight: 500;
     color:black;
 }
@@ -181,22 +189,31 @@ header {
     gap: 5px;
     font-weight: 700; 
     font-size: 13px;
-    padding-bottom: 30px;
+    padding-bottom: 20px;
+    border: 1px solid  #8b8b8b;
+    border-radius: 5px;
 }
 
 .all-spend > span{
     font-size: 18px;
     color: rgb(231, 36, 36);
+    padding: 0 10px 0 10px;
 }
 
 .all-incom> span{
     font-size: 18px;
     color: rgb(25, 165, 25);
+    padding: 0 10px 0 10px;
 }
 
 .all-balance> span{
     font-size: 18px;
     color: rgb(25, 165, 25);
+    padding: 0 10px 0 10px;
+}
+
+.result-p{
+    padding-top: 8px;
 }
 
 .history-list{
@@ -210,12 +227,15 @@ header {
     list-style: none;
     max-height: 400px;
     overflow-y: auto;
+    padding-top: 20px;
 }
 
 .box{
     display: flex;
     flex-direction: row;
-    gap: 230px;
+    gap: 180px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid rgb(230, 223, 223);
 }
 
 .box1{
@@ -226,7 +246,7 @@ header {
 #date{
     font-size: 10px;
     color: gray;
-    width: 100px;
+    width: 150px;
     border: none;
 }
 
