@@ -6,26 +6,23 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Get방식 요청으로 응답한 페이지</h1>
-    <h5>HTTP요청 메서드 중 하나로 서버에서 정보를 가져올 때 사용되는 요청 방식이다.</h5>
+    <h1>Post방식 요청해보기</h1>
+    <h5>HTTP요청 메서드 중 하나로 서버에 데이터를 생성/수정 요청할 때 일반적으로 사용되는 요청 방식이다.</h5>
     
     <p>
-        특징 1. 요청시 URL의 쿼리문자열(Query String)을 포함하여 데이터를 전송 <br>
-        => 사용자가 입력한 값(데이터)를 서버에 보낼 때 URL에 노출하여 전달함. <br>
-        => 보안유지가 어려움 <br>
-        => 즉, 로그인이나 회원가입같은 private데이터가 포함된 요청에 경우 Get방식은 부적합 함. <br><br>
+        특징 1. POST방식으로 요청시 URL의 Body영역내에 데이터를 포함시켜 전달 <br>
+        => 사용자가 입력한 값들이 URL에 노출되지 않음.
+        => 보안유기가 가능 <br>
+        => 즉, 로그인이나 회원가입 같은 경우 POST방식이 적합 <br><br>
 
-        특징 2. 데이터 길이 제한이 있음 <br>
-        => URL에 함께 전달되는 방식이기 때문에 데이터의 길이제한이 있음, 하여 너무 긴 데이터는 절단되어 전달될 수 있음(평균 2000자정도) <br>
-        => 즉, 게시판 작성같은 경우 Get방식이 부적합 함. <br><br>
+        특징 2. Body영역은 전송하는 길이에 제한이 없다. <br>
+        => 게시판 작성같은 경우 POST방식이 적합.
 
-        특징 3. 캐싱기능및 즐겨찾기사용 가능 <br>
-        url을 저장해둔 뒤 재 요청하는 방식 <br>
-        => 검색기능에 적합
+        특징 3. 즐겨찾기가 가능하나 데이터를 활용할 수 없다.
+        =>즉, 기존에 봤던 응답화면을 다시 볼수 없다. <br>
     </p>
 
-    <a href="https://search.naver.com/search.naver?query=kh">네이버에서 KH정보교육원 검색</a>
-    <form action="/servlet/gettest.do" method="get">
+    <form action="/servlet/posttest.do" method="post">
         <ul>
             <li>
                 이름 : <input type="text" name="userName">

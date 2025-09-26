@@ -199,7 +199,14 @@ inputSpendBtn.addEventListener('click', function(){
     inputIncomeBtn.classList.remove('active');
 });
 
+
+
+
+
+
+
+
 // ===== 초기화 =====
-document.addEventListener('reset', function(){
+document.addEventListener('DOMContentLoaded', function(){
     init();
 });
