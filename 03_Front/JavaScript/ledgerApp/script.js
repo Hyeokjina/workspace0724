@@ -62,6 +62,7 @@ function addRecord() {
         createdAt: new Date().toLocaleString()
     };
 
+    //칸비우기
     records.push(record);
     inputText.value = '';
     inputPrice.value = '';
@@ -199,6 +200,6 @@ inputSpendBtn.addEventListener('click', function(){
 });
 
 // ===== 초기화 =====
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('reset', function(){
     init();
 });
