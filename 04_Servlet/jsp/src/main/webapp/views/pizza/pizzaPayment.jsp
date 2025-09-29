@@ -1,51 +1,55 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%
+	String name = (String)request.getAttribute("name"); //다형성 체크
+	String phone = (String)request.getAttribute("phone");
+	String address = (String)request.getAttribute("address");
+	String message = (String)request.getAttribute("message");
+	
+	String pizza = (String)request.getAttribute("pizza");
+	String[] toppingArr = (String[])request.getAttribute("toppingArr");
+	String[] sideArr = (String[])request.getAttribute("sideArr");
+	String payment = (String)request.getAttribute("payment");
+	
+	int price = (int)request.getAttribute("price");
+%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 </head>
 <body>
-    <h1>피자 주문페이지</h1>
+	<h1>피자 결제 페이지</h1>
+
     <h2>주문내역</h2>
-    <b>[주문자 정보]</b>
-        <ul>
-            <li>
-                성함 : ${userName}
-            </li>
-            <li>
-                전화번호 : ${phone}
-            </li>
-            <li>
-                주소 : ${address}
-            </li>
-            <li>
-                요청사항 : ${message}
-            </li>
-        </ul>
+    <h4>[ 주문자 정보 ]</h4>
+    <ul>
+        <li>성함 : <%=name%></li>
+        <li>전화번호 : <%=phone%></li>
+        <li>주소 : <%=address%></li>
+        <li>요청사항 : <%=message%></li>
+    </ul>
 
-    <br>
+    <br><br><br>
 
-    <p><b>[주문 정보]</b></p>
-        <ul>
-            <li>
-                피자 : ${pizza}
-            </li>
-            <li>
-                토핑 : ${toppingsStr}
-            </li>
-            <li>
-                사이드 : ${sidesStr}
-            </li>
-            <li>
-                결제방식 : ${payment}
-            </li>
-        </ul>
-        
-        <br>
-     <h3>총 결제 금액 : ${totalPrice} 원</h3>
+    <h4>[ 주문 정보 ]</h4>
+    <ul>
+        <li>피자 : <%=pizza%></li>
+        <% if(toppingArr != null) { %>
+        	<li>토핑 : <%=String.join(",", toppingArr)%></li>
+        <% } else { %>
+        	<li>토핑 선택 안함.</li>
+        <% } %>
+        <% if(sideArr != null) { %>
+        	<li>사이드 : <%=String.join(",", sideArr)%></li>
+        <% } else { %>
+        	<li>사이드 선택 안함.</li>
+        <% } %>
+        <li>결제방식 : <%=payment%></li>
+    </ul>
+
+    <h3>위와같이 주문하셨습니다.</h3>
+    <h2>총 가격 : <%=price %>원</h2>
 </body>
 </html>
