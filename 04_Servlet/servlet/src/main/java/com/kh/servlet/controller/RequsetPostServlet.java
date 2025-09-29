@@ -22,7 +22,7 @@ public class RequsetPostServlet extends HttpServlet {
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Get방식으로 요청시 doGet메서드를 실행하여 요청을 처리해 준다.(톰캣이 서블릿객체를 생성해서 메서드 호출까지 해줌)
-				System.out.println("서블릿 응답 완료");
+				System.out.println("Post 서블릿 응답 완료");
 				
 				/*
 				 * HttpServletRequest -> 요청시 전달된 애용들이 담겨있는 객체(사용자가 입력한 값, 요청방식, 요청자의 ip, url등....)
