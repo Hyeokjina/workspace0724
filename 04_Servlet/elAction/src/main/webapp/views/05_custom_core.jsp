@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +26,7 @@
     num2 : ${num2} <br>
 
     <p>
-        변수를 삭제하고자 한다면 (c:remove var="제거하고자하는 변수명" [scope="내장객체"])
+        변수를 삭제하고자 한다면 (c:remove var="제거하고자 하는 변수명" [scope="내장객체"])
         - 지정된 내장객체에서 해당 이름의 속성을 제거.
         - scope의 속성을 생략하면 모든 scope에서 같은 이름을 찾아 제거함.
     </p>
@@ -35,6 +35,61 @@
     삭제 전 : ${result} <br>
 
     <c:remove var="result" scope="request"/>
-    request영역에 result 삭제 후 : ${result}
+    request영역에 result 삭제 후 : ${result} <br>
+
+    <c:remove var="result" />
+    모든영역에 result 삭제 후 : ${result} <br>
+
+    <hr>
+    <p>
+        변수 출력 (c:out value="출력하고자하는 값" [default="기본값"] [escapeXml="true \ false"]) <br>
+        -> 값을 안전하게 출력할 수 있음, 값이 null이면 default를 출력하게 설정할 수 있음.
+    </p>
+
+    <br>
+
+    <h3>2. 조건문 - if (c: if test="조건식")</h3>
+    <p>
+        - java에서의 if문과 같은 역활을 하는 태그 <br>
+        - 조건식은 test속성안에 el구문으로 작성한다.
+    </p>
+
+    <% if(10 < 20){ %>
+        <b>num2가 num1보다 큽니다.</b> <br>
+    <% } %>
+
+    <c:if test="${num1 > num2}">
+        <b>num1가 num2보다 큽니다.</b> <br>
+    </c:if>
+
+    <c:if test="${num1 < num2}">
+        <b>num2가 num1보다 큽니다.</b> <br>
+    </c:if>
+
+    <c:set var="str1" value="hello"/>
+    <c:if test="${str1 == 'hello'}">
+        <b>${str1}</b> <br>
+    </c:if>
+
+    <h3>3. 조건문 - 다중분기(c:choose/c:when/c:otherwise)</h3>
+    <c:choose>
+        <c:when text="${num1 > 30} ">
+            <b>num1이 30보다 틉니다.</b> <br>
+        </c:when>
+        <c:when text="${num1 > 20} ">
+            <b>num1이 20보다 틉니다.</b> <br>
+        </c:when>
+        <c:when text="${num1 > 10} ">
+            <b>num1이 10보다 틉니다.</b> <br>
+        </c:when>
+        <c:otherwise>
+            <b>모든 조건이 맞지않습니다.</b> <br>
+        </c:otherwise>
+
+    </c:choose>
+
+
+
+        <br><br><br><br><br>
 </body>
 </html>

@@ -64,8 +64,13 @@
 	<p>변수, 조건문, 반복문과 같은 로직과 같은 관련된 문법을 태그로 제공</p>
 	<a href="views/05_custom_core.jsp">01_core</a>
 	
+	<h4>2. JSTL Formatting Library</h4>
+	<p>숫자/날짜/시간의 출력 형식을 지정해주는 태그를 제공</p>
+	<a href="views/06_custom_fmt.jsp">02_fmt</a>
 	
-	
+	<h4>3. JSTL function Library</h4>
+	<p>EL안에서 사용할 수 있는 메서드를 제공</p>
+	<a href="views/07_custom_function.jsp">03_function</a>
 	
 	
 	
