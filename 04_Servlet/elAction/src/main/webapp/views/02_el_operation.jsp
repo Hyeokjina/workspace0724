@@ -31,7 +31,7 @@
     strOne과 strTwo가 일치하지 않는가? ${strOne != strTwo} 또는 ${strOne ne strTwo} <br>
 
     <%-- el구문 안에서 문자열 리터널값은 '',""를 구분하지 않음. --%>
-    strThree와 "hello"와 일치하는가? ${strThree == "hello"} 또는 ${strTrhee eq 'hello'} <br>
+    strThree와 "hello"와 일치하는가? ${strThree == 'hello'} 또는 ${strThree eq 'hello'} <br>
 
     <h3>4. 객체가 null인지 아닌지, list가 비어있는지 확인</h3>
     personOne이 null인가? ${personOne == null}  또는 ${personOne eq null} 또는 ${empty personOne} <br>
@@ -44,10 +44,10 @@
 	
 	<h4>5. 논리 연산자</h4>
 	true && true : ${true && true } 또는 ${true and true } <br>
-	false || flase : ${false || flase } 또는 ${flase or flase } <br>
+	false || flase : ${false || flase } 또는 ${true or flase } <br>
 	
 	 big이 small보다 크고 arrOne은 비어있는가?
-	 ${big > small && empty arrOne}
+	 ${big > small && empty arrOne} <br>
 	 ${big gt small and empty arrOne}
 	 
 	

@@ -57,7 +57,7 @@
     <h3>3. scope의 키가 동일한 경우</h3>
     scope값 : ${scope}
     
-    <p>EL은 공우 범위가 가장 작은 scope부터 해당 키값을 검색함(Page -> request -> session _> application) </p>
+    <p>EL은 공유 범위가 가장 작은 scope부터 해당 키값을 검색함(Page -> request -> session _> application) </p>
     test값 : ${test}
     
     <h4>직접 scope를 지정해서 접근도 가능</h4>
