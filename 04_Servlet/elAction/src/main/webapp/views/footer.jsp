@@ -8,8 +8,9 @@
 </head>
 <body>
 	<%
-		Stirng year = new java.text.SimpleDateFormat("yyyy").format()
+		String year = new java.text.SimpleDateFormat("yyyy").format(new java.util.Date());
 	%>
-	Copyright © 1998-<%=year %> KH IEI All Right Reserved
+	Copyright © 1998-<%=year %> KH Information Educational Institute All Right Reserved. <br>
+	test : ${param.test}
 </body>
 </html>

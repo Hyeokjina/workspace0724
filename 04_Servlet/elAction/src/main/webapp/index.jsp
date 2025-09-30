@@ -37,7 +37,57 @@
     		>> 커스텀액션태그 : 별도 라이브러리로 등록하여 사용하는 태그(JSTL등...)
      --%>
      
-     <h3>표준 액션 태그</h3>
-     <a href="views/03_action_include.jsp">01_jsp:include</a>
+    <h3>표준 액션 태그</h3>
+    <a href="views/03_action_include.jsp">01_jsp:include</a> <br>
+    <a href="views/04_action_forward.jsp">02_jsp:forward</a> <br>
+	
+	<h1>JSTL (JavaServer Pages Standard Tag Library)</h1>
+	<p>
+		JSP에서 자주 사용하는 기능(반복문, 조건문, 포맷팅, 등)을 태그 형태로 제공하는 라이브러리 <br>
+		자바코드를 직접 작성하지 않고도 로직을 구현 할 수 있어, 코드 가독성이 향상된다.
+	</p>
+	
+	<h3>JSPL 라이브러리 추가하는 법</h3>
+	1) maven repository 사이트 접속
+	2) jakarta.servlet.jsp.jstl jakarta.servlet.jsp.jstl-api 다운로드
+	3) 2개의 .jar파일을 WEB-INF/lib폴더에 추가
+	
+	<h3>JSTL 선언방법</h3>
+	<p>
+		JSTL을 사용하려는 JSP페이지 상단에 taglib지시어를 선언해야 한다. <br>
+		<%-- <%@ taglib prefix="접두어" rul="라이브러리파일상의 uri주소"	%> --%>
+	</p>
+	
+	<h3>Custom Action Tag (JSTL 주요 라이브러리)</h3>
+	
+	<h4>1. JSTL Core Library</h4>
+	<p>변수, 조건문, 반복문과 같은 로직과 같은 관련된 문법을 태그로 제공</p>
+	<a href="views/05_custom_core.jsp">01_core</a>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
