@@ -29,6 +29,8 @@ public class LoginController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//요청시 전달한 갑을 추출
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
 		
@@ -39,7 +41,7 @@ public class LoginController extends HttpServlet {
 			response.sendRedirect(request.getContextPath());
 		} else {
 			request.setAttribute("errorMsg", "로그인에 실패하였습니다.");
-			request.getRequestDispatcher("views/common/error.jsp").forward(request, response);;
+			request.getRequestDispatcher("views/common/error.jsp").forward(request, response);
 		}
 		
 	}

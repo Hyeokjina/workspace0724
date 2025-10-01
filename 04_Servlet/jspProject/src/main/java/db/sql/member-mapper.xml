@@ -25,7 +25,10 @@
 		)
 	</entry>
 	<entry key="loginUser">
-	    SELECT *
+	    SELECT
+				MEMBER_ID,
+				MEMBER_PWD,
+				STATUS
 	    FROM MEMBER
 	    WHERE MEMBER_ID = ?
 	      AND MEMBER_PWD = ?

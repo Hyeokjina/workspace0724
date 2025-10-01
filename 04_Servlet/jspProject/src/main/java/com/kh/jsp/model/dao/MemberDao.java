@@ -56,7 +56,9 @@ public class MemberDao {
 	}
 	
 	public boolean login(Connection conn, String userId, String userPwd) {
-	    boolean isValid = false;
+	    //select -> Member조회 -> ResultSet(한개 또는 0)
+		
+		boolean state = false;
 	    String sql = prop.getProperty("loginUser");
 
 	    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -65,12 +67,12 @@ public class MemberDao {
 
 	        try (ResultSet rset = pstmt.executeQuery()) {
 	            if (rset.next()) {
-	                isValid = true; // 일치하는 회원 존재
+	            	state = true; // 일치하는 회원 존재
 	            }
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return isValid;
+	    return state;
 	}
 }
