@@ -24,15 +24,21 @@
 			?
 		)
 	</entry>
-	<entry key="loginUser">
-	    SELECT
+	<entry key="loginMember">
+		SELECT MEMBER_NO,
 				MEMBER_ID,
 				MEMBER_PWD,
+				MEMBER_NAME,
+				PHONE,
+				EMAIL,
+				ADDRESS,
+				INTEREST,
+				ENROLL_DATE,
+				MODIFY_DATE,
 				STATUS
-	    FROM MEMBER
-	    WHERE MEMBER_ID = ?
-	      AND MEMBER_PWD = ?
-	      AND STATUS = 'Y'
+		FROM MEMBER
+	   WHERE MEMBER_ID = ?
+	     AND MEMBER_PWD = ?
+	     AND STATUS = 'Y'
 	</entry>
-	
 </properties>

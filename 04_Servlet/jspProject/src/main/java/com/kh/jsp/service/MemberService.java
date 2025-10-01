@@ -23,11 +23,12 @@ public class MemberService {
 		return result;
 	}
 	
-	public boolean login(String userId, String userPwd) {
-	    Connection conn = getConnection();
-	    boolean result = new MemberDao().login(conn, userId, userPwd);
-        close(conn);
-
-        return result;
+	public Member loginMember(String userId, String userPwd) {
+		Connection conn = getConnection();
+		Member m = new MemberDao().loginMember(userId, userPwd, conn);
+		
+		close(conn);
+		
+		return m;
 	}
 }
