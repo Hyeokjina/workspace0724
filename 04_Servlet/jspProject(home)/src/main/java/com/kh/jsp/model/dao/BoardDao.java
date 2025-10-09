@@ -1,77 +1,140 @@
 package com.kh.jsp.model.dao;
 
-import com.kh.jsp.model.vo.Board;
+import static com.kh.jsp.common.JDBCTemplate.close;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import static com.kh.jsp.common.JDBCTemplate.getConnection;
+
+import com.kh.jsp.model.vo.Board;
 
 public class BoardDao {
 
-	public int insertBoard(Board board) {
-	    String sql = "INSERT INTO board (board_no, board_title, board_content, board_writer, category_no, board_type, create_date) "
-	               + "VALUES (SEQ_BNO.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE)";
+    // 게시글 등록
+    public int insertBoard(Board board, Connection conn) {
+        int result = 0;
+        String sql = "INSERT INTO BOARD (BOARD_NO, BOARD_TITLE, BOARD_CONTENT, BOARD_WRITER, CATEGORY_NO, BOARD_TYPE, CREATE_DATE, STATUS) " +
+                     "VALUES (SEQ_BNO.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE, 'Y')";
 
-	    try (Connection conn = getConnection();
-	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, board.getBoardTitle());
+            pstmt.setString(2, board.getBoardContent());
+            pstmt.setInt(3, board.getBoardWriter());
+            pstmt.setInt(4, board.getCategoryNo());
+            pstmt.setInt(5, board.getBoardType());
 
-	        pstmt.setString(1, board.getBoardTitle());
-	        pstmt.setString(2, board.getBoardContent());
-	        pstmt.setInt(3, board.getBoardWriter());
-	        pstmt.setInt(4, board.getCategoryNo());
-	        pstmt.setInt(5, board.getBoardType());
+            result = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	        int result = pstmt.executeUpdate();
-	        conn.commit();
-	        return result;
+        return result;
+    }
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return 0;
-	    }
-	}
+    // 게시글 리스트 조회
+    public List<Board> selectBoardList(Connection conn) {
+        List<Board> list = new ArrayList<>();
+        String sql = "SELECT B.BOARD_NO, B.BOARD_TITLE, B.BOARD_CONTENT, B.BOARD_WRITER, " +
+                     "M.MEMBER_NAME AS WRITER_NAME, B.CATEGORY_NO, C.CATEGORY_NAME, " +
+                     "B.COUNT AS READ_COUNT, B.CREATE_DATE, B.STATUS " +
+                     "FROM BOARD B " +
+                     "JOIN MEMBER M ON B.BOARD_WRITER = M.MEMBER_NO " +
+                     "JOIN CATEGORY C ON B.CATEGORY_NO = C.CATEGORY_NO " +
+                     "WHERE B.STATUS = 'Y' " +
+                     "ORDER BY B.BOARD_NO DESC";
 
-	public List<Board> selectBoardList() {
-	    List<Board> list = new ArrayList<>();
-	    String sql = "SELECT board_no, board_title, board_content, board_writer, category_no, board_type, count, create_date "
-	               + "FROM board ORDER BY board_no DESC";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
-	    try (Connection conn = getConnection();
-	         PreparedStatement pstmt = conn.prepareStatement(sql);
-	         ResultSet rs = pstmt.executeQuery()) {
+            while(rs.next()) {
+                Board board = new Board();
+                board.setBoardNo(rs.getInt("BOARD_NO"));
+                board.setBoardTitle(rs.getString("BOARD_TITLE"));
+                board.setBoardContent(rs.getString("BOARD_CONTENT"));
+                board.setBoardWriter(rs.getInt("BOARD_WRITER"));
+                board.setBoardWriterName(rs.getString("WRITER_NAME"));
+                board.setCategoryNo(rs.getInt("CATEGORY_NO"));
+                board.setCategoryName(rs.getString("CATEGORY_NAME"));
+                board.setReadCount(rs.getInt("READ_COUNT"));
+                board.setCreateDate(rs.getDate("CREATE_DATE"));
 
-	        while (rs.next()) {
-	            Board board = new Board();
-	            board.setBoardNo(rs.getInt("board_no"));
-	            board.setBoardTitle(rs.getString("board_title"));
-	            board.setBoardContent(rs.getString("board_content"));
-	            board.setBoardWriter(rs.getInt("board_writer"));
-	            board.setCategoryNo(rs.getInt("category_no"));
-	            board.setBoardType(rs.getInt("board_type"));
-	            board.setReadCount(rs.getInt("count")); // count 컬럼 → readCount 필드
-	            board.setCreateDate(new Date(rs.getTimestamp("create_date").getTime()));
+                list.add(board);
+            }
 
-	            // 작성자 이름, 카테고리 이름 기본값 (나중에 JOIN 가능)
-	            board.setBoardWriterName("회원" + board.getBoardWriter());
-	            switch(board.getCategoryNo()) {
-	                case 10: board.setCategoryName("공통"); break;
-	                case 20: board.setCategoryName("운동"); break;
-	                case 30: board.setCategoryName("등산"); break;
-	                case 40: board.setCategoryName("게임"); break;
-	                case 50: board.setCategoryName("낚시"); break;
-	                case 60: board.setCategoryName("요리"); break;
-	                case 70: board.setCategoryName("기타"); break;
-	                default: board.setCategoryName("알수없음"); break;
-	            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-	            list.add(board);
-	        }
+        return list;
+    }
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+    // 게시글 상세 조회
+    public Board selectBoard(Connection conn, int boardNo) {
+        Board board = null;
+        String sql = "SELECT B.BOARD_NO, B.BOARD_TITLE, B.BOARD_CONTENT, B.BOARD_WRITER, " +
+                     "M.MEMBER_NAME AS WRITER_NAME, B.CATEGORY_NO, C.CATEGORY_NAME, " +
+                     "B.COUNT AS READ_COUNT, B.CREATE_DATE, B.STATUS " +
+                     "FROM BOARD B " +
+                     "JOIN MEMBER M ON B.BOARD_WRITER = M.MEMBER_NO " +
+                     "JOIN CATEGORY C ON B.CATEGORY_NO = C.CATEGORY_NO " +
+                     "WHERE B.BOARD_NO = ?";
 
-	    return list;
-	}
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, boardNo);
 
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if(rs.next()) {
+                    board = new Board();
+                    board.setBoardNo(rs.getInt("BOARD_NO"));
+                    board.setBoardTitle(rs.getString("BOARD_TITLE"));
+                    board.setBoardContent(rs.getString("BOARD_CONTENT"));
+                    board.setBoardWriter(rs.getInt("BOARD_WRITER"));
+                    board.setBoardWriterName(rs.getString("WRITER_NAME"));
+                    board.setCategoryNo(rs.getInt("CATEGORY_NO"));
+                    board.setCategoryName(rs.getString("CATEGORY_NAME"));
+                    board.setReadCount(rs.getInt("READ_COUNT"));
+                    board.setCreateDate(rs.getDate("CREATE_DATE"));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return board;
+    }
+
+    // 게시글 수정
+    public int updateBoard(Board board, Connection conn) {
+        int result = 0;
+        String sql = "UPDATE BOARD SET BOARD_TITLE = ?, BOARD_CONTENT = ?, CATEGORY_NO = ?, MODIFY_DATE = SYSDATE WHERE BOARD_NO = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, board.getBoardTitle());
+            pstmt.setString(2, board.getBoardContent());
+            pstmt.setInt(3, board.getCategoryNo());
+            pstmt.setInt(4, board.getBoardNo());
+
+            result = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    // 게시글 삭제 (논리 삭제)
+    public int deleteBoard(int boardNo, Connection conn) {
+        int result = 0;
+        String sql = "UPDATE BOARD SET STATUS = 'N' WHERE BOARD_NO = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, boardNo);
+            result = pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }

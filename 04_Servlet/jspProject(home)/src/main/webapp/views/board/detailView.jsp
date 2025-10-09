@@ -122,66 +122,66 @@
 	</style>
 </head>
 <body onload="init(${board.boardNo})">
-	<jsp:include page="/views/common/menubar.jsp" />
+    <jsp:include page="/views/common/menubar.jsp" />
 
-	<div class="board-container">
-		<div class="board-card">
-			<h2>일반게시글 상세보기</h2>
+    <div class="board-container">
+        <div class="board-card">
+            <h2>일반게시글 상세보기</h2>
 
-			<table class="detail-table">
-				<tr>
-					<th>카테고리</th>
-					<td></td>
-					<th>제목</th>
-					<td colspan="3"></td>
-				</tr>
-				<tr>
-					<th>작성자</th>
-					<td></td>
-					<th>작성일</th>
-					<td></td>
-				</tr>
-				<tr>
-					<th>내용</th>
-					<td colspan="3">
-						<div class="content-area">
-							
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>첨부파일</th>
-					<td colspan="3">
-						첨부파일이 없습니다.
-					</td>
-				</tr>
-			</table>
+            <table class="detail-table">
+                <tr>
+                    <th>카테고리</th>
+                    <td>${board.categoryName}</td>
+                    <th>제목</th>
+                    <td colspan="3">${board.boardTitle}</td>
+                </tr>
+                <tr>
+                    <th>작성자</th>
+                    <td>${board.boardWriterName}</td>
+                    <th>작성일</th>
+                    <td>${board.createDate}</td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td colspan="3">
+                        <div class="content-area">
+                            ${board.boardContent}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>첨부파일</th>
+                    <td colspan="3">
+                        첨부파일이 없습니다.
+                    </td>
+                </tr>
+            </table>
 
-			<div class="button-group">
-				<a class="btn btn-primary">목록가기</a>
-				<a class="btn btn-warning">수정하기</a>
-				<a class="btn btn-danger">삭제하기</a>
-			</div>
-		</div>
+            <div class="button-group">
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/list.bo">목록가기</a>
+                <a class="btn btn-warning">수정하기</a>
+                <a class="btn btn-danger">삭제하기</a>
+            </div>
+        </div>
 
-		<div class="reply-section">
-			<table class="reply-table">
-				<thead>
-					<tr>
-						<th width="120">댓글작성</th>
-						<td>
-							<textarea id="reply-content" cols="50" rows="3"></textarea>
-						</td>
-						<td width="100">
-							<button class="btn btn-primary reply-btn" onclick="">댓글등록</button>
-						</td>
-					</tr>
-				</thead>
-				<tbody>
-					<!-- 댓글 목록이 여기에 동적으로 추가됩니다 -->
-				</tbody>
-			</table>
-		</div>
-	</div>
+        <div class="reply-section">
+            <table class="reply-table">
+                <thead>
+                    <tr>
+                        <th width="120">댓글작성</th>
+                        <td>
+                            <textarea id="reply-content" cols="50" rows="3"></textarea>
+                        </td>
+                        <td width="100">
+                            <button class="btn btn-primary reply-btn" onclick="">댓글등록</button>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 댓글 목록이 여기에 동적으로 추가됩니다 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

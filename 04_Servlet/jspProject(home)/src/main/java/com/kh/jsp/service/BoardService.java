@@ -1,17 +1,54 @@
 package com.kh.jsp.service;
 
+import static com.kh.jsp.common.JDBCTemplate.*;
+
+import java.sql.Connection;
+import java.util.List;
+
 import com.kh.jsp.model.dao.BoardDao;
 import com.kh.jsp.model.vo.Board;
-import java.util.List;
 
 public class BoardService {
     private final BoardDao dao = new BoardDao();
 
     public int insertBoard(Board board) {
-        return dao.insertBoard(board);
+        Connection conn = getConnection();
+        int result = dao.insertBoard(board, conn);
+        if(result > 0) commit(conn);
+        else rollback(conn);
+        close(conn);
+        return result;
     }
 
     public List<Board> selectBoardList() {
-        return dao.selectBoardList();
+        Connection conn = getConnection();
+        List<Board> list = dao.selectBoardList(conn);
+        close(conn);
+        return list;
+    }
+
+    public Board selectBoard(int boardNo) {
+        Connection conn = getConnection();
+        Board board = dao.selectBoard(conn, boardNo);
+        close(conn);
+        return board;
+    }
+
+    public int updateBoard(Board board) {
+        Connection conn = getConnection();
+        int result = dao.updateBoard(board, conn);
+        if(result > 0) commit(conn);
+        else rollback(conn);
+        close(conn);
+        return result;
+    }
+
+    public int deleteBoard(int boardNo) {
+        Connection conn = getConnection();
+        int result = dao.deleteBoard(boardNo, conn);
+        if(result > 0) commit(conn);
+        else rollback(conn);
+        close(conn);
+        return result;
     }
 }
