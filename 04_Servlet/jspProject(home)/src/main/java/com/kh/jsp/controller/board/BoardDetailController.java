@@ -15,17 +15,23 @@ public class BoardDetailController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String boardNoParam = request.getParameter("boardNo");
-        if(boardNoParam == null) {
+        String boardNoStr = request.getParameter("boardNo");
+
+        // boardNo 파라미터 체크
+        if(boardNoStr == null || boardNoStr.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/list.bo");
             return;
         }
 
-        int boardNo = Integer.parseInt(boardNoParam);
-        Board board = service.selectBoard(boardNo);
+        int boardNo = Integer.parseInt(boardNoStr);
 
+        // 조회수 증가
+        int result = service.increaseReadCount(boardNo);
+
+        // 상세 정보 가져오기
+        Board board = service.selectBoard(boardNo);
         if(board == null) {
-            request.setAttribute("errorMsg", "게시글이 존재하지 않습니다.");
+            request.setAttribute("errorMsg", "존재하지 않는 게시글입니다.");
             request.getRequestDispatcher("/views/common/error.jsp").forward(request, response);
             return;
         }

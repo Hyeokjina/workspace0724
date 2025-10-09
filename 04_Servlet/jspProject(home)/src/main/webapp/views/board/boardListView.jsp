@@ -74,7 +74,7 @@
     <div class="board-card">
         <h2>일반게시판</h2>
         <div class="write-btn-area">
-            <a href="<c:url value='/enroll.bo'/>" class="btn btn-primary">글쓰기</a>
+            <a href="${pageContext.request.contextPath}/enroll.bo" class="btn btn-primary">글쓰기</a>
         </div>
         <table class="board-table">
             <thead>
@@ -88,14 +88,14 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach var="board" items="${boardList}">
-                    <tr onclick="location.href='<c:url value='/detail.bo?boardNo=${board.boardNo}'/>'">
-                        <td>${board.boardNo}</td>
-						<td>${board.boardTitle}</td>
-						<td>${board.boardWriterName}</td>
-						<td>${board.categoryName}</td>
-						<td>${board.readCount}</td>
-						<td>${board.createDate}</td>
+                <c:forEach var="b" items="${boardList}">
+                    <tr onclick="location.href='${pageContext.request.contextPath}/detail.bo?boardNo=${b.boardNo}'">
+                        <td>${b.boardNo}</td>
+                        <td>${b.boardTitle}</td>
+                        <td>${b.boardWriterName}</td>
+                        <td>${b.categoryName}</td>
+                        <td>${b.readCount}</td>
+                        <td>${b.createDate}</td>
                     </tr>
                 </c:forEach>
                 <c:if test="${empty boardList}">
@@ -105,16 +105,6 @@
                 </c:if>
             </tbody>
         </table>
-
-        <div class="pagination">
-            <button class="btn btn-primary">&lt; 이전</button>
-            <button class="btn btn-outline-primary">1</button>
-            <button class="btn btn-outline-primary">2</button>
-            <button class="btn btn-outline-primary">3</button>
-            <button class="btn btn-outline-primary">4</button>
-            <button class="btn btn-outline-primary">5</button>
-            <button class="btn btn-primary">다음 &gt;</button>
-        </div>
     </div>
 </div>
 </body>

@@ -11,15 +11,6 @@ import com.kh.jsp.model.vo.Board;
 public class BoardService {
     private final BoardDao dao = new BoardDao();
 
-    public int insertBoard(Board board) {
-        Connection conn = getConnection();
-        int result = dao.insertBoard(board, conn);
-        if(result > 0) commit(conn);
-        else rollback(conn);
-        close(conn);
-        return result;
-    }
-
     public List<Board> selectBoardList() {
         Connection conn = getConnection();
         List<Board> list = dao.selectBoardList(conn);
@@ -34,18 +25,18 @@ public class BoardService {
         return board;
     }
 
-    public int updateBoard(Board board) {
+    public int insertBoard(Board board) {
         Connection conn = getConnection();
-        int result = dao.updateBoard(board, conn);
+        int result = dao.insertBoard(board, conn);
         if(result > 0) commit(conn);
         else rollback(conn);
         close(conn);
         return result;
     }
 
-    public int deleteBoard(int boardNo) {
+    public int increaseReadCount(int boardNo) {
         Connection conn = getConnection();
-        int result = dao.deleteBoard(boardNo, conn);
+        int result = dao.updateReadCount(conn, boardNo);
         if(result > 0) commit(conn);
         else rollback(conn);
         close(conn);
