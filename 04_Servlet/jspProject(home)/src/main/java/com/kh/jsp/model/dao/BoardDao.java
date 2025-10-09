@@ -108,4 +108,29 @@ public class BoardDao {
         }
         return 0;
     }
+    public int deleteBoard(Connection conn, int boardNo) {
+        String sql = "UPDATE BOARD SET STATUS = 'N' WHERE BOARD_NO = ?";
+        try(PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, boardNo);
+            return pstmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    public int updateBoard(Connection conn, Board board) {
+        String sql = "UPDATE BOARD SET BOARD_TITLE = ?, BOARD_CONTENT = ?, CATEGORY_NO = ?, MODIFY_DATE = SYSDATE WHERE BOARD_NO = ?";
+        try(PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, board.getBoardTitle());
+            pstmt.setString(2, board.getBoardContent());
+            pstmt.setInt(3, board.getCategoryNo());
+            pstmt.setInt(4, board.getBoardNo());
+            return pstmt.executeUpdate();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

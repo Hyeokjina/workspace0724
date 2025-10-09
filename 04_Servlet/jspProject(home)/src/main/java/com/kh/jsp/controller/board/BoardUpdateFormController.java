@@ -9,39 +9,36 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet("/detail.bo")
-public class BoardDetailController extends HttpServlet {
+@WebServlet("/updateForm.bo")
+public class BoardUpdateFormController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final BoardService service = new BoardService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String boardNoStr = request.getParameter("boardNo");
-
-        if(boardNoStr == null || boardNoStr.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/list.bo");
+        HttpSession session = request.getSession(false);
+        if(session == null || session.getAttribute("loginMember") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.me");
             return;
         }
 
-        int boardNo = Integer.parseInt(boardNoStr);
-        int result = service.increaseReadCount(boardNo);
-        Board board = service.selectBoard(boardNo);
-
-        if(board == null) {
-            request.setAttribute("errorMsg", "존재하지 않는 게시글입니다.");
+        String boardNoStr = request.getParameter("boardNo");
+        if(boardNoStr == null || boardNoStr.isEmpty()) {
+            request.setAttribute("errorMsg", "잘못된 접근입니다.");
             request.getRequestDispatcher("/views/common/error.jsp").forward(request, response);
             return;
         }
 
-        HttpSession session = request.getSession(false);
-        Integer loginUserNo = null;
-        if(session != null && session.getAttribute("loginMember") != null) {
-            loginUserNo = ((Member) session.getAttribute("loginMember")).getMemberNo();
+        int boardNo = Integer.parseInt(boardNoStr);
+        Board board = service.selectBoard(boardNo);
+
+        if(board == null || board.getBoardWriter() != ((Member) session.getAttribute("loginMember")).getMemberNo()) {
+            request.setAttribute("errorMsg", "수정 권한이 없습니다.");
+            request.getRequestDispatcher("/views/common/error.jsp").forward(request, response);
+            return;
         }
 
         request.setAttribute("board", board);
-        request.setAttribute("loginUserNo", loginUserNo); // JSP에서 작성자 비교용
-        request.getRequestDispatcher("/views/board/boardDetailView.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/board/boardUpdateForm.jsp").forward(request, response);
     }
-
 }

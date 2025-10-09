@@ -78,7 +78,7 @@
 <div class="board-container">
     <div class="board-card">
         <h2>게시글 작성</h2>
-        <form action="<c:url value='/enroll.bo'/>" method="post">
+        <form action="<c:url value='/enroll.bo'/>" method="post" enctype="multipart/form-data">
             <table class="form-table">
                 <tr>
                     <th>카테고리</th>
@@ -102,6 +102,12 @@
                     <th>내용</th>
                     <td><textarea name="content" rows="10" required></textarea></td>
                 </tr>
+                <tr>
+				    <th>첨부파일</th>
+				    <td>
+				        <input type="file" name="upfile">
+				    </td>
+				</tr>
             </table>
             <div class="button-group">
                 <button type="submit">작성하기</button>

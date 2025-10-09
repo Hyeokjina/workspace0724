@@ -158,10 +158,14 @@
             </table>
 
             <div class="button-group">
-                <a class="btn btn-primary" href="${pageContext.request.contextPath}/list.bo">목록가기</a>
-                <a class="btn btn-warning">수정하기</a>
-                <a class="btn btn-danger">삭제하기</a>
-            </div>
+			    <a class="btn btn-primary" href="${pageContext.request.contextPath}/list.bo">목록가기</a>
+			
+			    <c:if test="${loginUserNo == board.boardWriter}">
+			        <a class="btn btn-warning" href="${pageContext.request.contextPath}/updateForm.bo?boardNo=${board.boardNo}">수정하기</a>
+			        <a class="btn btn-danger" href="${pageContext.request.contextPath}/delete.bo?boardNo=${board.boardNo}" onclick="return confirm('정말 삭제하시겠습니까?');">삭제하기</a>
+			    </c:if>
+			</div>
+
         </div>
 
         <div class="reply-section">

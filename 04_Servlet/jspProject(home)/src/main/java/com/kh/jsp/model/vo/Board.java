@@ -23,6 +23,7 @@ public class Board {
     private int boardType;          // 글 타입
     private int readCount;          // 조회수
     private Date createDate;
+    private String fileName;
 
     public static Board createBoard(String title, String content, int writerNo, int categoryNo, int boardType) {
         Board board = new Board();
