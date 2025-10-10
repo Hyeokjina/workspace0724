@@ -78,7 +78,7 @@
 <div class="board-container">
     <div class="board-card">
         <h2>게시글 작성</h2>
-        <form action="<c:url value='/enroll.bo'/>" method="post" enctype="multipart/form-data">
+        <form action="<c:url value='/enroll.bo'/>" method="post">
             <table class="form-table">
                 <tr>
                     <th>카테고리</th>
