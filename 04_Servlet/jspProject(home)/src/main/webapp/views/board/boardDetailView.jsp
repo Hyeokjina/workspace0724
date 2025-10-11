@@ -126,7 +126,7 @@
 
     <div class="board-container">
         <div class="board-card">
-            <h2>일반게시글 상세보기</h2>
+            <h2>일반게시글 내용보기</h2>
 
             <table class="detail-table">
                 <tr>
