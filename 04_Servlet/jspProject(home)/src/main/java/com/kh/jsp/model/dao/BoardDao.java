@@ -120,14 +120,16 @@ public class BoardDao {
     }
     
     public int updateBoard(Connection conn, Board board) {
-        String sql = "UPDATE BOARD SET BOARD_TITLE = ?, BOARD_CONTENT = ?, CATEGORY_NO = ?, MODIFY_DATE = SYSDATE WHERE BOARD_NO = ?";
-        try(PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String sql = "UPDATE BOARD SET BOARD_TITLE = ?, BOARD_CONTENT = ?, CATEGORY_NO = ? WHERE BOARD_NO = ?";
+        
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, board.getBoardTitle());
             pstmt.setString(2, board.getBoardContent());
             pstmt.setInt(3, board.getCategoryNo());
             pstmt.setInt(4, board.getBoardNo());
+       
             return pstmt.executeUpdate();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;

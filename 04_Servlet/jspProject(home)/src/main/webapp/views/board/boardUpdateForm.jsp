@@ -69,7 +69,7 @@
             cursor: pointer;
             font-size: 1rem;
         }
-        .button-group button[type="reset"] {
+        .button-group button.back-btn {
             background: #aaa;
         }
         .existing-file {
@@ -85,8 +85,8 @@
         <div class="board-card">
             <h2>게시글 수정</h2>
 
-            <form action="<c:url value='/update.bo'/>" method="post" enctype="multipart/form-data">
-                <!-- boardNo를 반드시 hidden으로 전송 -->
+            <form action="<c:url value='/update.bo'/>" method="post">
+                <!-- boardNo를 반드시 hidden으로 전송 이건 몰랐던 타입이였음 -->
                 <input type="hidden" name="boardNo" value="${board.boardNo}" />
 
                 <table class="form-table">
@@ -129,7 +129,7 @@
 
                 <div class="button-group">
                     <button type="submit">수정 완료</button>
-                    <button type="reset">취소</button>
+                    <button type="button" class="back-btn" onclick="history.back();">취소</button>
                 </div>
             </form>
         </div>

@@ -105,6 +105,19 @@
                 </c:if>
             </tbody>
         </table>
+        <div class="pagination">
+                <button class="btn btn-primary">
+                &lt; 이전
+                </button>
+              	<button class="btn btn-outline-primary" >1</button>
+              	<button class="btn btn-outline-primary" >2</button>
+              	<button class="btn btn-outline-primary" >3</button>
+              	<button class="btn btn-outline-primary" >4</button>
+              	<button class="btn btn-outline-primary" >5</button>
+           	    <button class="btn btn-primary">
+                &lt; 다음
+                </button>
+          </div>
     </div>
 </div>
 </body>
