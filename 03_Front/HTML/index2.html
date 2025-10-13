@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💣 Minesweeper</title>
+<style>
+  body {
+    background: #222;
+    color: #fff;
+    font-family: "Consolas", monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  h1 {
+    margin-bottom: 10px;
+  }
+  #board {
+    display: grid;
+    grid-gap: 2px;
+    margin-top: 10px;
+  }
+  .cell {
+    width: 30px;
+    height: 30px;
+    background: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .cell.revealed {
+    background: #999;
+    cursor: default;
+  }
+  .cell.mine {
+    background: red;
+  }
+  .cell.flag {
+    background: #ff0;
+  }
+  button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+</style>
+</head>
+<body>
+<h1>💣 Minesweeper</h1>
+<div>지뢰 개수: <span id="mineCount"></span></div>
+<div id="board"></div>
+<button onclick="initGame()">다시 시작</button>
+
+<script>
+const rows = 10;
+const cols = 10;
+const mineTotal = 15;
+
+let board = [];
+let revealedCount = 0;
+let mineCount = mineTotal;
+const boardEl = document.getElementById('board');
+const mineCountEl = document.getElementById('mineCount');
+
+function initGame(){
+  board = [];
+  revealedCount = 0;
+  mineCount = mineTotal;
+  mineCountEl.innerText = mineCount;
+  boardEl.innerHTML = '';
+  boardEl.style.gridTemplateColumns = `repeat(${cols},30px)`;
+
+  // 셀 초기화
+  for(let r=0;r<rows;r++){
+    board[r] = [];
+    for(let c=0;c<cols;c++){
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.dataset.row = r;
+      cell.dataset.col = c;
+      cell.addEventListener('click',onCellClick);
+      cell.addEventListener('contextmenu',onCellRightClick);
+      boardEl.appendChild(cell);
+      board[r][c] = {el: cell, mine:false, revealed:false, flag:false, count:0};
+    }
+  }
+
+  // 지뢰 배치
+  let minesPlaced = 0;
+  while(minesPlaced < mineTotal){
+    const r = Math.floor(Math.random()*rows);
+    const c = Math.floor(Math.random()*cols);
+    if(!board[r][c].mine){
+      board[r][c].mine = true;
+      minesPlaced++;
+    }
+  }
+
+  // 주변 지뢰 수 계산
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      if(board[r][c].mine) continue;
+      let count = 0;
+      for(let dr=-1; dr<=1; dr++){
+        for(let dc=-1; dc<=1; dc++){
+          const nr=r+dr, nc=c+dc;
+          if(nr>=0 && nr<rows && nc>=0 && nc<cols && board[nr][nc].mine) count++;
+        }
+      }
+      board[r][c].count = count;
+    }
+  }
+}
+
+function onCellClick(e){
+  const r = parseInt(this.dataset.row);
+  const c = parseInt(this.dataset.col);
+  revealCell(r,c);
+}
+
+function onCellRightClick(e){
+  e.preventDefault();
+  const r = parseInt(this.dataset.row);
+  const c = parseInt(this.dataset.col);
+  const cell = board[r][c];
+  if(cell.revealed) return;
+  cell.flag = !cell.flag;
+  cell.el.classList.toggle('flag', cell.flag);
+  mineCountEl.innerText = mineTotal - document.querySelectorAll('.flag').length;
+}
+
+function revealCell(r,c){
+  const cell = board[r][c];
+  if(cell.revealed || cell.flag) return;
+  cell.revealed = true;
+  cell.el.classList.add('revealed');
+  revealedCount++;
+
+  if(cell.mine){
+    cell.el.classList.add('mine');
+    alert('💥 게임 오버!');
+    revealAllMines();
+    return;
+  }
+
+  if(cell.count>0){
+    cell.el.innerText = cell.count;
+  } else {
+    // 주변 0인 경우 재귀적으로 오픈
+    for(let dr=-1; dr<=1; dr++){
+      for(let dc=-1; dc<=1; dc++){
+        const nr=r+dr, nc=c+dc;
+        if(nr>=0 && nr<rows && nc>=0 && nc<cols) revealCell(nr,nc);
+      }
+    }
+  }
+
+  if(revealedCount === rows*cols - mineTotal){
+    alert('🎉 승리!');
+    revealAllMines();
+  }
+}
+
+function revealAllMines(){
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      if(board[r][c].mine) board[r][c].el.classList.add('mine','revealed');
+    }
+  }
+}
+
+initGame();
+</script>
+</body>
+</html>
