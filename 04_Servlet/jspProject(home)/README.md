@@ -64,16 +64,7 @@ project/
 - 기능별 오류 페이지 구성
 - Oracle DB 연동을 통한 데이터 관리
 - MVC 패턴 기반 구조로 모듈화된 개발
-- JSP include를 통한 공통 레이아웃 구성
-
-## 📸 화면 미리보기 (Preview)
-
-| 기능 | 미리보기 |
-|------|-----------|
-| 로그인 화면 | ![Login Page](./assets/login.gif) |
-| 회원가입 화면 | ![Register Page](./assets/register.png) |
-| 게시판 목록 | ![Board List](./assets/board-list.jpg) |
-| 게시글 작성 | ![Post Write](./assets/post-write.gif) |
+- JSP include를 통한 공통 레이아웃 구현
 
 
 ## 💡 학습 포인트 (Learning Points)
