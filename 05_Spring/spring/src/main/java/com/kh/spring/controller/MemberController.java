@@ -14,21 +14,47 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.awt.*;
+
 //Bean에 class등록하는 방법으로 @Component를 클래스에 부여한다.
 //@Controller -> @Component + Controller객체가 가질 수 있는 예외처리등의 기능을 포함하는 어노테이션
 @Controller
 public class MemberController {
 
     /*
-    @Autowired
-    의존성 주입을 사용할 때 기술하는 어노테이션
-    클래스내에 필요한 객체를 직접생성하지압ㅎ고 spring컨테이너가 관리하는 객체(Bean에 등록)를 주입받아 사용 할 수 있게 해줌.
+        private MemberService memberService; = new MemberServiceImpl();
+        기존 객체 직접 생성방식
+        객체간의 결합도가 높아짐(구현체가 고정되어있어 확장/교체가 어려움) -> 소스코드 수정이 일어날 경우 하나하나 변경해야하는 코드가 연쇄적으로 생김.
+
+        DI(Dependancy Injection) - 의존성 주입방식 사용
+        - 객체를 직접 생성하지않고, 스프링컨테이너가 관리하는 객체를 주입받아 쓰는 것
+        - 결합도 낮아지고, 테스트가 용이해지며, 관심사 분리(객체를 생성하고 사용하는 부분과 비즈니스 로직이 분리)되어 유지보수성이 높아짐.
+
+        @Autowired
+        의존성 주입을 사용할 때 기술하는 어노테이션
+        클래스내에 필요한 객체를 직접생성하지않고 spring컨테이너가 관리하는 객체(Bean에 등록)를 주입받아 사용할 수 있게 해줌.
+        필드 주입방식 / 생성자 주입방식
+
+        필드주입방식
+        스프링 컨테이너가 객체를 생성 후, @Autowired가 있는 필드에 의존성주입 해주는 방식
+        장점 : 코드가 간결하다.
+        단점 : 테스트가 어렵다.(필드주입방식은 객체생성시 의존성이 주입되지 않고 bean에서 생성 후 주입받는 방식이 때문에
+                                테스트 진행시 임의로 객체를 생성하기 어렵다,)
+              불변성 보장 불가. -> 런타임에 값이 변경될 수 있다.
+
+       생성자 주입방식
+        가장 권장되는 방식으로, 생성 시점에 @Autowired어노테이션이 있는 생성자를통해 의존성을 주입하는 방식
+        - 불변성 보장, 테스트 용이
      */
+    private final MemberService memberService;
+
     @Autowired
-    private MemberService memberService;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     /*
-    Spring에서 클라이언트가 HTML폼데이터로 보낸 정보를 받는 방법
+    Spring에서 클라이언트가 HTML 폼데이터로 보낸 정보를 받는 방법
 
     1. HttpServletRequest를 활용해서 전달값을 가져옴.
     메서드에 매게변수로 HttpServletRequest를 작성해주면
@@ -62,24 +88,25 @@ public class MemberController {
      */
 
     /*
-    * 3. 객체를 이용하는 방법(@ModelAttribute생략가능)
-    * 요청시 전달값들을 담고자하는 클래스 타입의 객체를 만들어 준 뒤
-    * 전달되는 key값과 매개변수 객체의 필드명을 동일하게 만들어주면 객체에 전달값을 맵핑해준다.
-    * */
+    3. 객체를 이용하는 방법(@ModelAttribute 생략가능)
+    요청시 전달값들을 담고자하는 클래스 타입의 객체를 만들어 준 뒤
+    전달되는 key값과 매게변수 객체의 필드명을 동일하게 만들어주면 객체에 전달값을 맵핑해준다.
+     */
     /*
     @PostMapping("login.me")
     public String login(@ModelAttribute Member member){
         System.out.println(member);
         return null;
     }
-    */
+     */
 
     /*
-    * 요청처리 후에 데이터를 담아서 응답하는 방법(포워딩 or url재요청)
-    * 1.String에서 제공하는 Model객체를 이용하는 방법
-    * 포워딩할 응답뷰로 전달하고자 하는 데이티를 k-v쌍으로 담을 수 있는 영역
-    * Model객체에 addAtribute()로 저장시 requestScope에 값을 저장하게 됨.
-    * */
+    요청 처리 후 데이터를 담아서 응답하는 방법(포워딩 or url재요청)
+
+    1. spring에서 제공하는 Model객체를 이용하는 방법
+    포워딩할 응답뷰로 전달하고자하는 데이터를 k-v쌍으로 담을 수 있는 영역
+    Model객체에 addAttribute()로 저장시 requestScope에 값을 저장하게 됨.
+     */
     /*
     @PostMapping("login.me")
     public String login(@ModelAttribute Member member, Model model) {
@@ -87,13 +114,14 @@ public class MemberController {
 
         model.addAttribute("memberId", member.getMemberId());
         model.addAttribute("memberPwd", member.getMemberPwd());
-        return null;
+
+        return "index";
     }
-    */
+     */
 
     /*
-    * HttpSession을 이용한 값 저장 후 url 재요청
-    */
+    2. HttpSession을 이용한 값 저장 후 url 재요청
+     */
     /*
     @PostMapping("login.me")
     public String login(@ModelAttribute Member member, HttpSession session) {
@@ -107,19 +135,20 @@ public class MemberController {
     */
 
     /*
-    *  3. ModelAndview객체를 이용하는 방법 -> 데이터를 담고 리턴형식까지 지정할 수 있음
-    * */
+        3. ModelAndView객체를 이용하는 방법 -> 데이터를 담고 리턴형식까지 지정할 수 있음
+     */
     /*
     @PostMapping("login.me")
-    public String login(@ModelAttribute Member member, ModelAndView mv) {
+    public ModelAndView login(@ModelAttribute Member member, ModelAndView mv) {
         System.out.println(member);
 
         mv.addObject("memberId", member.getMemberId());
         mv.addObject("memberPwd", member.getMemberPwd());
 
-        //mv.setViewName("index"); //포워딩
-        mv.setViewName("redirect:/"); //url요청
-        return "mv";
+        //mv.setViewName("index"); // 포워딩
+        mv.setViewName("redirect:/"); //url재요청
+
+        return mv;
     }
      */
 
@@ -130,5 +159,7 @@ public class MemberController {
         memberService.loginMember(member);
 
 
+
+        return ;
     }
 }
