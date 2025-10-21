@@ -122,7 +122,7 @@
 	</style>
 </head>
 <body onload="init(${board.boardNo})">
-	<jsp:include page="/views/common/menubar.jsp" />
+	<jsp:include page="/WEB-INF/views/common/menubar.jsp" />
 
 	<div class="board-container">
 		<div class="board-card">

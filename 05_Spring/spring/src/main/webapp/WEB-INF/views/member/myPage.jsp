@@ -85,7 +85,7 @@
 	</style>
 </head>
 <body>
-	<jsp:include page="/views/common/menubar.jsp" />
+	<jsp:include page="/WEB-INF/views/common/menubar.jsp" />
 
 	<div class="mypage-container">
 		<div class="mypage-card">
