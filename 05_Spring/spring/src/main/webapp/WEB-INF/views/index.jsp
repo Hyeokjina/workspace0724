@@ -7,8 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	 <jsp:include page="/WEB-INF/views/common/menubar.jsp" />
+<jsp:include page="/WEB-INF/views/common/menubar.jsp" />
 
-    ${memberId} / ${memberPwd}
+
 </body>
 </html>

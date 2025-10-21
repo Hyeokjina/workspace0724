@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Indexed;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -156,10 +157,10 @@ public class MemberController {
     public String login(@ModelAttribute Member member) {
         System.out.println(member);
 
-        memberService.loginMember(member);
+        Member loginMember = memberService.getMemberById(member.getMemberId());
+        System.out.println(loginMember);
 
 
-
-        return ;
+        return "index";
     }
 }
