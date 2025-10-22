@@ -201,6 +201,8 @@ public class MemberController {
         return count > 0 ? "NNNNN" : "NNNNY";
     }
 
+
+
     @PostMapping("insert.me")
     public String joinMember(Member member, HttpSession httpSession, Model model) {
         /*
