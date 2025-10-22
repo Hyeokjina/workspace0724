@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -222,5 +223,10 @@ public class MemberController {
             model.addAttribute("errorMsg", "회원가입에 실패하였습니다.");
             return "common/error";
         }
+    }
+
+    @GetMapping("myPage.me")
+    public String myPage() {
+        return "member/myPage";
     }
 }

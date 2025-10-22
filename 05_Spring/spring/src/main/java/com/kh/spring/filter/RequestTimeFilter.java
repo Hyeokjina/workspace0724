@@ -29,6 +29,8 @@ public class RequestTimeFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        log.info("RequestTimeFilter 필터 실행");
+
         // 요청 시작 시간 기록
         long startTime = System.currentTimeMillis();
 
