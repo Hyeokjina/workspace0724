@@ -52,12 +52,18 @@ public class BoardController {
     @PostMapping("/insert.bo")
     public String insertBoard(Board board,
                               @RequestParam(value = "upfile", required = false) MultipartFile upfile,
-                              HttpSession session) {
+                              HttpSession session, Model model) {
         Member loginMember = (Member) session.getAttribute("loginMember");
         board.setBoardWriter(loginMember.getMemberNo());
 
         int result = boardService.insertBoard(board, upfile);
 
-        return "redirect:/board/list.bo";
+        if(result > 0){
+            session.setAttribute("alertMsg", "게시글이 등록되었습니다.");
+            return "redirect:/list.bo";
+        } else {
+            model.addAttribute("errorMsg", "게시글 등록에 실패하였습니다.");
+            return "common/error";
+        }
     }
 }

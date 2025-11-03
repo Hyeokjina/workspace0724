@@ -44,7 +44,12 @@
         AND BOARD_TYPE = 1
         ORDER BY BOARD_NO DESC
     </select>
+
+    <!--selectKey : insert하기 전또는 후에, 어떤 sql 을 실행해서 생성된 키 값을 자바 객체에 담아주는 기능 -->
     <insert id="insertBoard" parameterType="Board">
+        <selectKey keyProperty="boardNo" resultType="_int" order="BEFORE">
+            SELECT SEQ_BNO.NEXTVAL FROM DUAL
+        </selectKey>
         INSERT INTO BOARD(
         BOARD_NO,
         BOARD_TYPE,
@@ -53,12 +58,32 @@
         BOARD_CONTENT,
         BOARD_WRITER
         ) VALUES(
-        SEQ_BNO.NEXTVAL,
+        #{boardNo},
         1,
         #{categoryNo},
         #{boardTitle},
         #{boardContent},
         #{boardWriter}
+        )
+    </insert>
+
+
+    <insert id="insertAttachment" parameterType="Attachment">
+        INSERT INTO ATTACHMENT
+        (
+        FILE_NO,
+        REF_BNO,
+        ORIGIN_NAME,
+        CHANGE_NAME,
+        FILE_PATH,
+        FILE_LEVEL
+        ) VALUES (
+        SEQ_FNO.NEXTVAL,
+        #{refBoardNo},
+        #{originName},
+        #{changeName},
+        #{filePath},
+        #{fileLevel}
         )
     </insert>
 </mapper>
