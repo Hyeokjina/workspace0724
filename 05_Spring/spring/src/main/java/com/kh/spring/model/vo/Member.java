@@ -1,7 +1,6 @@
 package com.kh.spring.model.vo;
 
 import lombok.*;
-
 import java.sql.Date;
 
 @Getter

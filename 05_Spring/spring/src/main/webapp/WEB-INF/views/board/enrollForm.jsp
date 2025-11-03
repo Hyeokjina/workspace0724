@@ -98,7 +98,7 @@
                 <tr>
                     <th>카테고리</th>
                     <td>
-                        <select name="category">
+                        <select name="categoryNo">
                             <c:forEach var="c" items="${categories}">
                                 <option value="${c.categoryNo}">${c.categoryName}</option>
                             </c:forEach>
@@ -108,13 +108,13 @@
                 <tr>
                     <th>제목</th>
                     <td>
-                        <input type="text" name="title" required>
+                        <input type="text" name="boardTitle" required>
                     </td>
                 </tr>
                 <tr>
                     <th>내용</th>
                     <td>
-                        <textarea name="content" rows="10"></textarea>
+                        <textarea name="boardContent" rows="10"></textarea>
                     </td>
                 </tr>
                 <tr>

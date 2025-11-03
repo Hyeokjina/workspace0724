@@ -1,10 +1,6 @@
 package com.kh.spring.model.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -26,5 +22,4 @@ public class Board {
     private String categoryName;
     private String memberId;
     private String thumbnailImg;
-
 }

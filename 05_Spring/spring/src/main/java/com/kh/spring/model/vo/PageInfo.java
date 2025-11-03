@@ -1,4 +1,4 @@
-package com.kh.spring.common.vo;
+package com.kh.spring.model.vo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,45 +23,9 @@ public class PageInfo {
         this.pageLimit = pageLimit;
         this.boardLimit = boardLimit;
 
-        /*
-         * maxPage : 우리 데이터의 마지막 페이지는 몇페이지인가?
-         *
-         * 100			10			->	10
-         * 107			10			->  11
-         *
-         * 총 게시글 수 / 한 페이지에 보여줄 게시글 수 -> 올림
-         */
-
         this.maxPage = (int)Math.ceil((double)this.listCount/this.boardLimit);
-
-        /*
-         * startPage : 페이지 버큰의 시작 수
-         *
-         * currentPage       pageLimit       startPage
-         * 	    1                5                1
-         *      7                5                6
-         *      11				 10				  11
-         *
-         * startPage = ((currentPage - 1) / pageLimit) * pageLimit + 1;
-         */
-
         this.startPage = ((this.currentPage - 1) / this.pageLimit) * this.pageLimit + 1;
-
-        /*
-         * endPage : 페이지버튼의 마지막 수
-         *
-         * pageLimit -> 10일때
-         *
-         * startPage: 1 -> 10
-         * startPage: 11 -> 20
-         * startPage: 21 -> 25
-         *
-         * endPage : startPage + pageLimit - 1;
-         * */
-
         this.endPage = this.startPage + this.pageLimit - 1;
-
-        // 만약 maxPage가 25라면?
         this.endPage = this.endPage > this.maxPage ? this.maxPage : this.endPage;
     }
 

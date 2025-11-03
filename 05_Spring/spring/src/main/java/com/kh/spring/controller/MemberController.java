@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -180,14 +179,6 @@ public class MemberController {
         return mv;
     }
 
-    @GetMapping("logout.me")
-    public ModelAndView logout(HttpSession httpSession, ModelAndView mv) {
-        httpSession.removeAttribute("loginMember");
-        mv.setViewName("redirect:/");
-
-        return mv;
-    }
-
     @GetMapping("enrollForm.me")
     public String enrollForm() {
         return "member/enrollForm";
@@ -201,8 +192,6 @@ public class MemberController {
 
         return count > 0 ? "NNNNN" : "NNNNY";
     }
-
-
 
     @PostMapping("insert.me")
     public String joinMember(Member member, HttpSession httpSession, Model model) {
@@ -225,8 +214,14 @@ public class MemberController {
         }
     }
 
-    @GetMapping("myPage.me")
+    @GetMapping("/myPage.me")
     public String myPage() {
         return "member/myPage";
+    }
+
+    @GetMapping("/logout.me")
+    public String logout(HttpSession httpSession) {
+        httpSession.removeAttribute("loginMember");
+        return "redirect:/";
     }
 }

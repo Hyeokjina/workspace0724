@@ -1,49 +1,63 @@
 package com.kh.spring.controller;
 
-import com.kh.spring.common.vo.PageInfo;
 import com.kh.spring.model.vo.Board;
+import com.kh.spring.model.vo.Category;
+import com.kh.spring.model.vo.Member;
 import com.kh.spring.service.BoardService;
-
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.devtools.remote.server.Dispatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.DispatcherServlet;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class BoardController {
 
-    @Autowired
     private final BoardService boardService;
 
+    @Autowired
     public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
 
-    // 게시글 목록 조회
+    //게시글 목록 조회
     @GetMapping("list.bo")
-    public String selectBoardList(
-            @RequestParam(value = "cpage", defaultValue = "1") int currentPage,
-            Model model) {
+    public String selectBoardList(@RequestParam(value = "cpage", defaultValue = "1") int cuurentPage, Model model) {
+        Map<String, Object> result = boardService.getBoardList(cuurentPage);
 
-        try {
-            int listCount = boardService.selectAllBoardCount();
-            int pageLimit = 5;
-            int boardLimit = 5;
+        model.addAttribute("list", result.get("list"));
+        model.addAttribute("pi",  result.get("pi"));
 
-            PageInfo pi = new PageInfo(currentPage, listCount, pageLimit, boardLimit);
-            ArrayList<Board> list = boardService.selectAllBoard(pi);
+        return "board/listView";
+    }
 
-            model.addAttribute("list", list);
-            model.addAttribute("pi", pi);
+    @GetMapping("/enrollForm.bo")
+    public String enrollForm(Model model) {
+        List<Category> categories = boardService.getCategories();
 
-            return "board/listView"; // → /WEB-INF/views/board/listView.jsp
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("errorMsg", "게시글 목록 조회 실패");
-            return "common/error"; // → /WEB-INF/views/common/error.jsp
-        }
+        model.addAttribute("categories", categories);
+
+        return "board/enrollForm";
+    }
+
+    //spring boot에는 spring-boot-starter-web의존을 추가하면
+    @PostMapping("/insert.bo")
+    public String insertBoard(Board board,
+                              @RequestParam(value = "upfile", required = false) MultipartFile upfile,
+                              HttpSession session) {
+        Member loginMember = (Member) session.getAttribute("loginMember");
+        board.setBoardWriter(loginMember.getMemberNo());
+
+        int result = boardService.insertBoard(board, upfile);
+
+        return "redirect:/board/list.bo";
     }
 }
