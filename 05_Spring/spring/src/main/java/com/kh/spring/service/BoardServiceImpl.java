@@ -73,6 +73,17 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
+    @Override
+
+    public Board getBoardById(int boardNo) {
+        int result = boardMapper.increaseCount(boardNo);
+
+        Map<String,Object> map = new HashMap<>();
+        if(result > 0){
+            Board board = boardMapper.selectBoardByNo(boardNo);
+        }
+    }
+
     private String saveFile(MultipartFile file, String path) {
         String originName = file.getOriginalFilename();
         String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());

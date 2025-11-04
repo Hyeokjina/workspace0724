@@ -6,6 +6,7 @@
 <mapper namespace="com.kh.spring.model.mapper.BoardMapper">
     <resultMap id="boardResultMap" type="Board">
         <result column="BOARD_NO" property="boardNo"/>
+        <result column="CATEGORY_NO" property="categoryNo"/>
         <result column="CATEGORY_NAME" property="categoryName"/>
         <result column="BOARD_TITLE" property="boardTitle"/>
         <result column="MEMBER_ID" property="memberId"/>
@@ -86,4 +87,25 @@
         #{fileLevel}
         )
     </insert>
+    <!--조회수 증가 -->
+    <update id="increaseCount" parameterType="_int">
+        UPDATE BOARD
+            SET COUNT = COUNT +1;
+        WHERE BOARD_NO = #{bardNo}
+    </update>
+    <select id="selectBoardNo" >
+        SELECT B.BOARD_NO,
+                B.CATEGORY_NO,
+                C.CATEGORY_NAME,
+                B.BOARD_TITLE,
+                B.BOARD_CONTENT,
+                M.BOARD_WRITER,
+                B.COUNT,
+                TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') AS CREATE_DATE
+        FROM BOARD B
+        JOIN CATEGORY C USING(CATEGORY_NO)
+        JOIN MEMBER M ON B.BOARD_WRITER = M.MEMBER_NO
+        WHERE BOARD_NO = #{boardNo}
+            AND B.STATUS = 'Y'
+    </select>
 </mapper>

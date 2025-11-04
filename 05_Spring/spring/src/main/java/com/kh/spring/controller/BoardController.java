@@ -66,4 +66,9 @@ public class BoardController {
             return "common/error";
         }
     }
+
+    @GetMapping("/detail.bo")
+    public String detailBoard(@RequestParam(value = "bno", required = true) int boardNo) {
+        Board board = boardService.getBoardById(boardNo);
+    }
 }
