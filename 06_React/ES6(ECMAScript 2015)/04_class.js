@@ -76,3 +76,10 @@ class Math{
 }
 
 console.log(Math.add(1,7));
+
+//function Math() {}
+
+//Math.add - function(a,b){
+//    return a+b;
+//}
+

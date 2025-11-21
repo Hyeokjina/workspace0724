@@ -52,10 +52,24 @@ console.log(num);
 //벼열 / 객체 복사, 병합, 수정, 나머지값을 처리등등...
 //
 
-let tmp = {
-    name : "jiwon"
+let user = {
+    name: "지원",
+    age: 55,
+    job: "dev"
 }
 
-tmp.name = "sumin";
+user.job = "chef"; // 이렇게 변경시 실제 객체의 내부값만 변경된것이기 때문에 객쳋 자체의 주소값이 변경되지 않음
 
-console.log(tmp);
+let user = {
+    ...user,
+    job: "chef"
+}
+
+// let tmp1 = {
+//     name : "jiwon"
+// }
+
+// let tmp2 = {
+//     name : "jiwon"
+// }
+// console.log(tmp1 === tmp2);

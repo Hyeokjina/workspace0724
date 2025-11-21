@@ -8,3 +8,6 @@ console.log("2+3 =", add(2,3));
 console.log("pi = ", pi);
 
 helloFunc("문혁진");
+
+//모듈 시스템에서는 각파일에 독립된 scope를 제공함.
+//다른 파일에 변수나 함수는 반드시 import를 해서 사용.
