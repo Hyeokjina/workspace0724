@@ -1,0 +1,61 @@
+//1. 템플릿 리터럴
+//문자열과 변수 결합시 편리하고 여러줄의 문자열도 간단하게 처리가 가능하다.
+const userName = "최지원";
+console.log(`안녕하세요. ${userName}님`);
+
+const multiStr = `이 변수는 
+여러줄로 작성된
+문자열을 가지고 있습니다.`;
+console.log(multiStr);
+
+//2. 구조 분해 할당
+// 객체에서 필요한 값을 바로 변수로 추출할 때 사용.
+const userInfo = {
+    name: "최지투",
+    age: 55,
+    job: "dev"
+}
+
+//const name = userInfo.name;
+//const age = userInfo.age;
+//const {name, age} = userInfo;
+//console.log(name,age);
+
+//변수 이름을 변경해서 추출하고 싶을 때
+//const name = userInfo.name;
+//const newJob = userInfo.job;
+const {name, job: newJob} = userInfo;
+console.log(name, newJob);
+
+//React에서는 props라는 객체를 전달하고 매개변수로 내부의 값들을 받을 때 해당 문법을 주로 사용함.
+function myInfo({name, age}) {
+    console.log(name, age);
+}
+
+myInfo(userInfo);
+
+//3. 배열 구조 분해할당
+//배열 요소를 순서대로 변수에 담아줌
+const numbers = [10, 20, 30];
+const [num1, num2] = numbers;
+console.log(num1, num2);
+
+//필요없는 값은 생략이 가능함
+const [,, num] = numbers;
+console.log(num);
+
+//ract에서는 state라는 값을 생성할떄 배열에 값과 해당 값을 변경하는 함수가 순차적으로 전달된다.
+//useState() return [값, 값을 변경할 떄 사용하는 setter]
+//const[count, setCount] =useState(); 
+
+//4. 스프레드연산자(...)   
+//벼열 / 객체 복사, 병합, 수정, 나머지값을 처리등등...
+//
+
+let tmp = {
+    name : "jiwon"
+}
+
+tmp.name = "sumin";
+
+console.log(tmp);
