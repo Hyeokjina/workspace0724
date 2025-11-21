@@ -72,6 +72,60 @@ console.log(`map의 결과 : ${squared}`);
 
 //7. filter()
 // 조건에 맞는 요소만 추출하고 싶을 떄 -> 조건에 맞는 값만 모아서 새로운 배열을 반환
+// 서버로부터 데이터를 삭제하고 이를 ui 상태에 반영해 줄떄 많이 사용함
 // [3,9]
 const squared2 = numbers.filter((num) => num % 3 === 0);//내부 함수의 리턴값이 true인 것만 모아서 반환
 console.log(`filter의 결과 : ${squared2}`);
+
+//8. find()
+// 조건에 맞는 "첫번째"요소만 추출하고 싶을 떄 -> 조건에 맞는 값 하나 검색
+const squared3 = numbers.find((num) => num % 3 === 0);
+console.log(`find의 결과 : ${squared3}`);
+
+//9. some()
+//하나라도 조건을 만족하면 ture
+const squared4 = numbers.some((num) => num % 3 === 0);
+console.log(`하나라도 조건을 만족하면 : ${squared4}`);
+
+const squared5 = numbers.some((num) => num % 2 === 0);
+console.log(`하나라도 조건을 만족하면 : ${squared5}`);
+
+//10. every()
+//하나라도 조건을 만족하면 ture
+const squared6 = numbers.some((num) => num % 3 === 0);
+console.log(`하나라도 조건을 만족하면 : ${squared6}`);
+
+const squared7 = numbers.some((num) => num % 2 === 0);
+console.log(`하나라도 조건을 만족하면 : ${squared7}`);
+
+//6. reduce()
+//배열의 값을 누적하여 하나의 결과값을 추출
+//배열.reduce((누적값, 배열요소) => {실행할 코드 return 누적값;}, 누적값 초기값)
+
+const result = numbers.reduce((sum,num) => {
+    console.log("합 : " + sum + " 값 : " +num);
+    sum.push(num);
+    return sum;
+},[]);
+
+console.log(result);
+
+const stList = [{
+    name: "최지원",
+    age : 17,
+    score: 80
+},{
+    name: "김지원",
+    age : 17,
+    score: 20
+},{
+    name: "박지원",
+    age : 17,
+    score: 60
+}];
+
+let scoreMap = stList.reduce((scoreMap, std) => {
+    scoreMap[std.name] = std.score;
+    return scoreMap;
+}, {});
+console.log(scoreMap);
