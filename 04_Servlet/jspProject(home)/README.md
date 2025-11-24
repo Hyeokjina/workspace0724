@@ -57,7 +57,7 @@ project/
  │   ├── resources/                  # CSS, JS, 이미지
  │   └── index.jsp                   # 메인 페이지
  └── README.md
-<pre>
+</pre>
 ## 🌟 주요 기능 (Key Features)
 - 회원가입 / 로그인 / 로그아웃 / 댓글 작성 기능
 - 게시글 등록, 조회, 수정, 삭제 (CRUD)
@@ -104,3 +104,30 @@ project/
 | COUNT             | NUMBER                    | Yes       | 0                | 7    | 조회수                           |
 | CREATE_DATE       | DATE                      | No        | SYSDATE          | 8    | 작성일                           |
 | STATUS            | VARCHAR2(1 BYTE)          | Yes       | 'Y'              | 9    | 상태값 (Y: 활성 / N: 비활성)     |
+
+
+## 📸 대표 예시 화면
+
+### 메인 & 회원 관리
+
+| 메인 페이지 | 회원가입 |
+|------------|----------|
+| ![메인](./images/main.PNG) | ![회원가입](./images/join.PNG) |
+
+### 마이페이지 & 게시글 작성
+
+| 마이페이지 | 게시글 작성 |
+|-----------|------------|
+| ![마이페이지](./images/mypage.png) | ![게시글작성](./images/enrollfom.PNG) |
+
+### 게시글 상세 & 수정
+
+| 게시글 상세보기 | 게시글 수정 |
+|---------------|------------|
+| ![게시글상세](./images/detail.PNG) | ![게시글수정](./images/update.PNG) |
+
+### 사진 게시판
+
+| 사진 게시판 목록 | 사진 게시글 상세 |
+|----------------|----------------|
+| ![사진게시판](./images/picture.PNG) | ![사진상세](./images/pictureDetail.PNG) |
