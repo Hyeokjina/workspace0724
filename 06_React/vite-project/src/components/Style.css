@@ -13,3 +13,11 @@
     padding: 5px;
     border-radius: 50px;
 }
+
+.highlight3 {
+    color: rgb(18, 58, 190);
+    font-weight: bold;
+    background-color: rgba(243, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 50px;
+}
