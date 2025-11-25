@@ -37,6 +37,11 @@ class LifecycleTest extends Component {
         console.log("이전 props : ", prevProps);
     }
 
+    //컴포넌트가 언마운트 될 떄 호출
+    componentWillUnmount() {
+        console.log("componentWillUnmount : 컴포넌트가 언마운트 된다.")
+    }
+
     increment = () =>{
         this.setState({
             ...this.state,
