@@ -19,7 +19,13 @@ const products = [{
     product_name: "아이폰 17",
     price: 1050000,
     color: "민트",
-}]
+},{
+    product_id: 3,
+    product_name: "아이폰 15",
+    price: 700000,
+    color: "오렌지",
+}
+]
 
 const Table = styled.table`
   width: 100%;
