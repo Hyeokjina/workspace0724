@@ -14,6 +14,7 @@ const Product = (props) => {
             <Td>{product.product_name}</Td>
             <Td>{product.price}</Td>
             <Td>{product.color}</Td>
+            <Td>{product.sall}</Td>
             
 
         </tr>
