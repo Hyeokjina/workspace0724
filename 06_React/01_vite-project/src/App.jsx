@@ -125,6 +125,7 @@ function App() {
             <Th>제품명</Th>
             <Th>가격</Th>
             <Th>색상</Th>
+            <Th>판매량</Th>
           </tr>
         </thead>
         <tbody>
