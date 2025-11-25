@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Td = styled.td`
     padding: 12px;
-    border: 1px solid #afafaf;
+    border: 1px solid #d6d6d6;
 `
 
 const Product = (props) => {
