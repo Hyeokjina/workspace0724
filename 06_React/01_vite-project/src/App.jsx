@@ -64,6 +64,10 @@ const Th = styled.th`
 const Tr = styled.tr`
   
 `
+const Bt = styled.button`
+  background: #4cf54c54;
+  font-weight: 200px;
+`
 
 function App() {
 
@@ -78,7 +82,7 @@ function App() {
             <Th>가격</Th>
             <Th>색상</Th>
             <Th>판매량</Th>
-            <button1></button1>
+            <Bt>결정</Bt>
           </tr>
         </thead>
         <tbody>
