@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Profile = styled.div`
   border: 1px solid black;
-  background-color: #d4c8c877;
+  background-color: #dacfc777;
   padding: 10px;
   margin: 10px;
 `
