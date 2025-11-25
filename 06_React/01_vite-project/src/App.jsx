@@ -78,6 +78,7 @@ function App() {
             <Th>가격</Th>
             <Th>색상</Th>
             <Th>판매량</Th>
+            <button1></button1>
           </tr>
         </thead>
         <tbody>
