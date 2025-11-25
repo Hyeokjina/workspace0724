@@ -18,7 +18,7 @@ const ProfileCard = (props) => {
        <p>이름 : {profile.name}</p>
        <p>나이 : {profile.age}</p>
        <State isOnline={profile.isOnline}>
-       온라인 여부 : {profile.isOnline ? "🟢 온라인 상태입니다." : "🔴 오프라인 상태입니다."}
+        {profile.isOnline ? "🟢 온라인 여부 : 온라인 상태입니다." : "🔴 온라인 여부 : 오프라인 상태입니다."}
        </State>
     </Profile>
   )
