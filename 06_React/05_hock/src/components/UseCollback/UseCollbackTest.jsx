@@ -7,7 +7,7 @@ const UseCallbackTest = () => {
     const [dark, setDark] = useState(false);
 
     const theme = useMemo(() => ({
-        backgroundColor: dark ? "#333" : "#fff",
+        backgroundColor: dark ? "#333" : "#f3f3f3",
         color: dark ? "#fff" : "#3333",
         padding: "12px"
     }), [dark])
