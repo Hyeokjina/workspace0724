@@ -8,7 +8,7 @@ import LandingPage from './components/useState/LandingPage'
 import UseRefTest from './components/UseRef/UseRefTest'
 import UseRefScroll from './components/UseRef/UseRefScroll'
 import UseMemoTest from './components/UseMemo/UseMemoTest'
-
+import UseCollbackTest from './components/UseCollback/UseCollbackTest'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,7 +18,8 @@ function App() {
       {/* <LandingPage /> */}
       {/* <UseRefTest/> */}
       {/* <UseRefScroll/> */}
-      <UseMemoTest/>
+      {/* <UseMemoTest/> */}
+      <UseCollbackTest/>
     </>
   )
 }

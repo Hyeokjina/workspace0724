@@ -1,8 +1,10 @@
-import React, { useState } from 'react'  // useState 추가!
+import React, { useEffect, useState } from 'react'
 
 const UseRefTest = () => {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("man");
+
+  const useInput = useRef(null);
 
   const handelCangeNmae = (ev) => {
       setName(ev.target.value);
@@ -20,7 +22,10 @@ const UseRefTest = () => {
   const handelReset = () => {
       setGender("man");
       setName("");
-      document.getElementById('name-input').focus();  // 수정!
+      //document.getElementById('name-input').focus();
+
+      useInput.current?.focus();
+      //DOM 직접 탐색없이 React가 input을 참조하게 한다.
   }
 
   return (
@@ -31,6 +36,7 @@ const UseRefTest = () => {
                 id='name-input'
                 value={name} 
                 onChange={handelCangeNmae}
+                ref={useInput}
             />
         </label>
         <br /><br />
