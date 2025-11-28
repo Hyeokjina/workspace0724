@@ -14,7 +14,7 @@ function App() {
   };
 
   const deleteUser = (id) => {
-    setUsers(users.filter(user => user.id !== parseInt(id)));
+    setUsers(users.filter(user => user.id !== parseInt(id)));a
   };
 
   return (
