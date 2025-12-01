@@ -9,7 +9,7 @@ const Container = styled.div`
 
 const InfoBox = styled.div`
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #ebe4e4;
   margin: 20px 0;
 `;
 
@@ -33,10 +33,8 @@ function UserDetail({ users, deleteUser }) {
   }
 
   const handleDelete = () => {
-    if (window.confirm('정말 삭제하시겠습니까?')) {
-      deleteUser(id);
-      navigate('/');
-    }
+    deleteUser(id);
+    navigate('/');
   };
 
   return (

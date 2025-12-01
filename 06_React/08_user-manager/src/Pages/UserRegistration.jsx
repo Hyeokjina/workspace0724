@@ -85,7 +85,6 @@ function UserRegistration({ addUser }) {
           />
           {errors.name && <p>{errors.name}</p>}
         </FormGroup>
-
         <FormGroup>
           <label>나이</label>
           <input
