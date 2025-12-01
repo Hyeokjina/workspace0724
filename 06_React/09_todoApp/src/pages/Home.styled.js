@@ -9,5 +9,5 @@ export const Title = styled.h1`
     font-size: 42px;
     font-weight: bold;
     margin-bottom: 24px;
-    color: #333;
+    color: #252525ff;
 `
