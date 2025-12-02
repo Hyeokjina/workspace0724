@@ -4,6 +4,7 @@ import { ROUTES } from './routePaths'
 import Layout from '../components/Layout/Layout'
 import Home from '../pages/Home.Jsx'
 import TodoListPage from '../pages/TodoListPage'
+import TodoDetail from '../pages/TodoDetail'
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
             <Route path={ROUTES.HOME} element={<Layout />} >
                 <Route index element={<Home />}/>
                 <Route path='todos' element={<TodoListPage />} />
+                <Route path='todos/:id' element={<TodoDetail />} />
             </Route>
         </Routes>
     </BrowserRouter>
