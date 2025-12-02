@@ -5,6 +5,7 @@ import Layout from '../components/Layout/Layout'
 import Home from '../pages/Home.Jsx'
 import TodoListPage from '../pages/TodoListPage'
 import TodoDetail from '../pages/TodoDetail'
+import CategoryPage from '../pages/CategoryPage'  // 추가!
 
 const AppRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const AppRoutes = () => {
                 <Route index element={<Home />}/>
                 <Route path='todos' element={<TodoListPage />} />
                 <Route path='todos/:id' element={<TodoDetail />} />
+                <Route path='category/:category' element={<CategoryPage />} />  {/* 추가! */}
             </Route>
         </Routes>
     </BrowserRouter>

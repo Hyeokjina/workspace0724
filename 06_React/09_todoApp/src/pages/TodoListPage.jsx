@@ -4,6 +4,7 @@ import TodoForm from '../components/Todo/TodoForm'
 import { useTodos } from '../context/TodoContext'
 import { EmptyMessage, TodoListContainer } from '../components/Todo/TodoForm.styled'
 import TodoItem from '../components/Todo/TodoItem'
+import { Title } from './Home.styled'
 
 const TodoListPage = () => {
     const {todos, addTodo, toggleTodo, deleteTodo} = useTodos();
@@ -16,6 +17,7 @@ const TodoListPage = () => {
     })
     return (
         <Container>
+            <Title>할일 목록</Title>
             <TodoForm onAdd = {addTodo}/>
 
             <FilterButtons>

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { HeaderContainer, Logo, Nav, NavLink, NavLinks } from './Layout.styled'
 import { ROUTES } from '../../routes/routePaths'
 import { useLocation } from 'react-router-dom'
+import { ROUTES, CATEGORYS } from '../../routes/routePaths'
 
 const Header = () => {
   const location = useLocation();
@@ -19,7 +20,7 @@ const Header = () => {
         <NavLinks>
           <NavLink to={ROUTES.HOME} className={isActive(ROUTES.HOME)}>홈</NavLink>
           <NavLink to={ROUTES.TODOS} className={isActive(ROUTES.TODOS)}>할일목록</NavLink>
-          <NavLink to={ROUTES.CATEGORY} className={isActive(ROUTES.CATEGORY)}>카테고리</NavLink>
+          <NavLink to={ROUTES.CATEGORY(CATEGORYS.WORK)} className={isActive('/category')}>카테고리</NavLink>
         </NavLinks>
       </Nav>
     </HeaderContainer>
