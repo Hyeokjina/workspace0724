@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { HeaderContainer, Logo, Nav, NavLink, NavLinks } from './Layout.styled'
 import { ROUTES } from '../../routes/routePaths'
 import { useLocation } from 'react-router-dom'
-import { ROUTES, CATEGORYS } from '../../routes/routePaths'
+import { CATEGORYS } from '../../routes/routePaths'
 
 const Header = () => {
   const location = useLocation();
