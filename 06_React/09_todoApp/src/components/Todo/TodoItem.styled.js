@@ -34,6 +34,19 @@ export const Checkbox = styled.input`
     cursor: pointer;
 `
 
+export const DetailButton = styled.button`
+    color: #2d95ebff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 4px 8px;
+    margin-right: 15px;
+    &:hover{
+        scale: 0.98;
+    }
+`
+
 export const DeleteButton = styled.button`
     color: #a50303ff;
     background: none;
