@@ -21,4 +21,14 @@ public class BoardServiceImpl implements BoardService {
     public List<Board> findAll() {
         return boardMapper.findAll();
     }
+
+    @Override
+    public Board findById(String boardId) {
+        return boardMapper.findById(boardId);
+    }
+
+    @Override
+    public int save(Board board) {
+        return boardMapper.save(board);
+    }
 }
