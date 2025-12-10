@@ -1,91 +1,142 @@
-# GymHub 랜딩 페이지
+# 🏋️ GymHub Landing Page
 
-GymHub 제품 요구사항 문서(PRD)를 기반으로 제작된 랜딩 페이지입니다.
+**Retro-Futuristic Athletic Design**
 
-## 기술 스택
+80년대 피트니스 문화와 현대적 기하학이 만난 독특한 랜딩 페이지입니다.
 
-- **Next.js** 15.1.4
-- **React** 19.0.0
-- **TypeScript** 5.x
-- **Tailwind CSS** 3.4.1
-- **shadcn/ui** (Radix UI 기반)
-- **Lucide Icons**
+## 🎨 Design Concept
 
-## 주요 섹션
+### Aesthetic Direction
+- **Retro-Futuristic Athletic**: 80년대 네온 에너지 + 현대적 체계성
+- **Color Palette**: Neon Cyan (#00f0ff), Hot Pink (#ff0080), Electric Purple (#7d00ff)
+- **Typography**: Bebas Neue (Display) + Public Sans (Body)
+- **Motion**: 카운터 애니메이션, 그라데이션 시프트, 카드 3D 효과
 
-1. **Hero Section** - 제품 소개 및 주요 통계
-2. **Features Section** - 역할별 맞춤 기능 (회원, 트레이너, 운영자)
-3. **Tech Stack Section** - 검증된 기술 스택 및 시스템 아키텍처
-4. **Roadmap Section** - 5단계 제품 로드맵
-5. **CTA Section** - Call to Action 및 주요 지표
-6. **Footer** - 브랜드 정보 및 링크
+### Unique Features
+- 🎯 **Cursor Spotlight**: 마우스를 따라다니는 그라데이션 스팟라이트
+- ✨ **Neon Glow**: 네온 사인 효과의 텍스트와 버튼
+- 📊 **Counter Animation**: 숫자가 카운팅되는 애니메이션
+- 🎬 **Staggered Reveals**: 순차적으로 나타나는 요소들
+- 🌈 **Animated Gradients**: 움직이는 그라데이션 배경
+- 🔲 **Retro Grid**: 레트로 스타일 그리드 패턴
 
-## 설치 방법
+## 🚀 Tech Stack
 
-1. 의존성 설치:
+- **Framework**: Next.js 15.1.4 (App Router)
+- **Language**: TypeScript 5.x
+- **Styling**: Tailwind CSS 3.4.1 + Custom CSS
+- **Icons**: Emoji (네이티브)
+- **Fonts**: Google Fonts (Bebas Neue, Public Sans)
+
+## 📦 Installation
+
 ```bash
+cd gymhub-landing
 npm install
-```
-
-2. 개발 서버 실행:
-```bash
 npm run dev
 ```
 
-3. 브라우저에서 [http://localhost:3000](http://localhost:3000) 열기
+브라우저에서 [http://localhost:3000](http://localhost:3000) 열기
 
-## 빌드
+## 🎯 Sections
 
-프로덕션 빌드:
-```bash
-npm run build
-npm start
+1. **Hero Section**
+   - 네온 타이포그래피
+   - 카운터 애니메이션 통계
+   - 대각선 그라데이션 배경
+
+2. **Features Section**
+   - 역할별 기능 카드 (회원/트레이너/운영자)
+   - 3D 카드 호버 효과
+   - 컬러 코딩된 섹션
+
+3. **Tech Stack Section**
+   - 기술 스택 그리드
+   - 시스템 아키텍처 다이어그램
+   - 펄스 인디케이터
+
+4. **Roadmap Section**
+   - 5단계 로드맵 카드
+   - 상태 배지 (완료/진행중/계획)
+   - 비전 스테이트먼트
+
+5. **CTA Section**
+   - 애니메이션 그라데이션 배경
+   - 네온 버튼
+   - 주요 지표 그리드
+
+6. **Footer**
+   - 링크 그리드
+   - 소셜 미디어 아이콘
+   - 기술 배지
+
+## 🎨 Custom CSS Classes
+
+```css
+.neon-text          /* 네온 글로우 효과 */
+.neon-button        /* 네온 버튼 스타일 */
+.animated-gradient  /* 움직이는 그라데이션 */
+.retro-grid        /* 레트로 그리드 패턴 */
+.card-3d           /* 3D 카드 효과 */
+.fade-in-up        /* 페이드 인 애니메이션 */
+.pulse-glow        /* 펄스 글로우 */
 ```
 
-## 프로젝트 구조
+## 🌟 Key Design Principles
+
+1. **Bold Color Choices**: 강렬한 네온 컬러 팔레트
+2. **Kinetic Typography**: Bebas Neue로 역동적인 헤드라인
+3. **Interactive Effects**: 마우스 커서, 호버 상태, 애니메이션
+4. **Retro-Modern Fusion**: 80년대 감성과 현대적 UI의 조화
+5. **Spatial Hierarchy**: 대각선 레이아웃과 Z-축 효과
+
+## 📁 Project Structure
 
 ```
 gymhub-landing/
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx          # 레이아웃
-│   │   ├── page.tsx            # 메인 페이지
-│   │   └── globals.css         # 글로벌 스타일
-│   ├── components/
-│   │   ├── ui/                 # shadcn/ui 컴포넌트
-│   │   │   ├── button.tsx
-│   │   │   └── card.tsx
-│   │   └── sections/           # 랜딩 페이지 섹션
-│   │       ├── hero.tsx
-│   │       ├── features.tsx
-│   │       ├── tech-stack.tsx
-│   │       ├── roadmap.tsx
-│   │       ├── cta.tsx
-│   │       └── footer.tsx
-│   └── lib/
-│       └── utils.ts            # 유틸리티 함수
+│   │   ├── globals.css          # 커스텀 CSS + Tailwind
+│   │   ├── layout.tsx
+│   │   └── page.tsx             # 메인 페이지
+│   └── components/
+│       ├── CursorSpotlight.tsx  # 커서 스팟라이트
+│       └── sections/
+│           ├── HeroSection.tsx
+│           ├── FeaturesSection.tsx
+│           ├── TechStackSection.tsx
+│           ├── RoadmapSection.tsx
+│           ├── CTASection.tsx
+│           └── FooterSection.tsx
 ├── package.json
 ├── tsconfig.json
 ├── tailwind.config.ts
-├── next.config.ts
 └── README.md
 ```
 
-## 주요 기능
+## 🎭 Design Philosophy
 
-- ✅ 반응형 디자인
-- ✅ TypeScript 타입 안정성
-- ✅ Tailwind CSS 스타일링
-- ✅ shadcn/ui 컴포넌트
-- ✅ Lucide 아이콘
-- ✅ 최적화된 Next.js App Router
+이 랜딩 페이지는 **"AI slop" 미학을 피하고** 진정으로 독특한 디자인을 추구합니다:
 
-## 라이선스
+- ❌ 흔한 Inter/Roboto 폰트 대신 → ✅ Bebas Neue + Public Sans
+- ❌ 평범한 보라색 그라데이션 대신 → ✅ 네온 시안/핑크/퍼플
+- ❌ 정적인 카드 레이아웃 대신 → ✅ 3D 호버, 글로우, 애니메이션
+- ❌ 단조로운 백그라운드 대신 → ✅ 레트로 그리드, 애니메이션 그라데이션
 
-이 프로젝트는 GymHub 제품의 일부로 제작되었습니다.
+## 🚀 Production Build
+
+```bash
+npm run build
+npm start
+```
+
+## 📝 License
+
+GymHub 제품의 일부로 제작되었습니다.
 
 ---
 
-**제작**: GymHub 개발팀
-**버전**: 1.0.0
-**마지막 업데이트**: 2025-01-15
+**Created by**: GymHub Development Team
+**Version**: 1.0.0
+**Design Theme**: Retro-Futuristic Athletic
+**Last Updated**: 2025-01-15
