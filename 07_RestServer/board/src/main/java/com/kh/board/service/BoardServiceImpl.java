@@ -31,4 +31,14 @@ public class BoardServiceImpl implements BoardService {
     public int save(Board board) {
         return boardMapper.save(board);
     }
+
+    @Override
+    public int updateById(Board board) {
+        return boardMapper.updateById(board);
+    }
+
+    @Override
+    public int deleteById(String boardId) {
+        return boardMapper.deleteById(boardId);
+    }
 }

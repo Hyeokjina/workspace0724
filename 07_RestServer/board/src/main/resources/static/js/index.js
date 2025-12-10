@@ -106,19 +106,16 @@ function updateBoard(){
     if(!confirm("글을 정말 수정하시겠습니까?"))
         return;
 
-    const path = window.location.pathname;
-    const pathParts = path.split('/');
-    const boardId = pathParts[pathParts.length - 1];
+    const urlParams = new URLSearchParams(window.location.search);
+    const boardId = urlParams.get('id');
 
     const formData = new FormData();
     formData.append("title", document.querySelector('#title').value)
     formData.append("contents", document.querySelector('#contents').value)
     formData.append("upfile", document.querySelector('#upfile').files[0])
-    formData.append("originFile", document.querySelector('#originFile').value)
-    formData.append("boardId", boardId);
 
     $.ajax({
-        url: "http://localhost:8888/api/board",
+        url: "http://localhost:8888/api/board/" + boardId,
         type: "PUT",
         data: formData,
         contentType: false, // FormData를 사용하면 contentType은 false로 설정
@@ -126,11 +123,11 @@ function updateBoard(){
         success: function(response) {
             console.log(response)
             alert("글이 성공적으로 수정되었습니다.");
-            window.location.href = "/boardDetail/" + boardId;
+            window.location.href = "/boardDetail.html?id=" + boardId;
         },
         error: function(error) {
-            alert("글 등록에 실패했습니다.");
-            console.error("board insert failed");
+            alert("글 수정에 실패했습니다.");
+            console.error("board update failed");
         }
     });
 };
@@ -139,10 +136,8 @@ function deleteBoard(){
     if(!confirm("글을 정말 삭제하시겠습니까?"))
         return;
 
-    const path = window.location.pathname;
-    const pathParts = path.split('/');
-    const boardId = pathParts[pathParts.length - 1];
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const boardId = urlParams.get('id');
 
     $.ajax({
         url: "http://localhost:8888/api/board/" + boardId,
@@ -152,8 +147,8 @@ function deleteBoard(){
             window.location.href = "/";
         },
         error: function(error) {
-            alert("글 등록에 실패했습니다.");
-            console.error("board insert failed");
+            alert("글 삭제에 실패했습니다.");
+            console.error("board delete failed");
         }
     });
 };

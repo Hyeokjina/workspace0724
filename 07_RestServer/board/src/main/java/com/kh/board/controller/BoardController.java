@@ -77,4 +77,41 @@ public class BoardController {
             return new ResponseEntity<>("게시글 등록 실패", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping("/{boardId}")
+    public ResponseEntity<String> updateBoard(@PathVariable String boardId, @ModelAttribute BoardRequest.UpdateDto request, @RequestParam(value = "upfile", required = false) MultipartFile upfile) throws IOException {
+        request.setBoardId(boardId);
+
+        if(upfile != null && !upfile.isEmpty()){
+            File uploadDir = new File("C:\\workspcae\\07_RestServer\\board\\src\\main\\resources\\static\\uploads");
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
+
+            File file = new File(uploadDir, upfile.getOriginalFilename());
+            upfile.transferTo(file);
+
+            request.setFile_name("/uploads/"+upfile.getOriginalFilename());
+        }
+
+        Board board = request.toEntity();
+        int result = boardService.updateById(board);
+
+        if(result > 0){
+            return new ResponseEntity<>("게시글 수정 성공", HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>("게시글 수정 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<String> deleteBoard(@PathVariable String boardId){
+        int result = boardService.deleteById(boardId);
+
+        if(result > 0){
+            return new ResponseEntity<>("게시글 삭제 성공", HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>("게시글 삭제 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -10,4 +10,6 @@ public interface BoardMapper {
     List<Board> findAll();
     Board findById(String boardId);
     int save(Board board);
+    int updateById(Board board);
+    int deleteById(String boardId);
 }
