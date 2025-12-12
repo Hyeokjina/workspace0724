@@ -47,6 +47,6 @@ public class Member extends BaseTimeEntity {
     }
 
     public enum Status {
-        Y, N
+        Y, N, O
     }
 }
