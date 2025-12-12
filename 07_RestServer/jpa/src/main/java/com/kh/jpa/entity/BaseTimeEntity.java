@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Getter
-@EntityListeners(AuditingEntityListener.class) //Auditing(자동으로 값을
+@EntityListeners(AuditingEntityListener.class) //Auditing(자동으로 값을 매핑)
 @MappedSuperclass//추후에 BaseTimeEntity를 상속한 엔티티의 필드를 컬럼으로 인식.
 public abstract class BaseTimeEntity {
 
