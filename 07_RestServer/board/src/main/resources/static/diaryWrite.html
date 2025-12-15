@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일기 작성 - 나의 일기장</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="diary-form">
+            <h2>✏️ 일기 작성</h2>
+            <form id="diaryWriteForm">
+                <div class="form-group">
+                    <label for="title">제목</label>
+                    <input type="text" id="title" name="title" required placeholder="일기 제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" name="content" rows="10" required placeholder="오늘 하루는 어땠나요?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="emotion">오늘의 기분</label>
+                    <select id="emotion" name="emotion" required>
+                        <option value="">기분을 선택하세요</option>
+                        <option value="happy">😊 행복해요</option>
+                        <option value="excited">😆 신나요</option>
+                        <option value="normal">😐 평범해요</option>
+                        <option value="sad">😢 슬퍼요</option>
+                        <option value="angry">😠 화나요</option>
+                        <option value="tired">😴 피곤해요</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">작성 완료</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='/'">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/diaryWrite.js"></script>
+</body>
+</html>

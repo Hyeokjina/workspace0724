@@ -1,6 +1,14 @@
 package com.kh.jpa.entity;
 
-public class BoardTagId implements java.io.Serializable {
-    private long boardId;
-    private long tagNo;
+import lombok.*;
+
+import java.io.Serializable;
+
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class BoardTagId implements Serializable {
+    private Long board;
+    private Long tag;
 }

@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Board {
-    private String boardId;
+public class Diary {
+    private Long id;
+    private Long memberId;
     private String title;
-    private String contents;
-    private String fileName;
-    private String memberEmail;
+    private String content;
+    private String emotion;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

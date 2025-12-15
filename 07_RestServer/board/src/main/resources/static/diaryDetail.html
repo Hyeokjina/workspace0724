@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>일기 상세보기 - 나의 일기장</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="diary-detail">
+            <div class="diary-header">
+                <h2 id="diaryTitle"></h2>
+                <div class="diary-info">
+                    <span id="diaryEmotion" class="emotion-badge"></span>
+                    <span id="diaryDate" class="diary-date"></span>
+                </div>
+            </div>
+
+            <div class="diary-content">
+                <p id="diaryContent"></p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="editDiary()">수정</button>
+                <button class="btn btn-danger" onclick="deleteDiary()">삭제</button>
+                <button class="btn btn-secondary" onclick="location.href='/'">목록으로</button>
+            </div>
+        </div>
+
+        <!-- 수정 폼 (기본적으로 숨김) -->
+        <div id="editForm" class="diary-form" style="display: none;">
+            <h2>✏️ 일기 수정</h2>
+            <form id="diaryEditForm">
+                <div class="form-group">
+                    <label for="editTitle">제목</label>
+                    <input type="text" id="editTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="editContent">내용</label>
+                    <textarea id="editContent" name="content" rows="10" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editEmotion">오늘의 기분</label>
+                    <select id="editEmotion" name="emotion" required>
+                        <option value="happy">😊 행복해요</option>
+                        <option value="excited">😆 신나요</option>
+                        <option value="normal">😐 평범해요</option>
+                        <option value="sad">😢 슬퍼요</option>
+                        <option value="angry">😠 화나요</option>
+                        <option value="tired">😴 피곤해요</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">수정 완료</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/diaryDetail.js"></script>
+</body>
+</html>
