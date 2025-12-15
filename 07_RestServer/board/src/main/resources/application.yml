@@ -1,26 +1,25 @@
 spring:
   application:
-    name: diary
+    name: board
 
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/C:\workspcae\07_RestServer\db2\tdb
+      jdbc-url: jdbc:h2:tcp://localhost/C:\workspcae\07_RestServer\db\tdb
       driver-class-name: org.h2.Driver
       username: sa
       password: 1234
-
   h2:
     console:
       enabled: true
       path: /h2-console
 
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
 
 server:
-  port: 8080
+  port: 8888
 
   servlet:
     encoding:
@@ -31,5 +30,3 @@ server:
 mybatis:
   type-aliases-package: com.kh.board.entity
   mapper-locations: classpath:mappers/*.xml
-  configuration:
-    map-underscore-to-camel-case: true
