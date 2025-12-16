@@ -16,19 +16,15 @@ public class Profile {
     @Column(name = "PROFILE_ID")
     private Long profileId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", unique = true)
-    private Member member;
-
     @Column(name = "PROFILE_IMAGE", length = 100)
     private String profileImage;
 
     @Column(name = "INTRO", length = 300)
     private String intro;
 
-    // 비즈니스 메서드
-    public void updateProfile(String profileImage, String intro) {
-        this.profileImage = profileImage;
-        this.intro = intro;
-    }
+    //연관관계 맵핑
+    //1대1일
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", unique = true, nullable = false)
+    private Member member;
 }
