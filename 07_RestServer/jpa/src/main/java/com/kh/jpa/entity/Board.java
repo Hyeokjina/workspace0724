@@ -1,10 +1,12 @@
 package com.kh.jpa.entity;
 
+import com.kh.jpa.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +15,10 @@ import java.util.List;
 @Table(name = "BOARD")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Board {
+public class Board extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +30,7 @@ public class Board {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOARD_WRITER", nullable = false)
-    private Member writer;
+    private Member member;
 
     @Lob
     @Column(name = "BOARD_CONTENT", nullable = false)
@@ -41,17 +43,11 @@ public class Board {
     private String changeName;
 
     @Column(name = "COUNT")
-    @Builder.Default
+    @Builder.Default //@Builder.Default: 빌드패턴으로 객체 생성시 count값이 없다면 기본값을 사용한다.
     private Integer count = 0;
 
-    @CreatedDate
-    @Column(name = "CREATE_DATE", updatable = false)
-    private LocalDateTime createDate;
-
-    @Column(name = "STATUS", length = 1, nullable = false)
-    @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Status status = Status.Y;
+    private CommonEnums.Status status = CommonEnums.Status.Y;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -63,29 +59,5 @@ public class Board {
 
     public enum Status {
         Y, N
-    }
-
-    // 비즈니스 메서드
-    public void updateBoard(String title, String content, String originName, String changeName) {
-        this.boardTitle = title;
-        this.boardContent = content;
-        this.originName = originName;
-        this.changeName = changeName;
-    }
-
-    public void increaseCount() {
-        this.count++;
-    }
-
-    public void delete() {
-        this.status = Status.N;
-    }
-
-    public void addTag(Tag tag) {
-        BoardTag boardTag = BoardTag.builder()
-                .board(this)
-                .tag(tag)
-                .build();
-        this.boardTags.add(boardTag);
     }
 }
