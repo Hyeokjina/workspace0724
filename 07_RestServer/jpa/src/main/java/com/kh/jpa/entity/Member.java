@@ -42,6 +42,9 @@ public class Member extends BaseTimeEntity {
     @Builder.Default
     private Status status = Status.Y;
 
+    //연관관계 맵핑 (프로필과 1대1)
+    //cascade : Member객체 상태가 삭제(변경)되면 프로필에도 영향을 주겠다.
+    //orphanRemoval : Member객체에서 프로필의 참조값이 삭제되면 실제 db에 반영하겠다.
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
 
@@ -53,14 +56,5 @@ public class Member extends BaseTimeEntity {
         Y, N
     }
 
-    // 비즈니스 메서드
-    public void updateMemberInfo(String email, String phone, String address) {
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-    }
 
-    public void deactivate() {
-        this.status = Status.N;
-    }
 }
