@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Notice {
+public class Notice extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +30,4 @@ public class Notice {
 
     @Column(name = "NOTICE_CONTENT", length = 200, nullable = false)
     private String noticeContent;
-
-    @CreatedDate
-    @Column(name = "CREATE_DATE", updatable = false)
-    private LocalDateTime createDate;
-
-    // 비즈니스 메서드
-    public void updateNotice(String title, String content) {
-        this.noticeTitle = title;
-        this.noticeContent = content;
-    }
 }
