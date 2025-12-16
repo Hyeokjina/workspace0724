@@ -25,17 +25,21 @@ public class Reply extends BaseTimeEntity{
     @Column(name = "REPLY_CONTENT", length = 400, nullable = false)
     private String replyContent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "REF_BNO", nullable = false)
-    private Board board;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "REPLY_WRITER", nullable = false)
-    private Member writer;
-
     @Column(name = "STATUS", length = 1, nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private CommonEnums.Status status = CommonEnums.Status.Y;
+
+    // === 연관관계 맴핑 ===
+    // 댓글 : 게시글 (N : 1) 연관관계 주인
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "REF_BNO", nullable = false)
+    private Board board;
+
+    // 댓글 : 댓글작성회원 (N : 1) 연관관계 주인
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "REPLY_WRITER", nullable = false)
+    private Member writer;
+
 
 }
