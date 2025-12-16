@@ -1,5 +1,6 @@
 package com.kh.jpa.entity;
 
+import com.kh.jpa.enums.CommonEnums;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Reply {
+public class Reply extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,25 +33,9 @@ public class Reply {
     @JoinColumn(name = "REPLY_WRITER", nullable = false)
     private Member writer;
 
-    @CreatedDate
-    @Column(name = "CREATE_DATE", updatable = false, nullable = false)
-    private LocalDateTime createDate;
-
     @Column(name = "STATUS", length = 1, nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Status status = Status.Y;
+    private CommonEnums.Status status = CommonEnums.Status.Y;
 
-    public enum Status {
-        Y, N
-    }
-
-    // 비즈니스 메서드
-    public void updateReply(String content) {
-        this.replyContent = content;
-    }
-
-    public void delete() {
-        this.status = Status.N;
-    }
 }
