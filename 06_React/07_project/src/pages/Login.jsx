@@ -20,7 +20,7 @@ const Login = () => {
     const login = useAuthStore(state => state.login);
 
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: ''
     });
 
@@ -31,11 +31,11 @@ const Login = () => {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.username.trim()) {
-            alert('아이디를 입력해주세요.');
+        if (!formData.email.trim()) {
+            alert('이메일을 입력해주세요.');
             return;
         }
 
@@ -44,7 +44,7 @@ const Login = () => {
             return;
         }
 
-        const result = login(formData.username, formData.password);
+        const result = await login(formData.email, formData.password);
 
         if (result.success) {
             alert(result.message);
@@ -60,13 +60,13 @@ const Login = () => {
                 <Title>로그인</Title>
                 <Form onSubmit={handleSubmit}>
                     <InputGroup>
-                        <Label>아이디</Label>
+                        <Label>이메일</Label>
                         <Input
-                            type="text"
-                            name="username"
-                            value={formData.username}
+                            type="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleChange}
-                            placeholder="아이디"
+                            placeholder="이메일"
                         />
                     </InputGroup>
 

@@ -5,6 +5,6 @@ export const ROUTES = {
     DIARY_LIST: "/diaries",
     DIARY_WRITE: "/diaries/write",
     DIARY_DETAIL: (id) => `/diaries/${id}`,
+    CALENDAR: "/calendar",
     MYPAGE: "/mypage",
-    
 }

@@ -76,20 +76,28 @@ const DiaryDetail = () => {
     const updateDiary = useDiaryStore(state => state.updateDiary);
     const deleteDiary = useDiaryStore(state => state.deleteDiary);
 
+    const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [emotion, setEmotion] = useState('happy');
     const [error, setError] = useState('');
     const [diary, setDiary] = useState(null);
 
     useEffect(() => {
-        if (isLoggedIn()) {
-            const foundDiary = getDiaryById(id);
-            if (foundDiary && foundDiary.userId === currentUser.id) {
-                setDiary(foundDiary);
-                setContent(foundDiary.content);
-                setEmotion(foundDiary.emotion);
+        const loadDiary = async () => {
+            if (isLoggedIn()) {
+                const response = await getDiaryById(id);
+                const foundDiary = response.data || response;
+                // userId 또는 memberId 확인
+                const diaryOwnerId = foundDiary.userId || foundDiary.memberId;
+                if (foundDiary && diaryOwnerId === currentUser.id) {
+                    setDiary(foundDiary);
+                    setTitle(foundDiary.title || '');
+                    setContent(foundDiary.content);
+                    setEmotion(foundDiary.emotion);
+                }
             }
-        }
+        };
+        loadDiary();
     }, [id, isLoggedIn, getDiaryById, currentUser]);
 
     // 로그인 체크
@@ -114,6 +122,7 @@ const DiaryDetail = () => {
     }
 
     const formatDate = (dateString) => {
+        if (!dateString) return '';
         const date = new Date(dateString);
         return date.toLocaleDateString('ko-KR', {
             year: 'numeric',
@@ -123,28 +132,47 @@ const DiaryDetail = () => {
         });
     }
 
+    const handleTitleChange = (e) => {
+        setTitle(e.target.value);
+        setError('');
+    }
+
     const handleContentChange = (e) => {
         setContent(e.target.value);
         setError('');
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (title.trim().length === 0) {
+            setError('제목을 입력해주세요.');
+            return;
+        }
 
         if (content.trim().length === 0) {
             setError('일기 내용을 입력해주세요.');
             return;
         }
 
-        
-        updateDiary(diary.id, content.trim(), emotion);
-        navigate(ROUTES.DIARY_LIST);
+        const result = await updateDiary(diary.id, title.trim(), content.trim(), emotion);
+
+        if (result.success) {
+            navigate(ROUTES.DIARY_LIST);
+        } else {
+            setError(result.message || '일기 수정에 실패했습니다.');
+        }
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (window.confirm('정말 이 일기를 삭제하시겠습니까?')) {
-            deleteDiary(diary.id);
-            navigate(ROUTES.DIARY_LIST);
+            const result = await deleteDiary(diary.id);
+
+            if (result.success) {
+                navigate(ROUTES.DIARY_LIST);
+            } else {
+                setError(result.message || '일기 삭제에 실패했습니다.');
+            }
         }
     }
 
@@ -152,9 +180,20 @@ const DiaryDetail = () => {
         <Container>
             <FormCard>
                 <Title>일기 수정</Title>
-                <DateDisplay>{formatDate(diary.date)}</DateDisplay>
+                <DateDisplay>{formatDate(diary.createdAt)}</DateDisplay>
 
                 <Form onSubmit={handleSubmit}>
+                    <TextareaGroup>
+                        <Label>제목</Label>
+                        <Textarea
+                            value={title}
+                            onChange={handleTitleChange}
+                            placeholder="제목을 입력하세요"
+                            rows={1}
+                            style={{ resize: 'none' }}
+                        />
+                    </TextareaGroup>
+
                     <EmotionPicker>
                         <Label>오늘의 기분</Label>
                         <div>

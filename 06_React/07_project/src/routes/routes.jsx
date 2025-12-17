@@ -8,6 +8,7 @@ import Signup from '../pages/Signup'
 import DiaryList from '../pages/DiaryList'
 import DiaryWrite from '../pages/DiaryWrite'
 import DiaryDetail from '../pages/DiaryDetail'
+import Calendar from '../pages/Calendar'
 import MyPage from '../pages/MyPage'
 import NotFound from '../pages/NotFound'
 
@@ -22,6 +23,7 @@ const AppRoutes = () => {
                     <Route path={ROUTES.DIARY_LIST} element={<DiaryList />} />
                     <Route path={ROUTES.DIARY_WRITE} element={<DiaryWrite />} />
                     <Route path="/diaries/:id" element={<DiaryDetail />} />
+                    <Route path={ROUTES.CALENDAR} element={<Calendar />} />
                     <Route path={ROUTES.MYPAGE} element={<MyPage />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>

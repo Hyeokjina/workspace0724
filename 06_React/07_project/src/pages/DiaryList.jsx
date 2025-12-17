@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../stores/useAuthStore'
 import useDiaryStore from '../stores/useDiaryStore'
@@ -15,6 +15,7 @@ import {
     DiaryCard,
     DiaryDate,
     DiaryEmotion,
+    DiaryTitle,
     DiaryContent,
     EmptyState,
     LoginPrompt
@@ -35,10 +36,17 @@ const DiaryList = () => {
     const currentUser = useAuthStore(state => state.currentUser);
     const isLoggedIn = useAuthStore(state => state.isLoggedIn);
     const getUserDiaries = useDiaryStore(state => state.getUserDiaries);
-    const searchDiaries = useDiaryStore(state => state.searchDiaries);
+    const fetchDiaries = useDiaryStore(state => state.fetchDiaries);
 
     const [searchKeyword, setSearchKeyword] = useState('');
     const [isSearching, setIsSearching] = useState(false);
+
+    // 서버에서 일기 데이터 가져오기
+    useEffect(() => {
+        if (isLoggedIn() && currentUser) {
+            fetchDiaries(currentUser.id);
+        }
+    }, [isLoggedIn, currentUser, fetchDiaries]);
 
     // 로그인하지 않은 경우
     if (!isLoggedIn()) {
@@ -55,13 +63,18 @@ const DiaryList = () => {
         )
     }
 
-    // 현재 유저의 일기 가져오기
-    const userDiaries = isSearching
-        ? searchDiaries(currentUser.id, searchKeyword)
-        : getUserDiaries(currentUser.id);
+    // 현재 유저의 일기 가져오기 (동기 함수 사용)
+    const userDiaries = getUserDiaries(currentUser.id);
+
+    // 검색어로 필터링 (클라이언트 사이드)
+    const filteredDiaries = isSearching && searchKeyword.trim()
+        ? userDiaries.filter(diary =>
+            diary.content.toLowerCase().includes(searchKeyword.toLowerCase())
+          )
+        : userDiaries;
 
     // 최신순 정렬
-    const sortedDiaries = [...userDiaries].sort((a, b) =>
+    const sortedDiaries = [...filteredDiaries].sort((a, b) =>
         new Date(b.createdAt) - new Date(a.createdAt)
     );
 
@@ -80,6 +93,7 @@ const DiaryList = () => {
     }
 
     const formatDate = (dateString) => {
+        if (!dateString) return '';
         const date = new Date(dateString);
         return date.toLocaleDateString('ko-KR', {
             year: 'numeric',
@@ -122,10 +136,11 @@ const DiaryList = () => {
                             key={diary.id}
                             onClick={() => navigate(ROUTES.DIARY_DETAIL(diary.id))}
                         >
-                            <DiaryDate>{formatDate(diary.date)}</DiaryDate>
+                            <DiaryDate>{formatDate(diary.createdAt)}</DiaryDate>
                             <DiaryEmotion>
                                 {EMOTIONS[diary.emotion] ? EMOTIONS[diary.emotion].emoji : '😊'}
                             </DiaryEmotion>
+                            <DiaryTitle>{diary.title}</DiaryTitle>
                             <DiaryContent>{diary.content}</DiaryContent>
                         </DiaryCard>
                     ))}

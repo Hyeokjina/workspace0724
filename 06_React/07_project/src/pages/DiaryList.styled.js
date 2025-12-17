@@ -142,14 +142,24 @@ export const DiaryEmotion = styled.div`
     margin-bottom: 16px;
 `
 
-export const DiaryContent = styled.p`
-    font-size: 16px;
+export const DiaryTitle = styled.h3`
+    font-size: 18px;
+    font-weight: 700;
     color: #2C3E50;
+    margin-bottom: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+`
+
+export const DiaryContent = styled.p`
+    font-size: 14px;
+    color: #7F8C8D;
     line-height: 1.6;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 `
 

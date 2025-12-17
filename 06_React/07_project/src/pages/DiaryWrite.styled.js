@@ -98,13 +98,13 @@ export const Label = styled.label`
 `
 
 export const Textarea = styled.textarea`
-    padding: 16px;
+    padding: 12px 16px;
     border: 2px solid #E0E0E0;
     border-radius: 12px;
     font-size: 16px;
     font-family: 'Noto Sans KR', sans-serif;
     resize: vertical;
-    min-height: 120px;
+    min-height: ${props => props.rows === 1 ? '45px' : '120px'};
     transition: all 0.2s;
     line-height: 1.6;
 

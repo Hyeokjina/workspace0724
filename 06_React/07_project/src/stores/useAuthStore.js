@@ -18,13 +18,13 @@ const useAuthStore = create(
             isLoggedIn: () => !!get().currentUser,
 
             // 회원가입
-            signup: async (username, password, nickname) => {
+            signup: async (email, password, nickname) => {
                 set({ loading: true, error: null });
                 try {
-                    const response = await apiRequest('/members/signup', {
+                    const response = await apiRequest('/members', {
                         method: 'POST',
                         body: JSON.stringify({
-                            username,
+                            email,
                             password,
                             nickname
                         })
@@ -39,28 +39,28 @@ const useAuthStore = create(
             },
 
             // 로그인
-            login: async (username, password) => {
+            login: async (email, password) => {
                 set({ loading: true, error: null });
                 try {
-                    const user = await apiRequest('/members/login', {
+                    const response = await apiRequest('/members/login', {
                         method: 'POST',
                         body: JSON.stringify({
-                            username,
+                            email,
                             password
                         })
                     });
 
                     const userInfo = {
-                        id: user.id,
-                        username: user.username,
-                        nickname: user.nickname
+                        id: response.data.id,
+                        email: response.data.email,
+                        nickname: response.data.nickname
                     };
 
                     set({ currentUser: userInfo, loading: false });
                     return { success: true, message: '로그인 성공!' };
                 } catch (error) {
                     set({ error: error.message, loading: false });
-                    return { success: false, message: error.message || '아이디 또는 비밀번호가 틀렸습니다.' };
+                    return { success: false, message: error.message || '이메일 또는 비밀번호가 틀렸습니다.' };
                 }
             },
 
@@ -70,7 +70,7 @@ const useAuthStore = create(
             },
 
             // 회원정보 수정
-            updateUser: async (newUsername, newPassword, newNickname) => {
+            updateUser: async (newEmail, newPassword, newNickname) => {
                 const { currentUser } = get();
                 if (!currentUser) {
                     return { success: false, message: '로그인이 필요합니다.' };
@@ -78,10 +78,10 @@ const useAuthStore = create(
 
                 set({ loading: true, error: null });
                 try {
-                    const updatedUser = await apiRequest(`/members/${currentUser.id}`, {
+                    const response = await apiRequest(`/members/${currentUser.id}`, {
                         method: 'PUT',
                         body: JSON.stringify({
-                            username: newUsername,
+                            email: newEmail,
                             password: newPassword,
                             nickname: newNickname
                         })
@@ -90,8 +90,8 @@ const useAuthStore = create(
                     // currentUser 업데이트
                     const updatedCurrentUser = {
                         ...currentUser,
-                        username: updatedUser.username,
-                        nickname: updatedUser.nickname
+                        email: response.data.email,
+                        nickname: response.data.nickname
                     };
 
                     set({

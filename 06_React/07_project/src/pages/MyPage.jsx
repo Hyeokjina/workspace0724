@@ -31,22 +31,25 @@ const MyPage = () => {
     const diaries = useDiaryStore(state => state.diaries);
 
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: '',
         passwordConfirm: '',
         nickname: ''
     });
 
     useEffect(() => {
-        if (isLoggedIn() && currentUser) {
-            const currentPassword = getCurrentUserPassword();
-            setFormData({
-                username: currentUser.username,
-                password: currentPassword || '',
-                passwordConfirm: currentPassword || '',
-                nickname: currentUser.nickname
-            });
-        }
+        const loadUserData = async () => {
+            if (isLoggedIn() && currentUser) {
+                const currentPassword = await getCurrentUserPassword();
+                setFormData({
+                    email: currentUser.email,
+                    password: currentPassword || '',
+                    passwordConfirm: currentPassword || '',
+                    nickname: currentUser.nickname
+                });
+            }
+        };
+        loadUserData();
     }, [currentUser, isLoggedIn, getCurrentUserPassword]);
 
     if (!isLoggedIn()) {
@@ -61,16 +64,18 @@ const MyPage = () => {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.username.trim()) {
-            alert('아이디를 입력해주세요.');
+        if (!formData.email.trim()) {
+            alert('이메일을 입력해주세요.');
             return;
         }
 
-        if (formData.username.length < 4) {
-            alert('아이디는 4자 이상이어야 합니다.');
+        // 이메일 형식 검증
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            alert('올바른 이메일 형식을 입력해주세요.');
             return;
         }
 
@@ -94,17 +99,17 @@ const MyPage = () => {
             return;
         }
 
-        const result = updateUser(formData.username, formData.password, formData.nickname);
+        const result = await updateUser(formData.email, formData.password, formData.nickname);
         alert(result.message);
-        
+
         if (result.success) {
             navigate(ROUTES.HOME);
         }
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (window.confirm('정말 탈퇴하시겠습니까?')) {
-            const result = deleteUser();
+            const result = await deleteUser();
             alert(result.message);
             navigate(ROUTES.HOME);
         }
@@ -117,13 +122,13 @@ const MyPage = () => {
                 
                 <Form onSubmit={handleSubmit}>
                     <InputGroup>
-                        <Label>아이디</Label>
+                        <Label>이메일</Label>
                         <Input
-                            type="text"
-                            name="username"
-                            value={formData.username}
+                            type="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleChange}
-                            placeholder="아이디 (4자 이상)"
+                            placeholder="이메일"
                         />
                     </InputGroup>
 

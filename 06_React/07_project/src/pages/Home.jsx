@@ -107,12 +107,12 @@ const Home = () => {
     
     const currentUser = useAuthStore(state => state.currentUser);
     const isLoggedIn = useAuthStore(state => state.isLoggedIn);
-    const filterByEmotion = useDiaryStore(state => state.filterByEmotion);
+    const getEmotionCount = useDiaryStore(state => state.getEmotionCount);
 
-    // 감정별 개수 계산
-    const getEmotionCount = (emotionValue) => {
+    // 감정별 개수 계산 (로컬 상태에서)
+    const getCount = (emotionValue) => {
         if (!isLoggedIn()) return 0;
-        return filterByEmotion(currentUser.id, emotionValue).length;
+        return getEmotionCount(currentUser.id, emotionValue);
     }
 
     return (
@@ -126,7 +126,7 @@ const Home = () => {
                         {EMOTIONS.map(emotion => (
                             <StatCard key={emotion.value} color={emotion.color}>
                                 <StatEmoji>{emotion.emoji}</StatEmoji>
-                                <StatCount>{getEmotionCount(emotion.value)}</StatCount>
+                                <StatCount>{getCount(emotion.value)}</StatCount>
                                 <StatLabel>{emotion.label}</StatLabel>
                             </StatCard>
                         ))}

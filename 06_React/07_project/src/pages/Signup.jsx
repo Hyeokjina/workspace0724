@@ -20,7 +20,7 @@ const Signup = () => {
     const signup = useAuthStore(state => state.signup);
 
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: '',
         passwordConfirm: '',
         nickname: ''
@@ -33,16 +33,18 @@ const Signup = () => {
         });
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.username.trim()) {
-            alert('아이디를 입력해주세요.');
+        if (!formData.email.trim()) {
+            alert('이메일을 입력해주세요.');
             return;
         }
 
-        if (formData.username.length < 4) {
-            alert('아이디는 4자 이상이어야 합니다.');
+        // 간단한 이메일 형식 검증
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            alert('올바른 이메일 형식을 입력해주세요.');
             return;
         }
 
@@ -66,7 +68,7 @@ const Signup = () => {
             return;
         }
 
-        const result = signup(formData.username, formData.password, formData.nickname);
+        const result = await signup(formData.email, formData.password, formData.nickname);
 
         if (result.success) {
             alert(result.message);
@@ -82,13 +84,13 @@ const Signup = () => {
                 <Title>회원가입</Title>
                 <Form onSubmit={handleSubmit}>
                     <InputGroup>
-                        <Label>아이디</Label>
+                        <Label>이메일</Label>
                         <Input
-                            type="text"
-                            name="username"
-                            value={formData.username}
+                            type="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleChange}
-                            placeholder="아이디 (4자 이상)"
+                            placeholder="이메일"
                         />
                     </InputGroup>
 

@@ -35,6 +35,7 @@ const DiaryWrite = () => {
     const isLoggedIn = useAuthStore(state => state.isLoggedIn);
     const addDiary = useDiaryStore(state => state.addDiary);
 
+    const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [emotion, setEmotion] = useState('happy');
     const [error, setError] = useState('');
@@ -52,13 +53,23 @@ const DiaryWrite = () => {
         weekday: 'long'
     });
 
-    const handleContentChange = (e) => {
-    setContent(e.target.value);
-    setError('');
+    const handleTitleChange = (e) => {
+        setTitle(e.target.value);
+        setError('');
     }
 
-    const handleSubmit = (e) => {
+    const handleContentChange = (e) => {
+        setContent(e.target.value);
+        setError('');
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (title.trim().length === 0) {
+            setError('제목을 입력해주세요.');
+            return;
+        }
 
         if (content.trim().length === 0) {
             setError('일기 내용을 입력해주세요.');
@@ -70,8 +81,13 @@ const DiaryWrite = () => {
             return;
         }
 
-        addDiary(currentUser.id, content.trim(), emotion);
-        navigate(ROUTES.DIARY_LIST);
+        const result = await addDiary(currentUser.id, title.trim(), content.trim(), emotion);
+
+        if (result.success) {
+            navigate(ROUTES.DIARY_LIST);
+        } else {
+            setError(result.message || '일기 저장에 실패했습니다.');
+        }
     }
 
     const handleCancel = () => {
@@ -86,6 +102,17 @@ const DiaryWrite = () => {
                 <DateDisplay>{today}</DateDisplay>
 
                 <Form onSubmit={handleSubmit}>
+                    <TextareaGroup>
+                        <Label>제목</Label>
+                        <Textarea
+                            value={title}
+                            onChange={handleTitleChange}
+                            placeholder="제목을 입력하세요"
+                            rows={1}
+                            style={{ resize: 'none' }}
+                        />
+                    </TextareaGroup>
+
                     <EmotionPicker>
                         <Label>오늘의 기분</Label>
                         <div>

@@ -18,9 +18,15 @@ const useDiaryStore = create(
             fetchDiaries: async (userId) => {
                 set({ loading: true, error: null });
                 try {
-                    const data = await apiRequest(`/diaries/user/${userId}`);
-                    set({ diaries: data, loading: false });
-                    return data;
+                    const response = await apiRequest(`/diaries`);
+                    // ApiResponse 구조: { success, message, data }
+                    const allDiaries = response.data || [];
+                    // 사용자의 일기만 필터링 (userId 또는 memberId 확인)
+                    const userDiaries = allDiaries.filter(diary =>
+                        diary.userId === userId || diary.memberId === userId
+                    );
+                    set({ diaries: userDiaries, loading: false });
+                    return userDiaries;
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     throw error;
@@ -28,38 +34,46 @@ const useDiaryStore = create(
             },
 
             // 일기 추가
-            addDiary: async (userId, content, emotion) => {
+            addDiary: async (userId, title, content, emotion) => {
                 set({ loading: true, error: null });
                 try {
-                    const newDiary = await apiRequest('/diaries', {
+                    const response = await apiRequest('/diaries', {
                         method: 'POST',
                         body: JSON.stringify({
-                            userId,
+                            memberId: userId,
+                            title,
                             content,
-                            emotion,
-                            date: new Date().toISOString().split('T')[0]
+                            emotion
                         })
                     });
+
+                    const newDiary = response.data || response;
 
                     set(state => ({
                         diaries: [...state.diaries, newDiary],
                         loading: false
                     }));
-                    return newDiary;
+                    return { success: true, message: '일기가 저장되었습니다.', data: newDiary };
                 } catch (error) {
                     set({ error: error.message, loading: false });
-                    throw error;
+                    return { success: false, message: error.message };
                 }
             },
 
             // 일기 수정
-            updateDiary: async (id, content, emotion) => {
+            updateDiary: async (id, title, content, emotion) => {
                 set({ loading: true, error: null });
                 try {
-                    const updatedDiary = await apiRequest(`/diaries/${id}`, {
+                    const response = await apiRequest(`/diaries/${id}`, {
                         method: 'PUT',
-                        body: JSON.stringify({ content, emotion })
+                        body: JSON.stringify({
+                            title,
+                            content,
+                            emotion
+                        })
                     });
+
+                    const updatedDiary = response.data || response;
 
                     set(state => ({
                         diaries: state.diaries.map(diary =>
@@ -67,10 +81,10 @@ const useDiaryStore = create(
                         ),
                         loading: false
                     }));
-                    return updatedDiary;
+                    return { success: true, message: '일기가 수정되었습니다.', data: updatedDiary };
                 } catch (error) {
                     set({ error: error.message, loading: false });
-                    throw error;
+                    return { success: false, message: error.message };
                 }
             },
 
@@ -86,16 +100,28 @@ const useDiaryStore = create(
                         diaries: state.diaries.filter(diary => diary.id !== id),
                         loading: false
                     }));
+                    return { success: true, message: '일기가 삭제되었습니다.' };
                 } catch (error) {
                     set({ error: error.message, loading: false });
-                    throw error;
+                    return { success: false, message: error.message };
                 }
             },
 
             // 특정 유저의 일기 가져오기 (로컬 상태에서)
             getUserDiaries: (userId) => {
                 const { diaries } = get();
-                return diaries.filter(diary => diary.userId === userId);
+                return diaries.filter(diary =>
+                    diary.userId === userId || diary.memberId === userId
+                );
+            },
+
+            // 감정별 일기 개수 가져오기 (로컬 상태에서)
+            getEmotionCount: (userId, emotion) => {
+                const { diaries } = get();
+                return diaries.filter(diary =>
+                    (diary.userId === userId || diary.memberId === userId) &&
+                    diary.emotion === emotion
+                ).length;
             },
 
             // 검색 (서버에서)

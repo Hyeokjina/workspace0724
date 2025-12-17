@@ -68,6 +68,12 @@ const Header = () => {
                     >
                         게시판
                     </NavLink>
+                    <NavLink
+                        onClick={() => navigate(ROUTES.CALENDAR)}
+                        className={isActive(ROUTES.CALENDAR)}
+                    >
+                        📅 달력
+                    </NavLink>
                 </NavLinks>
 
                 <AuthButtons>
