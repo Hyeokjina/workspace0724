@@ -14,6 +14,71 @@ React 클라이언트와의 연동을 고려하여
 https://github.com/Hyeokjina/Diary-Project-react
 </sub>
 
+---
+
+## 프론트엔드와의 주요 차이점
+
+기존 Diary-Project-react와 비교하여 다음과 같은 변경사항이 있습니다:
+
+### 1. 아키텍처 분리
+- **기존**: 프론트엔드에서 Zustand를 사용한 클라이언트 상태 관리 (Mock 데이터)
+- **현재**: 백엔드 REST API 서버로 분리, 실제 데이터베이스(H2) 사용
+
+### 2. 감정(Emotion) 데이터 구조 변경
+- **기존**: 프론트엔드에서 5개 감정 사용 (좋았어, 힘들어, 화나, 설레, 차분)
+- **현재**: 백엔드 DB에서 4개 감정으로 통일 (happy: 좋았어, sad: 힘들어.., normal: 그냥 그래, fire: 최고!)
+- 프론트엔드도 4개 감정에 맞춰 수정 필요
+
+### 3. API 응답 구조 표준화
+- **기존**: 프론트엔드 함수가 직접 데이터 반환
+- **현재**: 모든 단일 리소스 API가 `ApiResponse` 형식으로 통일
+  ```json
+  {
+    "success": true/false,
+    "message": "성공/실패 메시지",
+    "data": { 실제 데이터 또는 null }
+  }
+  ```
+- 목록 조회 API(`GET /api/diaries`, `GET /api/diaries/member/{memberId}`)는 배열 직접 반환
+
+### 4. 일기 목록 응답 최적화
+- **기존**: 모든 필드 포함
+- **현재**: 목록 조회 시 `content`와 `updatedAt` 필드는 `null`로 반환하여 응답 크기 최적화
+- 상세 조회 시에만 전체 필드 제공
+
+### 5. 달력(Calendar) 기능 데이터 처리
+- **기존**: 프론트엔드에서 Mock 데이터로 달력 표시
+- **현재**: 백엔드 API에서 실제 작성일(`createdAt`) 기반으로 데이터 제공
+- 프론트엔드는 `GET /api/diaries/member/{memberId}`로 해당 회원의 모든 일기를 가져와 날짜별로 필터링하여 달력에 표시
+
+### 6. 회원 관리 기능 확장
+- **기존**: 회원가입, 로그인만 구현
+- **현재**: 회원 정보 조회(`GET /api/members/{id}`), 수정(`PUT /api/members/{id}`), 탈퇴(`DELETE /api/members/{id}`) 추가
+
+### 7. 데이터 영속성
+- **기존**: 브라우저 새로고침 시 데이터 초기화
+- **현재**: H2 파일 기반 DB 사용으로 서버 재시작 후에도 데이터 유지
+
+---
+
+## 주요 화면
+
+### 홈 & 인증
+| 비로그인 홈 | 회원가입 | 로그인 |
+|----------|--------|--------|
+| ![비로그인 홈](./image/비로그인화면.PNG) | ![회원가입](./image/회원가입.PNG) | ![로그인](./image/로그인.PNG) |
+
+### 일기 기능
+| 로그인 후 홈 | 일기 작성 | 일기 목록 |
+|----------|--------|--------|
+| ![홈화면](./image/홈화면.PNG) | ![일기쓰기](./image/일기쓰기.PNG) | ![게시판리스트](./image/게시판리스트.PNG) |
+
+### 일기 관리 & 회원 정보
+| 일기 상세/수정/삭제 | 달력 | 내 정보 |
+|----------|--------|--------|
+| ![일기상세](./image/일기상세보기%20및%20수정%20삭제.PNG) | ![달력](./image/달력.PNG) | ![내정보](./image/내정보.PNG) |
+
+---
 
 ## 프로젝트 개요
 
@@ -42,9 +107,9 @@ https://github.com/Hyeokjina/Diary-Project-react
 - Emotion과 N:1 관계
 
 ### Emotion (감정)
-- 감정 정보 관리 (happy, sad, angry, excited, calm)
+- 감정 정보 관리 (happy, sad, normal, fire)
 - 일기와 1:N 관계
-- 초기 데이터로 5개 감정 제공
+- 초기 데이터로 4개 감정 제공 (좋았어, 힘들어.., 그냥 그래, 최고!)
 
 ## API 명세
 
@@ -63,10 +128,13 @@ https://github.com/Hyeokjina/Diary-Project-react
 - **Response**:
   - **201 Created**: 회원가입 성공
   - **409 Conflict**: 이메일 중복
-  - **400 Bad Request**: 잘못된 요청
 - **Response Body** (성공 시):
 ```json
-"회원가입 성공"
+{
+  "success": true,
+  "message": "회원가입 성공",
+  "data": null
+}
 ```
 
 #### 1.2 로그인
@@ -84,10 +152,78 @@ https://github.com/Hyeokjina/Diary-Project-react
 - **Response Body** (성공 시):
 ```json
 {
-  "id": 1,
-  "email": "user@example.com",
-  "nickname": "홍길동",
-  "createdAt": "2024-12-15T10:30:00"
+  "success": true,
+  "message": "로그인 성공",
+  "data": {
+    "id": 1,
+    "email": "user@example.com",
+    "nickname": "홍길동",
+    "createdAt": "2025-12-15T10:30:00"
+  }
+}
+```
+
+#### 1.3 회원 정보 조회
+- **URL**: `GET /api/members/{id}`
+- **Path Variable**: `id` (Long)
+- **Response**:
+  - **200 OK**: 조회 성공
+  - **404 Not Found**: 회원을 찾을 수 없음
+- **Response Body** (성공 시):
+```json
+{
+  "success": true,
+  "message": "회원 조회 성공",
+  "data": {
+    "id": 1,
+    "email": "user@example.com",
+    "nickname": "홍길동",
+    "createdAt": "2025-12-15T10:30:00"
+  }
+}
+```
+
+#### 1.4 회원 정보 수정
+- **URL**: `PUT /api/members/{id}`
+- **Path Variable**: `id` (Long)
+- **Request Body**:
+```json
+{
+  "email": "newemail@example.com",
+  "password": "newpassword123",
+  "nickname": "새닉네임"
+}
+```
+- **Response**:
+  - **200 OK**: 수정 성공
+  - **404 Not Found**: 회원을 찾을 수 없음
+  - **409 Conflict**: 이메일 중복
+- **Response Body** (성공 시):
+```json
+{
+  "success": true,
+  "message": "회원정보 수정 성공",
+  "data": {
+    "id": 1,
+    "email": "newemail@example.com",
+    "nickname": "새닉네임",
+    "createdAt": "2025-12-15T10:30:00"
+  }
+}
+```
+
+#### 1.5 회원 탈퇴
+- **URL**: `DELETE /api/members/{id}`
+- **Path Variable**: `id` (Long)
+- **Response**:
+  - **200 OK**: 탈퇴 성공
+  - **404 Not Found**: 회원을 찾을 수 없음
+- **Response Body** (성공 시):
+```json
+{
+  "success": true,
+  "message": "회원 탈퇴 성공",
+  "data": null
 }
 ```
 
@@ -104,15 +240,21 @@ https://github.com/Hyeokjina/Diary-Project-react
 [
   {
     "id": 1,
+    "memberId": 1,
     "title": "오늘의 일기",
+    "content": null,
     "emotion": "happy",
-    "createdAt": "2024-12-15T10:30:00"
+    "createdAt": "2025-12-15T10:30:00",
+    "updatedAt": null
   },
   {
     "id": 2,
+    "memberId": 1,
     "title": "즐거운 하루",
-    "emotion": "excited",
-    "createdAt": "2024-12-14T09:20:00"
+    "content": null,
+    "emotion": "fire",
+    "createdAt": "2025-12-14T09:20:00",
+    "updatedAt": null
   }
 ]
 ```
@@ -127,9 +269,12 @@ https://github.com/Hyeokjina/Diary-Project-react
 [
   {
     "id": 1,
+    "memberId": 1,
     "title": "오늘의 일기",
+    "content": null,
     "emotion": "happy",
-    "createdAt": "2024-12-15T10:30:00"
+    "createdAt": "2025-12-15T10:30:00",
+    "updatedAt": null
   }
 ]
 ```
@@ -143,13 +288,17 @@ https://github.com/Hyeokjina/Diary-Project-react
 - **Response Body** (성공 시):
 ```json
 {
-  "id": 1,
-  "memberId": 1,
-  "title": "오늘의 일기",
-  "content": "오늘은 정말 좋은 하루였다. 새로운 것을 배웠고...",
-  "emotion": "happy",
-  "createdAt": "2024-12-15T10:30:00",
-  "updatedAt": "2024-12-15T10:30:00"
+  "success": true,
+  "message": "일기 조회 성공",
+  "data": {
+    "id": 1,
+    "memberId": 1,
+    "title": "오늘의 일기",
+    "content": "오늘은 정말 좋은 하루였다. 새로운 것을 배웠고...",
+    "emotion": "happy",
+    "createdAt": "2025-12-15T10:30:00",
+    "updatedAt": "2025-12-15T10:30:00"
+  }
 }
 ```
 
@@ -166,10 +315,14 @@ https://github.com/Hyeokjina/Diary-Project-react
 ```
 - **Response**:
   - **201 Created**: 작성 성공
-  - **400 Bad Request**: 잘못된 요청
+  - **400 Bad Request**: 잘못된 요청 (존재하지 않는 회원 또는 감정)
 - **Response Body** (성공 시):
 ```json
-"일기 작성 성공"
+{
+  "success": true,
+  "message": "일기 작성 성공",
+  "data": null
+}
 ```
 
 #### 2.5 일기 수정
@@ -189,7 +342,11 @@ https://github.com/Hyeokjina/Diary-Project-react
   - **400 Bad Request**: 잘못된 요청
 - **Response Body** (성공 시):
 ```json
-"일기 수정 성공"
+{
+  "success": true,
+  "message": "일기 수정 성공",
+  "data": null
+}
 ```
 
 #### 2.6 일기 삭제
@@ -200,7 +357,11 @@ https://github.com/Hyeokjina/Diary-Project-react
   - **404 Not Found**: 일기를 찾을 수 없음
 - **Response Body** (성공 시):
 ```json
-"일기 삭제 성공"
+{
+  "success": true,
+  "message": "일기 삭제 성공",
+  "data": null
+}
 ```
 
 ---
@@ -256,37 +417,64 @@ CREATE TABLE diary (
 );
 ```
 
-## 주요 구현 특징
-
-### JPA 구현 방식
-- **EntityManager + JPQL 사용**: Spring Data JPA Repository 메서드 방식이 아닌, EntityManager와 JPQL을 직접 사용하는 Repository 패턴 구현
-- **Repository Interface + Impl 구조**: 각 엔티티별로 Repository 인터페이스와 구현체(Impl)를 분리하여 구현
-- **BaseTimeEntity**: `@MappedSuperclass`를 사용한 공통 시간 필드 관리 (createdAt, updatedAt)
-- **JPA Auditing**: `@EnableJpaAuditing`을 통한 자동 시간 관리
-- **연관관계 매핑**: Member-Diary (1:N), Emotion-Diary (1:N) 양방향 관계 설정
-- **Lazy Loading**: 연관 엔티티는 기본적으로 지연 로딩 사용, 필요시 JPQL의 join fetch로 최적화
-
 ---
 
 ## 실행 방법
 
-### 1. 프로젝트 클론 및 빌드
+### 백엔드 서버 실행
+
+#### 1. 프로젝트 클론 및 빌드
 ```bash
-cd board
+git clone <repository-url>
+cd diary-rest-jpa
 ./gradlew build
 ```
 
-### 2. 애플리케이션 실행
+#### 2. 애플리케이션 실행
 ```bash
 ./gradlew bootRun
 ```
 
-### 3. 서버 접속
+#### 3. 서버 접속 확인
 - **API Server**: `http://localhost:8080`
 - **H2 Console**: `http://localhost:8080/h2-console`
-  - JDBC URL: `jdbc:h2:mem:diarydb`
+  - JDBC URL: `jdbc:h2:file:./data/diarydb` (파일 기반 DB)
   - Username: `sa`
   - Password: (없음)
+
+### 프론트엔드(React) 서버 실행
+
+#### 1. React 프로젝트 클론
+```bash
+git clone https://github.com/Hyeokjina/Diary-Project-react
+cd Diary-Project-react
+```
+
+#### 2. 의존성 설치
+```bash
+npm install
+```
+
+#### 3. package.json에 proxy 설정 추가
+```json
+{
+  "proxy": "http://localhost:8080"
+}
+```
+
+#### 4. React 개발 서버 실행
+```bash
+npm start
+```
+
+#### 5. 브라우저 접속
+- **React App**: `http://localhost:3000`
+
+### 전체 실행 순서
+1. 백엔드 서버 실행 (포트 8080)
+2. React 서버 실행 (포트 3000)
+3. 브라우저에서 `http://localhost:3000` 접속
+4. React 앱이 백엔드 API(`http://localhost:8080/api/*`)와 통신
 
 ---
 
