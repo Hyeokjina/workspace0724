@@ -19,4 +19,12 @@ public class MemberRequest {
         private String email;
         private String password;
     }
+
+    @Getter
+    @Setter
+    public static class Update {
+        private String email;
+        private String password;
+        private String nickname;
+    }
 }

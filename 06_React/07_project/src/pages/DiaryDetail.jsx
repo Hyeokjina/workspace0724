@@ -155,7 +155,7 @@ const DiaryDetail = () => {
             return;
         }
 
-        const result = await updateDiary(diary.id, title.trim(), content.trim(), emotion);
+        const result = await updateDiary(diary.id, currentUser.id, title.trim(), content.trim(), emotion);
 
         if (result.success) {
             navigate(ROUTES.DIARY_LIST);

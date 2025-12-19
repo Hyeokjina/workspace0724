@@ -28,11 +28,14 @@ public class DiaryServiceImpl implements DiaryService {
     public List<DiaryResponse> findAll() {
         return diaryRepository.findAll()
                 .stream()
-                .map(diary -> DiaryResponse.of(
+                .map(diary -> new DiaryResponse(
                         diary.getId(),
+                        diary.getMember().getId(),
                         diary.getTitle(),
+                        null, // content는 목록에서는 null
                         diary.getEmotion().getName(),
-                        diary.getCreatedAt()
+                        diary.getCreatedAt(),
+                        null  // updatedAt는 목록에서는 null
                 ))
                 .collect(Collectors.toList());
     }
@@ -41,11 +44,14 @@ public class DiaryServiceImpl implements DiaryService {
     public List<DiaryResponse> findByMemberId(Long memberId) {
         return diaryRepository.findByMemberId(memberId)
                 .stream()
-                .map(diary -> DiaryResponse.of(
+                .map(diary -> new DiaryResponse(
                         diary.getId(),
+                        diary.getMember().getId(),
                         diary.getTitle(),
+                        null, // content는 목록에서는 null
                         diary.getEmotion().getName(),
-                        diary.getCreatedAt()
+                        diary.getCreatedAt(),
+                        null  // updatedAt는 목록에서는 null
                 ))
                 .collect(Collectors.toList());
     }

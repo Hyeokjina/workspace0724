@@ -21,7 +21,7 @@ const useAuthStore = create(
             signup: async (email, password, nickname) => {
                 set({ loading: true, error: null });
                 try {
-                    const response = await apiRequest('/members', {
+                    const response = await apiRequest('/members/signup', {
                         method: 'POST',
                         body: JSON.stringify({
                             email,
@@ -31,7 +31,7 @@ const useAuthStore = create(
                     });
 
                     set({ loading: false });
-                    return { success: true, message: '회원가입이 완료되었습니다!', data: response };
+                    return { success: response.success, message: response.message };
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     return { success: false, message: error.message };
@@ -57,7 +57,7 @@ const useAuthStore = create(
                     };
 
                     set({ currentUser: userInfo, loading: false });
-                    return { success: true, message: '로그인 성공!' };
+                    return { success: true, message: response.message };
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     return { success: false, message: error.message || '이메일 또는 비밀번호가 틀렸습니다.' };
@@ -99,7 +99,7 @@ const useAuthStore = create(
                         loading: false
                     });
 
-                    return { success: true, message: '회원정보가 수정되었습니다!' };
+                    return { success: response.success, message: response.message };
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     return { success: false, message: error.message || '회원정보 수정에 실패했습니다.' };
@@ -129,7 +129,7 @@ const useAuthStore = create(
 
                 set({ loading: true, error: null });
                 try {
-                    await apiRequest(`/members/${currentUser.id}`, {
+                    const response = await apiRequest(`/members/${currentUser.id}`, {
                         method: 'DELETE'
                     });
 
@@ -138,7 +138,7 @@ const useAuthStore = create(
                         loading: false
                     });
 
-                    return { success: true, message: '회원 탈퇴가 완료되었습니다.' };
+                    return { success: response.success, message: response.message };
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     return { success: false, message: error.message || '회원 탈퇴에 실패했습니다.' };

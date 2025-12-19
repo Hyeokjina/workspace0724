@@ -19,8 +19,8 @@ const useDiaryStore = create(
                 set({ loading: true, error: null });
                 try {
                     const response = await apiRequest(`/diaries`);
-                    // ApiResponse 구조: { success, message, data }
-                    const allDiaries = response.data || [];
+                    // response는 이미 JSON 배열
+                    const allDiaries = response || [];
                     // 사용자의 일기만 필터링 (userId 또는 memberId 확인)
                     const userDiaries = allDiaries.filter(diary =>
                         diary.userId === userId || diary.memberId === userId
@@ -47,13 +47,11 @@ const useDiaryStore = create(
                         })
                     });
 
-                    const newDiary = response.data || response;
+                    // 일기 작성 후 목록 다시 조회
+                    await get().fetchDiaries(userId);
 
-                    set(state => ({
-                        diaries: [...state.diaries, newDiary],
-                        loading: false
-                    }));
-                    return { success: true, message: '일기가 저장되었습니다.', data: newDiary };
+                    set({ loading: false });
+                    return { success: response.success, message: response.message };
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     return { success: false, message: error.message };
@@ -61,7 +59,7 @@ const useDiaryStore = create(
             },
 
             // 일기 수정
-            updateDiary: async (id, title, content, emotion) => {
+            updateDiary: async (id, userId, title, content, emotion) => {
                 set({ loading: true, error: null });
                 try {
                     const response = await apiRequest(`/diaries/${id}`, {
@@ -73,15 +71,11 @@ const useDiaryStore = create(
                         })
                     });
 
-                    const updatedDiary = response.data || response;
+                    // 일기 수정 후 목록 다시 조회
+                    await get().fetchDiaries(userId);
 
-                    set(state => ({
-                        diaries: state.diaries.map(diary =>
-                            diary.id === id ? updatedDiary : diary
-                        ),
-                        loading: false
-                    }));
-                    return { success: true, message: '일기가 수정되었습니다.', data: updatedDiary };
+                    set({ loading: false });
+                    return { success: response.success, message: response.message };
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     return { success: false, message: error.message };
@@ -92,7 +86,7 @@ const useDiaryStore = create(
             deleteDiary: async (id) => {
                 set({ loading: true, error: null });
                 try {
-                    await apiRequest(`/diaries/${id}`, {
+                    const response = await apiRequest(`/diaries/${id}`, {
                         method: 'DELETE'
                     });
 
@@ -100,7 +94,7 @@ const useDiaryStore = create(
                         diaries: state.diaries.filter(diary => diary.id !== id),
                         loading: false
                     }));
-                    return { success: true, message: '일기가 삭제되었습니다.' };
+                    return { success: response.success, message: response.message };
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     return { success: false, message: error.message };
@@ -154,9 +148,9 @@ const useDiaryStore = create(
             getDiaryById: async (id) => {
                 set({ loading: true, error: null });
                 try {
-                    const diary = await apiRequest(`/diaries/${id}`);
+                    const response = await apiRequest(`/diaries/${id}`);
                     set({ loading: false });
-                    return diary;
+                    return response.data;
                 } catch (error) {
                     set({ error: error.message, loading: false });
                     throw error;
