@@ -30,6 +30,31 @@ public class BoardDto {
 
     @Getter
     @AllArgsConstructor
+    public static class Update{
+        private String board_title;
+        private String board_content;
+        private MultipartFile file;
+        private List<String> tags;
+
+        public String getBoardTitle() {
+            return board_title;
+        }
+
+        public String getBoardContent() {
+            return board_content;
+        }
+
+        public MultipartFile getFile() {
+            return file;
+        }
+
+        public List<String> getTags() {
+            return tags;
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
     @Builder
     public static class Response{
         private Long board_id;

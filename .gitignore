@@ -120,3 +120,13 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,eclipse,java
+
+# .gitignore에 추가
+*.mv.db
+*.trace.db
+```
+
+
+### 2. LF/CRLF 경고 (무시해도 됨)
+```
+warning: LF will be replaced by CRLF

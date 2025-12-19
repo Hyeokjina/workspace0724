@@ -71,4 +71,13 @@ public class Board extends BaseTimeEntity{
         boardTag.changeBoard(this);
         this.boardTags.add(boardTag);
     }
+
+    public void updateBoard(String boardTitle, String boardContent) {
+        if(boardTitle != null) this.boardTitle = boardTitle;
+        if(boardContent != null) this.boardContent = boardContent;
+    }
+
+    public void changeStatus(CommonEnums.Status status) {
+        this.status = status;
+    }
 }

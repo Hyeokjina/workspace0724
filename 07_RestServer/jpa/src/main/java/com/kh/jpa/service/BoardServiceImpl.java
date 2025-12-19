@@ -121,4 +121,88 @@ public class BoardServiceImpl implements BoardService {
                 board.getCreateDate()
         ));
     }
+
+    @Override
+    @Transactional
+    public BoardDto.Response updateBoard(Long boardId, BoardDto.Update updateDto) throws IOException {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+
+        // 제목, 내용 수정
+        board.updateBoard(updateDto.getBoardTitle(), updateDto.getBoardContent());
+
+        // 파일 수정
+        if(updateDto.getFile() != null && !updateDto.getFile().isEmpty()) {
+            // 기존 파일 삭제
+            if(board.getChangeName() != null) {
+                File oldFile = new File(FILE_PATH + board.getChangeName());
+                if(oldFile.exists()) {
+                    oldFile.delete();
+                }
+            }
+
+            // 새 파일 저장
+            String originName = updateDto.getFile().getOriginalFilename();
+            String changeName = UUID.randomUUID().toString() + "_" + originName;
+
+            File uploadDir = new File(FILE_PATH);
+            if(!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+
+            updateDto.getFile().transferTo(new File(FILE_PATH + changeName));
+            board.changeFile(originName, changeName);
+        }
+
+        // 태그 수정
+        if(updateDto.getTags() != null) {
+            // 기존 태그 모두 제거
+            board.getBoardTags().clear();
+
+            // 새 태그 추가
+            for(String tagName : updateDto.getTags()) {
+                Tag tag = tagRepository.findByTagName(tagName)
+                        .orElseGet(() -> tagRepository.save(Tag.builder()
+                                .tagName(tagName)
+                                .build()));
+                board.addTag(tag);
+            }
+        }
+
+        List<String> tagNames = board.getBoardTags()
+                .stream()
+                .map(boardTag -> boardTag.getTag().getTagName())
+                .toList();
+
+        return BoardDto.Response.of(
+                board.getBoardId(),
+                board.getBoardTitle(),
+                board.getBoardContent(),
+                board.getOriginName(),
+                board.getChangeName(),
+                board.getCount(),
+                board.getMember().getUserId(),
+                board.getMember().getUserName(),
+                board.getCreateDate(),
+                tagNames
+        );
+    }
+
+    @Override
+    @Transactional
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+
+        // 파일 삭제
+        if(board.getChangeName() != null) {
+            File file = new File(FILE_PATH + board.getChangeName());
+            if(file.exists()) {
+                file.delete();
+            }
+        }
+
+        // 게시글 삭제 (soft delete)
+        board.changeStatus(CommonEnums.Status.N);
+    }
 }
