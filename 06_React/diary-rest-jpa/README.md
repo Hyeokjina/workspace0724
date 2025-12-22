@@ -21,7 +21,7 @@ https://github.com/Hyeokjina/Diary-Project-react
 기존 Diary-Project-react와 비교하여 다음과 같은 변경사항이 있습니다:
 
 ### 1. 아키텍처 분리
-- **기존**: 프론트엔드에서 Zustand를 사용한 클라이언트 상태 관리 (Mock 데이터)
+- **기존**: 프론트엔드에서 Zustand를 사용한 클라이언트 상태 관리
 - **현재**: 백엔드 REST API 서버로 분리, 실제 데이터베이스(H2) 사용
 
 ### 2. 감정(Emotion) 데이터 구조 변경

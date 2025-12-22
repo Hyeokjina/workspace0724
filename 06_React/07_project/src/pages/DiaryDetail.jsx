@@ -169,7 +169,7 @@ const DiaryDetail = () => {
             const result = await deleteDiary(diary.id);
 
             if (result.success) {
-                navigate(ROUTES.DIARY_LIST);
+                navigate(-1); // 이전 페이지(달력)로 돌아가기
             } else {
                 setError(result.message || '일기 삭제에 실패했습니다.');
             }
