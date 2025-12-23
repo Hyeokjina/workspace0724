@@ -124,7 +124,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public BoardDto.Response updateBoard(Long boardId, BoardDto.Update updateDto) throws IOException {
+    public BoardDto.Response updateBoard(Long boardId, BoardDto.Update updateDto) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
 

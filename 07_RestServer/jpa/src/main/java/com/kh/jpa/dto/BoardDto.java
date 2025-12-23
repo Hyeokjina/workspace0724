@@ -99,4 +99,13 @@ public class BoardDto {
                     .build();
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class Update{
+        private String board_title;
+        private String board_content;
+        private MultipartFile file;
+        private List<String> tags;
+    }
 }

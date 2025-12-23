@@ -49,7 +49,7 @@ public class BoardController {
     public ResponseEntity<BoardDto.Response> updateBoard(
             @PathVariable("boardId") Long boardId,
             @ModelAttribute BoardDto.Update updateBoard
-    ) throws IOException {
+    )  {
         BoardDto.Response response = boardService.updateBoard(boardId, updateBoard);
         return ResponseEntity.ok(response);
     }
