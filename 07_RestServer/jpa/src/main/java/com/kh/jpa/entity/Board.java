@@ -63,6 +63,20 @@ public class Board extends BaseTimeEntity{
         if(changeName != null) this.changeName = changeName;
     }
 
+    public void update(String title, String content, String originName, String changeName) {
+        this.changeFile(originName, changeName);
+        if(title != null) this.boardTitle = title;
+        if(content != null) this.boardContent = content;
+    }
+
+//    public void changeTitle(String title){
+//        if(title != null) this.boardTitle = title;
+//    }
+//
+//    public void changeContent(String content){
+//        if(content != null) this.boardContent = content;
+//    }
+
     public void addTag(Tag tag){
         BoardTag boardTag = BoardTag.builder()
                 .tag(tag)
@@ -70,14 +84,5 @@ public class Board extends BaseTimeEntity{
 
         boardTag.changeBoard(this);
         this.boardTags.add(boardTag);
-    }
-
-    public void updateBoard(String boardTitle, String boardContent) {
-        if(boardTitle != null) this.boardTitle = boardTitle;
-        if(boardContent != null) this.boardContent = boardContent;
-    }
-
-    public void changeStatus(CommonEnums.Status status) {
-        this.status = status;
     }
 }

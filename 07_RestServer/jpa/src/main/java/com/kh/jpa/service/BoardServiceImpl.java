@@ -32,6 +32,7 @@ public class BoardServiceImpl implements BoardService {
     private final String FILE_PATH = "C:\\devtool\\upload";
 
     @Override
+    @Transactional
     public Long createBoard(BoardDto.Create createDto) throws IOException {
         // 게시글 작성
         // 작성자 찾기 -> 객체관점의 코드를 작성할 것이기 때문에 key를 직접 외래키로 insert하지 않고
@@ -124,48 +125,53 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public BoardDto.Response updateBoard(Long boardId, BoardDto.Update updateDto) {
+    public BoardDto.Response updateBoard(Long boardId, BoardDto.Update updateBoardDto) throws IOException {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
 
-        // 제목, 내용 수정
-        board.updateBoard(updateDto.getBoardTitle(), updateDto.getBoardContent());
+        String originName = board.getOriginName();
+        String changeName = board.getChangeName();
 
-        // 파일 수정
-        if(updateDto.getFile() != null && !updateDto.getFile().isEmpty()) {
-            // 기존 파일 삭제
-            if(board.getChangeName() != null) {
-                File oldFile = new File(FILE_PATH + board.getChangeName());
-                if(oldFile.exists()) {
-                    oldFile.delete();
-                }
-            }
-
-            // 새 파일 저장
-            String originName = updateDto.getFile().getOriginalFilename();
-            String changeName = UUID.randomUUID().toString() + "_" + originName;
+        if(updateBoardDto.getFile() != null && !updateBoardDto.getFile().isEmpty()) {
+            originName = updateBoardDto.getFile().getOriginalFilename();
+            changeName = UUID.randomUUID().toString() + "_" + originName;
 
             File uploadDir = new File(FILE_PATH);
             if(!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
 
-            updateDto.getFile().transferTo(new File(FILE_PATH + changeName));
-            board.changeFile(originName, changeName);
+            updateBoardDto.getFile()
+                    .transferTo(new File(FILE_PATH + changeName));
         }
 
-        // 태그 수정
-        if(updateDto.getTags() != null) {
-            // 기존 태그 모두 제거
+        board.update(updateBoardDto.getBoard_title(),
+                updateBoardDto.getBoard_content(),
+                originName, changeName
+        );
+
+//        board.changeTitle(updateBoardDto.getBoard_title());
+//        board.changeFile(originName, changeName);
+//        board.changeContent(updateBoardDto.getBoard_content());
+
+        if(updateBoardDto.getTags() != null && !updateBoardDto.getTags().isEmpty()) {
+            //기존BoardTag -> 연결을 끊어야할까? X
+            //연결된 BoardTag의 영속성을 제거한다.
             board.getBoardTags().clear();
 
-            // 새 태그 추가
-            for(String tagName : updateDto.getTags()) {
+            for(String tagName : updateBoardDto.getTags()) {
+                //tag를 이름으로 조회해서 없으면 새로 만들자
                 Tag tag = tagRepository.findByTagName(tagName)
-                        .orElseGet(() -> tagRepository.save(Tag.builder()
+                        .orElseGet(() -> tagRepository.save(Tag.builder() //없다면 예외발생이 아닌 생성
                                 .tagName(tagName)
                                 .build()));
-                board.addTag(tag);
+
+                    board.addTag(tag);
+                //                BoardTag boardTag = BoardTag.builder()
+                //                        .tag(tag)
+                //                        .build();
+                //
+                //                boardTag.changeBoard(board);
             }
         }
 
@@ -194,15 +200,12 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
 
-        // 파일 삭제
-        if(board.getChangeName() != null) {
-            File file = new File(FILE_PATH + board.getChangeName());
-            if(file.exists()) {
-                file.delete();
-            }
+        if(board.getChangeName() != null){
+            new File(FILE_PATH + board.getChangeName()).delete();
         }
 
-        // 게시글 삭제 (soft delete)
-        board.changeStatus(CommonEnums.Status.N);
+        boardRepository.delete(board);
     }
+
+
 }

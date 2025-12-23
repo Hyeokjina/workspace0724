@@ -4,10 +4,10 @@ spring:
 
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/C:\workspcae\07_RestServer\jpa/tdb
+      jdbc-url: jdbc:h2:tcp://localhost/C:\workspace\07_RestServer\jpa/tdb
       driver-class-name: org.h2.Driver
       username: sa
-      password:
+      password: 1234
   h2:
     console:
       enabled: true
@@ -18,7 +18,7 @@ spring:
       max-request-size: 100MB
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     show-sql: true
