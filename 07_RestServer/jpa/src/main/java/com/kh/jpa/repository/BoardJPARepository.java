@@ -45,10 +45,13 @@ public interface BoardJPARepository extends JpaRepository<Board, Long> {
     List<Board> findByMemberAndStatus(@Param("userId") String userId, @Param("status") CommonEnums.Status status);
 
     //특정태그를 가진 게시그 조회
-    @Query("select b from Board b" +
+    @Query("select distinct b from Board b" +
             "join b.boarddTags bt" +
             "join bt.tag t" +
             "where t.tagName = :tagName and b.status = :status")
+    //조인은 행을 기준으로 하기 때문에
+    //하나의 board가 태그 갯수만큼 조회됨
+    // jpql의 distinct는 같은 식별자(Pk)를 가진 board는 결과리스트에 한번만 넣어라
     Page<Board> findByTagName(@Param("tagname") String tagName,
                               @Param("status") CommonEnums.Status status,
                               Pageable pageable);
