@@ -8,7 +8,7 @@ const Layout = () => {
     <LayoutContainer>
         <Header />
         <MainContent>
-            <Outlet /> {/* Routes에서 넘겨준 children props를 Outlet라는 컴포넌트로 가져올 수 있다. */}
+            <Outlet /> {/* Routes에서 넘겨준 children props를 Outlet라는 컴포넌트로 가져올 수 있다.*/}
         </MainContent>
     </LayoutContainer>
   )
