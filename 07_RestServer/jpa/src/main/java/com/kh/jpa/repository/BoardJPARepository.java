@@ -11,50 +11,37 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-// JpaRepository를 상속받아 기본 CRUD메서드를 자동으로 제공받을 수 있음
-// save(Board b) - 저장
-// findById(Long id) - id(pk)로 조회
-// findAll() - 전체조회
-// delete(Board b) - 삭제
-// count() - 개수조회
-// existsById(Long id) - 존재여부
 
-// Query Method: 메서드 이름 규칙에 따라 자동으로 쿼리 생성
-// findByStatus - status 필드로 검색
 public interface BoardJPARepository extends JpaRepository<Board, Long> {
-    // SELECT * FROM board WHERE status = ? ORDER BY create_date DESC
-    // Pageable을 추가하면 페이징 처리된 결과 반환
 
     //상태값을 통한 게시글 조회
     Page<Board> findByStatus(CommonEnums.Status status, Pageable pageable);
 
     //작성자로 게시글 조회
     List<Board> findByMember(Member member);
-
-    //작성자로 아이디로 조회
+    //작성자의 아이디로 조회
     List<Board> findByMemberUserId(String userId);
 
     //제목 또는 내용으로 게시글 검색
-    List<Board> findByBoardTitleContainingOrBoardContent(String title, String content);
+    List<Board> findByBoardTitleContainingOrBoardContentContaining(String title, String content);
 
-    //조회수가 놓은 순으로 게시글 조회
+    //조회수가 높은 순으로 게시글 조회
     List<Board> findByOrderByCountDesc();
 
-    //특정 작성자의 확성 게시글 조회(페이징) -> JPQL로
+    //특정 작성자의 활성 게시글 조회(페이징) -> JPQL로
     @Query("select b from Board b where b.member.userId = :userId and b.status = :status")
     List<Board> findByMemberAndStatus(@Param("userId") String userId, @Param("status") CommonEnums.Status status);
 
-    //특정태그를 가진 게시그 조회
-    @Query("select distinct b from Board b" +
-            "join b.boarddTags bt" +
-            "join bt.tag t" +
+    //특정 태그를 가진 게시글 조회
+    @Query("select distinct b from Board b " +
+            "join b.boardTags bt " +
+            "join bt.tag t " +
             "where t.tagName = :tagName and b.status = :status")
-    //조인은 행을 기준으로 하기 때문에
-    //하나의 board가 태그 갯수만큼 조회됨
-    // jpql의 distinct는 같은 식별자(Pk)를 가진 board는 결과리스트에 한번만 넣어라
-    Page<Board> findByTagName(@Param("tagname") String tagName,
+    //조인은 행을 기준으로 하기때문에
+    //하나의 Board가 태그 갯수만큼 조회됨
+    // jpql의 distinct는 같은 식별자(pk)를 가진 board는 결과리스트에 한번만 넣어라
+    Page<Board> findByTagName(@Param("tagName") String tagName,
                               @Param("status") CommonEnums.Status status,
                               Pageable pageable);
-
 
 }

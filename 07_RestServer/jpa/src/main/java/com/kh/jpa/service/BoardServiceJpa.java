@@ -5,15 +5,12 @@ import com.kh.jpa.entity.Board;
 import com.kh.jpa.entity.Member;
 import com.kh.jpa.entity.Tag;
 import com.kh.jpa.enums.CommonEnums;
-import com.kh.jpa.repository.BoardJPARepository;
-import com.kh.jpa.repository.MemberJPARepository;
-import com.kh.jpa.repository.TagJPARepository;
+import com.kh.jpa.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,16 +19,15 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly=true)
-public class BoardServiceJpa implements BoardService {
+public class BoardServiceJpa implements BoardService{
 
     private final MemberJPARepository memberJPARepository;
     private final BoardJPARepository boardJPARepository;
     private final TagJPARepository tagJPARepository;
     private final String FILE_PATH = "C:\\devtool\\upload";
 
+
     @Override
-    @Transactional
     public Long createBoard(BoardDto.Create createDto) throws IOException {
         Member member = memberJPARepository.findById(createDto.getUser_id())
                 .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다"));
@@ -57,12 +53,20 @@ public class BoardServiceJpa implements BoardService {
         board.changeFile(originName, changeName);
 
         if(createDto.getTags() != null && !createDto.getTags().isEmpty()) {
+            // tag가 전달됨 ["srping", "jpa"]
             for(String tagName : createDto.getTags()) {
+                //tag를 이름으로 조회해서 없으면 새로 만들자
                 Tag tag = tagJPARepository.findByTagName(tagName)
-                        .orElseGet(() -> tagJPARepository.save(Tag.builder()
+                        .orElseGet(() -> tagJPARepository.save(Tag.builder() //없다면 예외발생이 아닌 생성
                                 .tagName(tagName)
                                 .build()));
+
                 board.addTag(tag);
+//                BoardTag boardTag = BoardTag.builder()
+//                        .tag(tag)
+//                        .build();
+//
+//                boardTag.changeBoard(board);
             }
         }
 
@@ -73,7 +77,7 @@ public class BoardServiceJpa implements BoardService {
     @Override
     public BoardDto.Response getBoardDetail(Long boardId) {
         Board board = boardJPARepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
+                        .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다"));
 
         List<String> tagNames = board.getBoardTags()
                 .stream()
@@ -109,7 +113,6 @@ public class BoardServiceJpa implements BoardService {
     }
 
     @Override
-    @Transactional
     public BoardDto.Response updateBoard(Long boardId, BoardDto.Update updateBoardDto) throws IOException {
         Board board = boardJPARepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
@@ -139,8 +142,9 @@ public class BoardServiceJpa implements BoardService {
             board.getBoardTags().clear();
 
             for(String tagName : updateBoardDto.getTags()) {
+                //tag를 이름으로 조회해서 없으면 새로 만들자
                 Tag tag = tagJPARepository.findByTagName(tagName)
-                        .orElseGet(() -> tagJPARepository.save(Tag.builder()
+                        .orElseGet(() -> tagJPARepository.save(Tag.builder() //없다면 예외발생이 아닌 생성
                                 .tagName(tagName)
                                 .build()));
 
@@ -168,7 +172,6 @@ public class BoardServiceJpa implements BoardService {
     }
 
     @Override
-    @Transactional
     public void deleteBoard(Long boardId) {
         Board board = boardJPARepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글을 찾을 수 없습니다."));
@@ -180,4 +183,3 @@ public class BoardServiceJpa implements BoardService {
         boardJPARepository.delete(board);
     }
 }
-
