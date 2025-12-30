@@ -9,5 +9,12 @@ public class CommonEnums {
             return Y;
         }
     }
+
+    public enum Role {
+        ADMIN, USER;
+        public static Role getDefault() {
+            return ADMIN;
+        }
+    }
 }
 
