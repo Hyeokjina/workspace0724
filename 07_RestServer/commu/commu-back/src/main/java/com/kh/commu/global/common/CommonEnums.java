@@ -11,10 +11,7 @@ public class CommonEnums {
     }
 
     public enum Role {
-        ADMIN, USER;
-        public static Role getDefault() {
-            return ADMIN;
-        }
+        USER, ADMIN;
     }
 }
 

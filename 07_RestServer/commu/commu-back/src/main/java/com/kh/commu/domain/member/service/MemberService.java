@@ -26,10 +26,9 @@ public class MemberService {
             throw new IllegalArgumentException("이미 존재하는 회원ID입니다.");
         }
 
-
-        Member member = member.builder()
+        Member member = Member.builder()
                 .userId(request.getUserId())
-                .userPwd((passwordEncoder.encode(request.getUserPwd())))
+                .userPwd(passwordEncoder.encode(request.getUserPwd()))
                 .userName(request.getUserName())
                 .email(request.getEmail())
                 .gender(request.getGender())
@@ -37,6 +36,7 @@ public class MemberService {
                 .phone(request.getPhone())
                 .address(request.getAddress())
                 .build();
+
         memberRepository.save(member);
         return member.getUserId();
     }
