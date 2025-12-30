@@ -1,4 +1,4 @@
-package com.kh.commu.global.excepiton;
+package com.kh.commu.global.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)// json직렬화시 null인 값은 포함하지 않는다.
+@JsonInclude(JsonInclude.Include.NON_NULL) // json직렬화시 null인 값은 포함하지 않는다.
 public class ErrorResponse {
     private final String message;
     private final boolean success;
@@ -28,20 +28,6 @@ public class ErrorResponse {
     }
 
     public static ErrorResponse of(String message, Map<String, String> errors) {
-        return ErrorResponse.builder()
-                .success(false)
-                .message(message)
-                .errors(errors)
-                .build();
-    }
-
-    public static ErrorResponse error(String message) {
-        return ErrorResponse.builder()
-                .success(false)
-                .message(message)
-                .build();
-    }
-    public static ErrorResponse error(String message, Map<String, String> errors) {
         return ErrorResponse.builder()
                 .success(false)
                 .message(message)

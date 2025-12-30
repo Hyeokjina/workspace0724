@@ -1,5 +1,6 @@
-package com.kh.commu.global.excepiton;
+package com.kh.commu.global.exception;
 
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
            errors.put(fieldName, errorMsg);
         });
 
-        ErrorResponse response = ErrorResponse.of("입력값 검증에 실패하였습니다.",errors);
+        ErrorResponse response = ErrorResponse.of("입력값 검증에 실패하였습니다.", errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
@@ -36,11 +37,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
         Map<String, String> errors = ex.getConstraintViolations().stream()
                 .collect(Collectors.toMap(
-                        violation -> violation.getPropertyPath().toString(),
-                        ConstraintViolationException::getMessage,
-                        (existingVa)
-                ))
+                        violation ->  violation.getPropertyPath().toString(),
+                        ConstraintViolation::getMessage,
+                        (existingValue, newValue) -> existingValue
+                ));
+
+        ErrorResponse response = ErrorResponse.of("입력값 검증에 실패하였습니다.", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
     //나머지 모든 예외를 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
