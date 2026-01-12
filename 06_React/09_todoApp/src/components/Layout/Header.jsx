@@ -19,7 +19,7 @@ const Header = () => {
         <Logo to={ROUTES.HOME}>Todo App</Logo>
         <NavLinks>
           <NavLink to={ROUTES.HOME} className={isActive(ROUTES.HOME)}>홈</NavLink>
-          <NavLink to={ROUTES.TODOS} className={isActive(ROUTES.TODOS)}>할일목록</NavLink>
+          <NavLink to={ROUTES.TODOS} className={isActive(ROUTES.TODOS)}>할일 목록</NavLink>
           <NavLink to={ROUTES.CATEGORY(CATEGORYS.WORK)} className={isActive('/category')}>카테고리</NavLink>
         </NavLinks>
       </Nav>
