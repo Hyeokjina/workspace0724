@@ -93,7 +93,7 @@ const TodoDetail = () => {
     });
   };
   
-  // 카테고리 한글 변환
+  // 카테고리 한글변환
   const getCategoryName = (category) => {
     const categories = {
       work: '업무',
