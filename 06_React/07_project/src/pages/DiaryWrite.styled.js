@@ -22,7 +22,7 @@ export const FormCard = styled.div`
 export const Title = styled.h1`
     font-size: 32px;
     font-weight: 700;
-    color: #2C3E50;
+    color: #394f64;
     margin-bottom: 16px;
     text-align: center;
 `
