@@ -143,7 +143,7 @@ const Home = () => {
                 </>
             ) : (
                 <LoginPrompt>
-                    <p>하루를 100자로 기록하는 미니멀 일기장</p>
+                    <p>하루를  100자로 기록하는 미니멀 일기장</p>
                     <ButtonGroup>
                         <Button primary onClick={() => navigate(ROUTES.LOGIN)}>
                             로그인
