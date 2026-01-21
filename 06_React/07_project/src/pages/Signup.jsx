@@ -54,7 +54,7 @@ const Signup = () => {
         }
 
         if (formData.password.length < 6) {
-            alert('비밀번호는 6자 이상이어야 합니다.');
+            alert('비밀번호는 6자 이상이어야합니다.');
             return;
         }
 
