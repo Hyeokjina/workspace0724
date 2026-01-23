@@ -102,7 +102,7 @@ export const OrgChartView: React.FC<OrgChartViewProps> = ({ user, departments, e
         <div className="flex justify-between items-end mb-10">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2 mb-2">
-              <Building className="text-gray-800" size={32} /> 회사 조직도
+              <Building className="text-gray-800" size={32} /> 부서 관리
             </h1>
             <p className="text-sm text-gray-500">
                 부서별 연락처 및 구성원을 확인할 수 있습니다.

@@ -94,8 +94,8 @@ function App() {
         setUserProfile({
             ...EMPLOYEE_PROFILE_DATA,
             name: loggedInUser.name,
-            job: 'Creator',
-            org: 'MCN',
+            job: existingCreator?.category || 'Creator',
+            org: existingCreator?.platform || 'MCN',
             rank: '-',
             // Use fresh data from creators list if available, otherwise login data
             avatarUrl: existingCreator?.avatarUrl || loggedInUser.avatarUrl,
@@ -104,6 +104,11 @@ function App() {
             email: existingCreator?.contactInfo || loggedInUser.username + '@mcn.com',
             personalEmail: loggedInUser.username + '@gmail.com',
             phone: existingCreator?.contactInfo || '010-0000-0000',
+            // Creator specific fields
+            subscribers: existingCreator?.subscribers,
+            platform: existingCreator?.platform,
+            category: existingCreator?.category,
+            manager: existingCreator?.manager
         });
         setCurrentView('creator-schedule');
     } else {
@@ -213,6 +218,7 @@ function App() {
           id: Date.now(),
           name: userProfile.name,
           type: vacationForm.type,
+          applyDate: new Date().toISOString().split('T')[0], // 신청일은 오늘 날짜로 자동 설정
           startDate: vacationForm.startDate,
           endDate: vacationForm.endDate,
           days: calculatedDays, 
@@ -238,9 +244,19 @@ function App() {
       });
   };
 
-  const handlePhqSubmit = () => {
-      alert('자가진단이 완료되었습니다.');
+  const handlePhqSubmit = (result: { score: number, category: string, description: string }) => {
+      if (!user) return;
+      const newLog: IssueLog = {
+          id: Date.now(),
+          creator: user.name, // Assuming the logged in user is the creator or the name to be logged
+          date: new Date().toISOString().split('T')[0],
+          category: result.category, // Just the category e.g., '심각'
+          description: `[PHQ-9 자가진단] 총점 ${result.score}점\n${result.description}`,
+          status: '확인완료'
+      };
+      setCreatorIssueLogs([newLog, ...creatorIssueLogs]);
       setIsPhqModalOpen(false);
+      alert('자가진단 결과가 기록되었습니다.');
   };
 
   const pendingApprovals = vacationLogs.filter(log => log.status === '대기중').length;
@@ -279,6 +295,7 @@ function App() {
           onAddTask={(title) => isCreator && handleAddTask(title, user.id)}
           onToggleTask={handleToggleTask}
           onDeleteTask={handleDeleteTask}
+          onOpenVacationModal={() => setIsVacationModalOpen(true)} // Passed to use Global Modal
         />
       )}
       
@@ -299,6 +316,7 @@ function App() {
             vacationLogs={vacationLogs} 
             onUpdateVacationLogs={setVacationLogs}
             userName={userProfile.name}
+            onOpenVacationModal={() => setIsVacationModalOpen(true)}
         />
       )}
 
@@ -344,7 +362,7 @@ function App() {
         />
       )}
 
-      {(currentView === 'creator' || currentView === 'my-creator' || currentView === 'creator-schedule' || currentView === 'creator-health') && (
+      {(currentView === 'creator' || currentView === 'my-creator' || currentView === 'creator-schedule' || currentView === 'creator-health' || currentView === 'hr-creator-list' || currentView === 'hr-creator-contract' || currentView === 'hr-creator-health' || currentView === 'creator-calendar' || currentView === 'creator-list' || currentView === 'creator-ads' || currentView === 'creator-support') && (
         <CreatorManagerView 
             user={user} 
             creators={creators}
@@ -356,6 +374,7 @@ function App() {
             employees={employees}
             events={creatorEvents}
             onUpdateEvents={setCreatorEvents}
+            supportRequests={supportRequests}
             onAddSupportRequest={handleAddSupportRequest}
             currentView={currentView}
             allTasks={allTasks}
@@ -464,6 +483,13 @@ function App() {
                   </div>
               </div>
           </div>
+      )}
+
+      {isPhqModalOpen && (
+          <PhqSurveyModal 
+             onClose={() => setIsPhqModalOpen(false)} 
+             onSubmit={handlePhqSubmit} 
+          />
       )}
     </div>
   );

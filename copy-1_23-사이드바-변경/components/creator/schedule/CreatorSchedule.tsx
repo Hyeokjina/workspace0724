@@ -1,60 +1,22 @@
-import React, { useState } from 'react';
-import { User, UserRole, Employee } from '../types';
-import { AdminCreatorView } from './AdminCreatorView';
-import { EmployeeCreatorView } from './EmployeeCreatorView';
-import { 
-    Creator, HealthRecord, IssueLog, CreatorEvent, CreatorCalendar, CreatorHealthView, Task, INITIAL_TASKS, PhqSurveyModal, getCreatorColorStyles 
-} from './CreatorShared';
-// Added Users to the import list to resolve "Cannot find name 'Users'" error on line 301.
-import { CalendarIcon, Activity, CheckSquare, ClipboardList, X, Trash2, Plus, Search, Check, Users } from 'lucide-react';
 
-interface CreatorManagerViewProps {
-    user: User;
+import React, { useState } from 'react';
+import { CalendarIcon, Plus, X, Search, Users, Check, Trash2 } from 'lucide-react';
+import { Creator, CreatorEvent, CreatorCalendar, getCreatorColorStyles } from '../../CreatorShared';
+
+interface CreatorScheduleProps {
+    creator: Creator;
     creators: Creator[];
-    onUpdateCreators: (creators: Creator[]) => void;
-    // New Props for Health Sync
-    healthRecords: HealthRecord[];
-    onUpdateHealthRecords: (records: HealthRecord[]) => void;
-    issueLogs: IssueLog[];
-    onUpdateIssueLogs: (logs: IssueLog[]) => void;
-    employees: Employee[];
-    // Event Props
     events: CreatorEvent[];
     onUpdateEvents: (events: CreatorEvent[]) => void;
-    // Support Props
-    onAddSupportRequest?: (request: any) => void;
-    currentView?: string;
-    // Task Props
-    allTasks: Task[];
-    onAddTask: (title: string, creatorId: string) => void;
-    onToggleTask: (id: string) => void;
-    onDeleteTask: (id: string) => void;
 }
 
-// --- New Component for Creator Self View ---
-const CreatorSelfView = ({
-    user,
+export const CreatorSchedule: React.FC<CreatorScheduleProps> = ({
+    creator,
     creators,
     events,
-    onUpdateEvents,
-    healthRecords,
-    onUpdateHealthRecords,
-    issueLogs,
-    onUpdateIssueLogs,
-    currentView
-}: {
-    user: User,
-    creators: Creator[],
-    events: CreatorEvent[],
-    onUpdateEvents: (events: CreatorEvent[]) => void,
-    healthRecords: HealthRecord[],
-    onUpdateHealthRecords: (records: HealthRecord[]) => void,
-    issueLogs: IssueLog[],
-    onUpdateIssueLogs: (logs: IssueLog[]) => void,
-    currentView?: string
+    onUpdateEvents
 }) => {
     const [currentDate, setCurrentDate] = useState(new Date(2026, 0, 1));
-    const [isPhqModalOpen, setIsPhqModalOpen] = useState(false);
     const [isEventModalOpen, setIsEventModalOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<CreatorEvent | null>(null);
     const [partnerSearchQuery, setPartnerSearchQuery] = useState('');
@@ -73,26 +35,19 @@ const CreatorSelfView = ({
         partnerCreators: []
     });
 
-    // Identify the creator based on logged-in user ID
-    const myCreator = creators.find(c => c.id === user.id);
-    
+    const EVENT_TYPES = [
+        { id: 'content', label: '콘텐츠' },
+        { id: 'live', label: '라이브' },
+        { id: 'meeting', label: '미팅' },
+        { id: 'other', label: '기타' },
+    ];
+
     // Improved Filtering: Include events where I am the host OR a partner in a joint broadcast
-    const myEvents = myCreator 
-        ? events.filter(e => e.creatorId === myCreator.id || e.partnerCreators?.includes(myCreator.id)) 
-        : [];
-        
+    const myEvents = events.filter(e => e.creatorId === creator.id || e.partnerCreators?.includes(creator.id));
+    
     // Show all creators in joint broadcasts for proper color mapping
     const creatorsMap = creators.reduce((acc, c) => ({ ...acc, [c.id]: c }), {} as Record<string, Creator>);
-    
-    const isHealthView = currentView === 'creator-health';
-
-    if (!myCreator) {
-        return (
-            <div className="flex-1 h-screen flex items-center justify-center text-gray-500">
-                연결된 크리에이터 정보를 찾을 수 없습니다.
-            </div>
-        );
-    }
+    const potentialPartners = creators.filter(c => c.id !== creator.id && c.name.includes(partnerSearchQuery));
 
     const handleOpenEventModal = (date?: string) => {
         setNewEventData({
@@ -119,7 +74,7 @@ const CreatorSelfView = ({
 
         const newEvent: CreatorEvent = {
             id: Date.now().toString(),
-            creatorId: myCreator.id, // Always assign to self
+            creatorId: creator.id, // Always assign to self
             title: newEventData.title,
             date: newEventData.date,
             type: newEventData.type,
@@ -150,30 +105,6 @@ const CreatorSelfView = ({
         });
     };
 
-    const handlePhqSubmit = () => {
-        const newLog: IssueLog = {
-            id: Date.now(),
-            creator: myCreator.name,
-            date: new Date().toISOString().split('T')[0],
-            category: 'PHQ-9 자가진단',
-            description: '자가 건강 설문을 완료하였습니다. (점수: 8점 / 정상 범위)',
-            status: '확인완료'
-        };
-        onUpdateIssueLogs([newLog, ...issueLogs]);
-        alert('설문이 완료되었습니다. 결과가 담당 매니저에게 공유되었습니다.');
-        setIsPhqModalOpen(false);
-    };
-
-    const potentialPartners = creators.filter(c => c.id !== myCreator.id && c.name.includes(partnerSearchQuery));
-
-    const EVENT_TYPES = [
-        { id: 'content', label: '콘텐츠' },
-        { id: 'live', label: '라이브' },
-        { id: 'meeting', label: '미팅' },
-        { id: 'joint', label: '합방' },
-        { id: 'other', label: '기타' },
-    ];
-
     return (
         <div className="flex-1 h-screen overflow-hidden flex flex-col bg-white relative">
              <div className="px-8 pt-8 pb-6 shrink-0 border-b border-gray-100">
@@ -181,34 +112,21 @@ const CreatorSelfView = ({
                      <div className="flex justify-between items-end">
                         <div>
                              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                                {isHealthView ? <Activity className="text-[#00C471]" size={32}/> : <CalendarIcon className="text-gray-800" size={32}/>}
-                                {isHealthView ? '건강 관리' : '나의 일정'}
+                                <CalendarIcon className="text-gray-800" size={32}/>
+                                나의 일정
                              </h1>
                              <p className="text-sm text-gray-500 mt-2">
-                                {isHealthView 
-                                    ? '나의 건강 상태와 검진 기록을 확인하세요.' 
-                                    : `반가워요, ${myCreator.name}님! 오늘 일정을 관리해보세요.`
-                                }
+                                {`반가워요, ${creator.name}님! 오늘 일정을 관리해보세요.`}
                              </p>
                         </div>
                         <div className="flex gap-3">
-                            {isHealthView ? (
-                                <button 
-                                    onClick={() => setIsPhqModalOpen(true)}
-                                    className="flex items-center gap-2 bg-[#00C471] hover:bg-[#00b065] text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition-all active:scale-95"
-                                >
-                                    <ClipboardList size={20} />
-                                    자가진단 설문 시작
-                                </button>
-                            ) : (
-                                <button 
-                                    onClick={() => handleOpenEventModal()}
-                                    className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition-all active:scale-95"
-                                >
-                                    <Plus size={20} />
-                                    일정 추가
-                                </button>
-                            )}
+                            <button 
+                                onClick={() => handleOpenEventModal()}
+                                className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-xl font-bold shadow-md transition-all active:scale-95"
+                            >
+                                <Plus size={20} />
+                                일정 추가
+                            </button>
                         </div>
                      </div>
                  </div>
@@ -216,36 +134,20 @@ const CreatorSelfView = ({
 
              <div className="flex-1 overflow-y-auto p-8 bg-white">
                 <div className="max-w-[1600px] mx-auto">
-                    {!isHealthView && (
-                        <div className="animate-[fadeIn_0.2s_ease-out]">
-                            <div className="w-full">
-                                <CreatorCalendar 
-                                    events={myEvents}
-                                    creatorsMap={creatorsMap}
-                                    currentDate={currentDate}
-                                    onDateChange={setCurrentDate}
-                                    onAddEvent={handleOpenEventModal} 
-                                    onEventClick={setSelectedEvent} 
-                                    readOnly={false}
-                                    legendCreators={[myCreator]} // Only show me in the legend
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {isHealthView && (
-                        <div className="animate-[fadeIn_0.2s_ease-out]">
-                            <CreatorHealthView 
-                                creators={[myCreator]}
-                                records={healthRecords}
-                                onUpdateRecords={onUpdateHealthRecords}
-                                logs={issueLogs}
-                                onUpdateLogs={onUpdateIssueLogs}
+                    <div className="animate-[fadeIn_0.2s_ease-out]">
+                        <div className="w-full">
+                            <CreatorCalendar 
+                                events={myEvents}
+                                creatorsMap={creatorsMap}
+                                currentDate={currentDate}
+                                onDateChange={setCurrentDate}
+                                onAddEvent={handleOpenEventModal} 
+                                onEventClick={setSelectedEvent} 
                                 readOnly={false}
-                                isCreator={true} 
+                                legendCreators={[creator]} // Only show me in the legend
                             />
                         </div>
-                    )}
+                    </div>
                 </div>
              </div>
 
@@ -288,54 +190,12 @@ const CreatorSelfView = ({
                                     <select 
                                         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-black bg-white shadow-sm"
                                         value={newEventData.type}
-                                        onChange={e => setNewEventData({...newEventData, type: e.target.value as any, partnerCreators: e.target.value === 'joint' ? [] : []})}
+                                        onChange={e => setNewEventData({...newEventData, type: e.target.value as any})}
                                     >
                                         {EVENT_TYPES.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
                                     </select>
                                 </div>
                             </div>
-
-                            {newEventData.type === 'joint' && (
-                                <div className="p-4 bg-purple-50 rounded-xl border border-purple-100 animate-[slideDown_0.2s_ease-out]">
-                                    <label className="block text-xs font-bold text-purple-700 mb-3 flex items-center gap-1.5">
-                                        <Users size={14} /> 합방 참여 파트너 선택 (최소 1명)
-                                    </label>
-                                    
-                                    <div className="relative mb-3">
-                                        <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-purple-400" />
-                                        <input 
-                                            type="text" 
-                                            placeholder="이름으로 검색..."
-                                            className="w-full pl-8 pr-3 py-1.5 text-xs border border-purple-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-400 bg-white shadow-inner"
-                                            value={partnerSearchQuery}
-                                            onChange={e => setPartnerSearchQuery(e.target.value)}
-                                        />
-                                    </div>
-
-                                    <div className="max-h-40 overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
-                                        {potentialPartners.map(p => (
-                                            <div 
-                                                key={p.id}
-                                                onClick={() => togglePartnerCreator(p.id)}
-                                                className={`
-                                                    flex items-center justify-between p-2 rounded-lg cursor-pointer transition-all border
-                                                    ${newEventData.partnerCreators.includes(p.id) 
-                                                        ? 'bg-purple-600 border-purple-700 text-white shadow-sm scale-[0.98]' 
-                                                        : 'bg-white border-purple-100 text-purple-900 hover:bg-purple-100'}
-                                                `}
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-5 h-5 rounded-full bg-gray-200 overflow-hidden border border-purple-200/50 flex-shrink-0">
-                                                        {p.avatarUrl ? <img src={p.avatarUrl} className="w-full h-full object-cover" alt={p.name}/> : <X size={12} className="m-auto text-gray-400"/>}
-                                                    </div>
-                                                    <span className="text-xs font-medium">{p.name}</span>
-                                                </div>
-                                                {newEventData.partnerCreators.includes(p.id) && <Check size={14} />}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
 
                             <div>
                                 <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5 tracking-wider">상세 내용</label>
@@ -425,7 +285,7 @@ const CreatorSelfView = ({
                             </div>
 
                             <div className="flex gap-2">
-                                {selectedEvent.creatorId === myCreator.id && (
+                                {selectedEvent.creatorId === creator.id && (
                                     <button 
                                         onClick={() => handleDeleteEvent(selectedEvent.id)}
                                         className="flex-1 py-2.5 text-sm text-red-500 hover:bg-red-50 border border-red-100 rounded-xl font-bold transition-colors flex items-center justify-center gap-1.5"
@@ -444,74 +304,6 @@ const CreatorSelfView = ({
                     </div>
                 </div>
              )}
-
-             {isPhqModalOpen && (
-                 <PhqSurveyModal 
-                    onClose={() => setIsPhqModalOpen(false)} 
-                    onSubmit={handlePhqSubmit} 
-                 />
-             )}
         </div>
     );
-};
-
-export const CreatorManagerView = ({ 
-    user, 
-    creators, 
-    onUpdateCreators,
-    healthRecords,
-    onUpdateHealthRecords,
-    issueLogs,
-    onUpdateIssueLogs,
-    employees,
-    events,
-    onUpdateEvents,
-    onAddSupportRequest,
-    currentView,
-    allTasks,
-    onAddTask,
-    onToggleTask,
-    onDeleteTask
-}: CreatorManagerViewProps) => {
-  if (user.role === UserRole.CREATOR) {
-      return <CreatorSelfView 
-          user={user}
-          creators={creators}
-          events={events}
-          onUpdateEvents={onUpdateEvents}
-          healthRecords={healthRecords}
-          onUpdateHealthRecords={onUpdateHealthRecords}
-          issueLogs={issueLogs}
-          onUpdateIssueLogs={onUpdateIssueLogs}
-          currentView={currentView}
-      />;
-  }
-
-  return user.role === UserRole.ADMIN 
-    ? <AdminCreatorView 
-        user={user} 
-        creators={creators} 
-        onUpdateCreators={onUpdateCreators}
-        healthRecords={healthRecords}
-        onUpdateHealthRecords={onUpdateHealthRecords}
-        issueLogs={issueLogs}
-        onUpdateIssueLogs={onUpdateIssueLogs}
-        employees={employees}
-      />
-    : <EmployeeCreatorView 
-        user={user} 
-        creators={creators} 
-        onUpdateCreators={onUpdateCreators}
-        healthRecords={healthRecords}
-        onUpdateHealthRecords={onUpdateHealthRecords}
-        issueLogs={issueLogs}
-        onUpdateIssueLogs={onUpdateIssueLogs}
-        events={events}
-        onUpdateEvents={onUpdateEvents}
-        onAddSupportRequest={onAddSupportRequest}
-        allTasks={allTasks}
-        onAddTask={onAddTask}
-        onToggleTask={onToggleTask}
-        onDeleteTask={onDeleteTask}
-      />;
 };

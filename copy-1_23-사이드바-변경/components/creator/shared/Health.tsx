@@ -1,478 +1,10 @@
+
 import React, { useState } from 'react';
-import { 
-  Youtube, Twitch, Instagram, Smartphone, Monitor, ChevronLeft, ChevronRight, Plus,
-  Stethoscope, ClipboardList, X, Activity, HeartPulse, AlertTriangle, BrainCircuit,
-  FileText, Download, User, Upload, CheckCircle2, Calendar, AlertCircle
-} from 'lucide-react';
+import { X, CheckCircle2, AlertTriangle, AlertCircle, BrainCircuit, Stethoscope, Plus, Activity, User, Calendar, FileText, Download, Trash2, Edit3, Upload, RefreshCw } from 'lucide-react';
+import { Creator, HealthRecord, IssueLog } from './types';
 
-// --- Types ---
-export type PlatformType = 'YouTube' | 'Instagram' | 'TikTok' | 'Twitch' | 'Chzzk';
-
-export interface Creator {
-  id: string;
-  name: string;
-  platform: PlatformType;
-  status: '활동중' | '휴식중' | '계약만료' | '대기중' | '종료';
-  subscribers: string;
-  avatarUrl: string;
-  coverUrl: string;
-  tags: string[];
-  category?: string;
-  manager?: string;
-  managementStartDate?: string; // 담당 시작일
-  managementEndDate?: string;   // 담당 종료일
-  channelName?: string;
-  contactInfo?: string;
-  contractStatus: 'Signed' | 'Drafting' | 'Expired' | 'None';
-  // New fields for login credentials
-  loginId?: string;
-  password?: string;
-}
-
-export interface Task {
-  id: string;
-  title: string;
-  status: '진행중' | '완료됨'; // Removed '대기중'
-  assignee: string;
-  creatorId?: string;
-}
-
-export interface CreatorEvent {
-    id: string;
-    creatorId: string;
-    title: string;
-    date: string; // YYYY-MM-DD
-    type: 'live' | 'content' | 'meeting' | 'other' | 'joint';
-    content?: string;
-    partnerCreators?: string[]; // List of Creator IDs for joint broadcasts
-}
-
-export interface AdProposal {
-  id: string;
-  creatorId: string;
-  brandName: string;
-  campaignTitle: string;
-  budget: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  requestDate: string;
-  description: string;
-  targetDate?: string; // Added target schedule date
-}
-
-export interface HealthRecord {
-    id: string;
-    name: string;
-    lastCheck: string;
-    score: number; // 0-100
-    result: string;
-    status: string;
-}
-
-export interface IssueLog {
-    id: number;
-    creator: string;
-    date: string;
-    category: string;
-    description: string;
-    status: string;
-}
-
-// --- Mock Data ---
-export const INITIAL_CREATORS: Creator[] = [
-  {
-    id: '1',
-    name: '슈카월드',
-    platform: 'YouTube',
-    status: '활동중',
-    subscribers: '300.0만명',
-    avatarUrl: 'https://yt3.googleusercontent.com/ytc/AIdro_k2A0y_2y0aFhVj7V9VjB0jVjVjVjVjVjVjVjVj=s176-c-k-c0x00ffffff-no-rj',
-    coverUrl: 'https://picsum.photos/id/1/1200/300',
-    tags: ['경제', '토크', '지식'],
-    category: '경제/시사',
-    manager: '이채연',
-    managementStartDate: '2023-01-01',
-    managementEndDate: '2025-12-31',
-    channelName: '슈카월드',
-    contactInfo: '010-1234-5678',
-    contractStatus: 'Signed',
-    loginId: 'syuka',
-    password: 'password'
-  },
-  {
-    id: '2',
-    name: '침착맨',
-    platform: 'Twitch',
-    status: '활동중',
-    subscribers: '250.0만명',
-    avatarUrl: 'https://picsum.photos/id/64/200/200',
-    coverUrl: 'https://picsum.photos/id/64/1200/300',
-    tags: ['토크', '게임'],
-    category: '토크/게임',
-    manager: '이채연',
-    managementStartDate: '2023-03-15',
-    managementEndDate: '2024-03-14',
-    channelName: '침착맨',
-    contactInfo: '010-9876-5432',
-    contractStatus: 'Signed',
-    loginId: 'chim',
-    password: 'password'
-  },
-  {
-    id: '3',
-    name: '요리보고',
-    platform: 'YouTube',
-    status: '대기중',
-    subscribers: '85.0만명',
-    avatarUrl: 'https://picsum.photos/id/2/200/200',
-    coverUrl: 'https://picsum.photos/id/2/1200/300',
-    tags: ['요리', '레시피', '일상'],
-    category: '요리',
-    manager: '김유연',
-    managementStartDate: '2024-01-01',
-    managementEndDate: '2024-12-31',
-    channelName: 'CookWithMe',
-    contactInfo: 'cooking@email.com',
-    contractStatus: 'Drafting'
-  },
-  {
-    id: '4',
-    name: '여행가제이',
-    platform: 'Instagram',
-    status: '활동중',
-    subscribers: '45.0만명',
-    avatarUrl: 'https://picsum.photos/id/3/200/200',
-    coverUrl: 'https://picsum.photos/id/3/1200/300',
-    tags: ['여행', '브이로그'],
-    category: '여행',
-    manager: '김유연',
-    managementStartDate: '2023-06-01',
-    managementEndDate: '2025-05-31',
-    channelName: 'JayTrip',
-    contactInfo: '010-5555-4444',
-    contractStatus: 'Signed'
-  },
-  {
-    id: '5',
-    name: '겜돌이',
-    platform: 'Twitch',
-    status: '활동중',
-    subscribers: '12.0만명',
-    avatarUrl: 'https://picsum.photos/id/4/200/200',
-    coverUrl: 'https://picsum.photos/id/4/1200/300',
-    tags: ['게임'],
-    category: '게임',
-    manager: '이채연',
-    managementStartDate: '2024-02-01',
-    managementEndDate: '2025-02-01',
-    channelName: 'GameZone',
-    contactInfo: 'game@email.com',
-    contractStatus: 'Signed',
-    loginId: 'gamedol',
-    password: '1234'
-  },
-  {
-    id: '6',
-    name: '치즈냥이',
-    platform: 'Chzzk',
-    status: '활동중',
-    subscribers: '5.5만명',
-    avatarUrl: 'https://picsum.photos/id/40/200/200',
-    coverUrl: 'https://picsum.photos/id/40/1200/300',
-    tags: ['게임', '소통'],
-    category: '게임',
-    manager: '김유연',
-    managementStartDate: '2024-01-15',
-    managementEndDate: '2024-07-15',
-    channelName: 'CheeseCat',
-    contactInfo: 'cat@email.com',
-    contractStatus: 'None'
-  },
-  {
-    id: '7',
-    name: '철수',
-    platform: 'YouTube',
-    status: '활동중',
-    subscribers: '50.0만명',
-    avatarUrl: 'https://picsum.photos/id/100/200/200',
-    coverUrl: 'https://picsum.photos/id/100/1200/300',
-    tags: ['일상', '브이로그'],
-    category: '일상',
-    manager: '김유연',
-    managementStartDate: '2024-01-01',
-    managementEndDate: '2024-12-31',
-    channelName: 'CheolsuVlog',
-    contactInfo: 'cheolsu@email.com',
-    contractStatus: 'Signed'
-  }
-];
-
-export const INITIAL_TASKS: Record<string, Task[]> = {
-  '1': [
-    { id: 't1', title: '다음 주 콘텐츠 기획안 피드백', status: '진행중', assignee: '이채연' },
-    { id: 't2', title: '유튜브 채널 아트 리뉴얼 시안 확인', status: '진행중', assignee: '이채연' },
-    { id: 't3', title: '6월 정산서 발송', status: '진행중', assignee: '이채연' },
-    { id: 't4', title: '구독자 이벤트 당첨자 취합', status: '완료됨', assignee: '박지성' },
-    { id: 't5', title: '신규 굿즈 샘플 확인', status: '완료됨', assignee: '이채연' },
-  ],
-  '2': [
-    { id: 't6', title: '밀키트 콜라보 미팅', status: '완료됨', assignee: '최현석' },
-  ],
-  '5': [
-    { id: 't7', title: '신작 게임 프로모션 영상 촬영', status: '진행중', assignee: '이채연' },
-    { id: 't8', title: '주간 라이브 하이라이트 편집본 검수', status: '진행중', assignee: '이채연' },
-    { id: 't9', title: '팬미팅 장소 대관 확인', status: '완료됨', assignee: '김매니저' },
-  ]
-};
-
-export const INITIAL_EVENTS: CreatorEvent[] = [
-    { id: 'e1', creatorId: '1', title: '라이브 방송', date: '2026-01-10', type: 'live', content: '저녁 8시 정규 라이브 방송입니다. 주제: 경제 뉴스 정리' },
-    { id: 'e2', creatorId: '1', title: '유튜브 업로드', date: '2026-01-12', type: 'content', content: '편집본 업로드 예정. 썸네일 컨펌 필요.' },
-    { id: 'e3', creatorId: '3', title: '광고 미팅', date: '2026-01-15', type: 'meeting', content: '주방용품 브랜드 A사 미팅 (강남역 2시)' },
-    { id: 'e4', creatorId: '4', title: '출국 (일본)', date: '2026-01-20', type: 'other', content: '3박 4일 도쿄 브이로그 촬영 일정' },
-    { id: 'e5', creatorId: '6', title: '정기 방송', date: '2026-01-05', type: 'live', content: '치지직 이적 후 첫 정기 방송' },
-    { id: 'e6', creatorId: '1', title: '브랜드 미팅', date: '2026-01-22', type: 'meeting', content: '금융 앱 B사 연간 계약 논의' },
-];
-
-export const INITIAL_AD_PROPOSALS: AdProposal[] = [
-    {
-        id: 'ad-dummy-1',
-        creatorId: '7',
-        brandName: '테크월드',
-        campaignTitle: '게이밍 마우스 G-100 리뷰',
-        budget: '300만원',
-        status: 'pending',
-        requestDate: '2024-01-25',
-        description: '신제품 게이밍 마우스 상세 리뷰 및 게임 플레이 시연 영상 1편.',
-        targetDate: '2024-02-05'
-    },
-    {
-        id: 'ad-1',
-        creatorId: '1',
-        brandName: '삼성전자',
-        campaignTitle: '갤럭시 S24 울트라 기능 리뷰 및 시연',
-        budget: '2,500만원',
-        status: 'pending',
-        requestDate: '2024-01-20',
-        description: '신제품 출시 기념 메인 기능(AI) 집중 리뷰 영상 제작 요청드립니다. 엠바고 준수 필수.',
-        targetDate: '2024-02-10'
-    },
-    {
-        id: 'ad-2',
-        creatorId: '1',
-        brandName: '미래에셋증권',
-        campaignTitle: '2024년 하반기 경제 전망 세미나',
-        budget: '1,000만원',
-        status: 'accepted',
-        requestDate: '2024-01-15',
-        description: '오프라인 세미나 연사 초청 및 유튜브 라이브 송출 건입니다.'
-    },
-    {
-        id: 'ad-3',
-        creatorId: '2',
-        brandName: '넥슨',
-        campaignTitle: '신작 게임 찍먹 플레이',
-        budget: '1,500만원',
-        status: 'pending',
-        requestDate: '2024-01-21',
-        description: '캐주얼하게 게임을 즐기는 모습을 담은 라이브 방송 2시간 진행 요청.',
-        targetDate: '2024-02-01'
-    },
-    {
-        id: 'ad-4',
-        creatorId: '4',
-        brandName: '대한항공',
-        campaignTitle: '취항지 홍보 브이로그 (유럽)',
-        budget: '800만원 + 항공권',
-        status: 'rejected',
-        requestDate: '2024-01-10',
-        description: '신규 취항지 홍보를 위한 여행 브이로그 2편 제작.'
-    }
-];
-
-// --- Helper Functions ---
-export const renderPlatformIcon = (platform: PlatformType, size: number = 16) => {
-    switch (platform) {
-        case 'YouTube': return <Youtube size={size} className="text-black" />;
-        case 'Twitch': return <Twitch size={size} className="text-black" />;
-        case 'Instagram': return <Instagram size={size} className="text-black" />;
-        case 'TikTok': return <Smartphone size={size} className="text-black" />;
-        case 'Chzzk': return (
-            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5.5 11.5L15.5 2.5L13.5 10.5H21.5L11.5 21.5L13.5 11.5H5.5Z" fill="#000000" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-        );
-        default: return <Monitor size={size} className="text-gray-500" />;
-    }
-};
-
-export const PALETTE = [
-    { bg: 'bg-gray-100', text: 'text-gray-900', border: 'border-gray-200', dot: 'bg-gray-600' },
-    { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200', dot: 'bg-[#00C471]' },
-    { bg: 'bg-gray-100', text: 'text-gray-800', border: 'border-gray-200', dot: 'bg-blue-600' },
-    { bg: 'bg-gray-50', text: 'text-gray-900', border: 'border-gray-200', dot: 'bg-purple-600' },
-];
-
-export const getCreatorColorStyles = (id: string) => {
-    const idx = parseInt(id) || 0;
-    return PALETTE[idx % PALETTE.length];
-};
-
-// --- Shared Components ---
-interface CalendarProps {
-    events: CreatorEvent[];
-    creatorsMap: Record<string, Creator>;
-    currentDate: Date;
-    onDateChange: (date: Date) => void;
-    onAddEvent: (date?: string) => void;
-    onEventClick: (event: CreatorEvent) => void; 
-    readOnly?: boolean;
-    legendCreators?: Creator[]; // New prop to control legend visibility
-}
-
-export const CreatorCalendar: React.FC<CalendarProps> = ({ 
-    events, 
-    creatorsMap, 
-    currentDate, 
-    onDateChange, 
-    onAddEvent, 
-    onEventClick, 
-    readOnly = false,
-    legendCreators 
-}) => {
-    const getDaysInMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-    const getFirstDayOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-
-    const changeMonth = (offset: number) => {
-        onDateChange(new Date(currentDate.getFullYear(), currentDate.getMonth() + offset, 1));
-    };
-    
-    const goToToday = () => {
-        onDateChange(new Date());
-    };
-
-    const daysInMonth = getDaysInMonth(currentDate);
-    const firstDay = getFirstDayOfMonth(currentDate);
-    const days = [];
-
-    // Empty slots
-    for (let i = 0; i < firstDay; i++) {
-        days.push(<div key={`empty-${i}`} className="min-h-[120px] bg-white border-r border-b border-gray-200"></div>);
-    }
-
-    // Days
-    for (let d = 1; d <= daysInMonth; d++) {
-        const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        const isToday = new Date().toISOString().split('T')[0] === dateStr;
-        const dayEvents = events.filter(e => e.date === dateStr);
-
-        days.push(
-            <div 
-                key={d} 
-                onClick={() => !readOnly && onAddEvent(dateStr)} // Whole cell clickable
-                className={`min-h-[120px] bg-white border-r border-b border-gray-200 p-1 relative group transition-colors ${!readOnly ? 'hover:bg-gray-50 cursor-pointer' : ''}`}
-            >
-                 {/* Date Header */}
-                <div className="flex justify-between items-start mb-1 p-1">
-                     <span 
-                        className={`text-sm font-medium w-6 h-6 flex items-center justify-center rounded-[4px]
-                        ${isToday ? 'bg-[#00C471] text-white' : 'text-gray-500'}`}
-                     >
-                        {d}
-                     </span>
-                     {!readOnly && (
-                         <div className="opacity-0 group-hover:opacity-100 text-[#00C471] transition-opacity p-0.5">
-                             <Plus size={14} />
-                         </div>
-                     )}
-                </div>
-                
-                {/* Events */}
-                <div className="space-y-1 px-1">
-                    {dayEvents.map(evt => {
-                        const creator = creatorsMap[evt.creatorId];
-                        const styles = creator ? getCreatorColorStyles(creator.id) : PALETTE[0];
-                        
-                        return (
-                            <div 
-                                key={evt.id} 
-                                onClick={(e) => {
-                                    e.stopPropagation(); // Prevent onAddEvent trigger
-                                    onEventClick(evt);
-                                }}
-                                className={`
-                                    px-2 py-1 rounded-[3px] text-xs flex justify-between items-center group/item cursor-pointer shadow-sm
-                                    transition-all hover:brightness-95 border
-                                    ${styles.bg} ${styles.text} ${styles.border}
-                                `}
-                            >
-                                <div className="truncate font-medium flex items-center gap-1.5">
-                                    <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${styles.dot}`}></div>
-                                    <span className="truncate">{creator?.name} - {evt.title}</span>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        );
-    }
-
-    // Legend Logic: If legendCreators prop exists, use it. Otherwise use all creators in creatorsMap.
-    const legendList = legendCreators || Object.values(creatorsMap);
-
-    return (
-        <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
-            {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-white">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                        <button onClick={(e) => { e.stopPropagation(); changeMonth(-1); }} className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"><ChevronLeft size={18} /></button>
-                        <span className="text-lg font-bold text-gray-800 min-w-[120px] text-center">
-                            {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
-                        </span>
-                        <button onClick={(e) => { e.stopPropagation(); changeMonth(1); }} className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"><ChevronRight size={18} /></button>
-                    </div>
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); goToToday(); }}
-                        className="text-xs text-gray-600 hover:text-gray-900 bg-white border border-gray-200 hover:bg-gray-50 px-3 py-1.5 rounded-md shadow-sm transition-all"
-                    >
-                        오늘
-                    </button>
-                </div>
-                
-                {/* Creator Legend */}
-                <div className="flex gap-3 text-xs overflow-x-auto max-w-[500px] py-1 scrollbar-hide">
-                     {legendList.map((c: Creator) => {
-                         const style = getCreatorColorStyles(c.id);
-                         return (
-                             <div key={c.id} className="flex items-center gap-1 text-gray-600 shrink-0">
-                                 <div className={`w-2 h-2 rounded-full ${style.dot}`}></div>
-                                 {c.name}
-                             </div>
-                         )
-                     })}
-                </div>
-            </div>
-
-            {/* Grid Header */}
-            <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50">
-                {['일', '월', '화', '수', '목', '금', '토'].map((day, i) => (
-                    <div key={day} className={`py-2 text-center text-xs font-medium ${i === 0 ? 'text-[#00C471]' : 'text-gray-500'}`}>
-                        {day}
-                    </div>
-                ))}
-            </div>
-
-            {/* Grid Body */}
-            <div className="grid grid-cols-7">
-                {days}
-            </div>
-        </div>
-    );
-};
-
-// PHQ-9 Survey Modal Component (Shows Completed only)
-export const PhqSurveyModal = ({ onClose, onSubmit }: { onClose: () => void, onSubmit: () => void }) => {
+// PHQ-9 Survey Modal Component with Scoring Logic
+export const PhqSurveyModal = ({ onClose, onSubmit }: { onClose: () => void, onSubmit: (result: { score: number, category: string, description: string }) => void }) => {
     const [step, setStep] = useState(0);
     const questions = [
         "기분이 가라앉거나, 우울하거나, 희망이 없다고 느꼈다.",
@@ -488,12 +20,45 @@ export const PhqSurveyModal = ({ onClose, onSubmit }: { onClose: () => void, onS
     const options = ["없음", "2-6일", "7-12일", "거의 매일"];
     const [answers, setAnswers] = useState<number[]>(new Array(9).fill(0));
 
-    const handleSubmit = () => {
+    // Scoring result state
+    const [scoreResult, setScoreResult] = useState<{ score: number, category: string, description: string, color: string } | null>(null);
+
+    const calculateResult = () => {
+        const totalScore = answers.reduce((a, b) => a + b, 0);
+        let category = '';
+        let description = '';
+        let color = '';
+
+        if (totalScore <= 4) {
+            category = '정상';
+            description = '유의한 수준의 우울감이 시사되지 않습니다.';
+            color = 'text-green-600 bg-green-50 border-green-200';
+        } else if (totalScore <= 9) {
+            category = '경미';
+            description = '다소 경미한 수준의 우울감이 있으나 일상생활에 지장을 줄 정도는 아닙니다. 다만, 이러한 기분상태가 지속될 경우 개인의 신체적, 심리적 대처자원을 저하시킬 수 있습니다. 그러한 경우, 가까운 지역센터나 전문기관을 방문하시기 바랍니다.';
+            color = 'text-blue-600 bg-blue-50 border-blue-200';
+        } else if (totalScore <= 19) {
+            category = '주의';
+            description = '중간정도 수준의 우울감이 시사됩니다. 이러한 수준의 우울감은 흔히 신체적, 심리적 대처자원을 저하시키며 개인의 일상생활을 어렵게 만들기도 합니다. 가까운 지역센터나 전문기관을 방문하여 보다 상세한 평가와 도움을 받아보시기 바랍니다.';
+            color = 'text-orange-600 bg-orange-50 border-orange-200';
+        } else {
+            category = '심각';
+            description = '심한 수준의 우울감이 시사됩니다. 전문기관의 치료적 개입과 평가가 요구됩니다.';
+            color = 'text-red-600 bg-red-50 border-red-200';
+        }
+
+        setScoreResult({ score: totalScore, category, description, color });
         setStep(2);
     };
 
     const handleFinalize = () => {
-        onSubmit();
+        if (scoreResult) {
+            onSubmit({ 
+                score: scoreResult.score, 
+                category: scoreResult.category, 
+                description: scoreResult.description 
+            });
+        }
         onClose();
     };
 
@@ -535,16 +100,34 @@ export const PhqSurveyModal = ({ onClose, onSubmit }: { onClose: () => void, onS
                                 </div>
                             ))}
                             <div className="pt-4 text-center">
-                                <button onClick={handleSubmit} className="bg-black text-white px-8 py-2 rounded-lg text-sm">제출하기</button>
+                                <button onClick={calculateResult} className="bg-black text-white px-8 py-2 rounded-lg text-sm">제출하기</button>
                             </div>
                         </div>
                     )}
-                    {step === 2 && (
-                        <div className="text-center py-12">
-                            <div className="text-4xl mb-4">✅</div>
-                            <h2 className="text-xl font-bold text-gray-900 mb-2">검사가 완료되었습니다</h2>
-                            <p className="text-sm text-gray-500 mb-8">결과가 담당자에게 전달되었습니다.</p>
-                            <button onClick={handleFinalize} className="bg-gray-100 text-gray-900 px-6 py-2 rounded-lg text-sm font-bold">확인</button>
+                    {step === 2 && scoreResult && (
+                        <div className="text-center py-6 px-4">
+                            <div className="mb-6">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-1">검사 결과</h2>
+                                <p className="text-sm text-gray-500">자가진단 결과는 다음과 같습니다.</p>
+                            </div>
+                            
+                            <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                                <div className="text-sm text-gray-500 font-medium mb-1">총점</div>
+                                <div className="text-4xl font-bold text-gray-900 mb-4">{scoreResult.score} <span className="text-lg text-gray-400 font-medium">/ 27</span></div>
+                                
+                                <div className={`inline-block px-4 py-1.5 rounded-full text-sm font-bold border mb-4 ${scoreResult.color}`}>
+                                    {scoreResult.category}
+                                </div>
+                                
+                                <div className="text-left bg-white p-4 rounded-xl border border-gray-200 text-sm text-gray-700 leading-relaxed shadow-sm">
+                                    <span className="font-bold block mb-1">📋 결과 설명</span>
+                                    {scoreResult.description}
+                                </div>
+                            </div>
+
+                            <button onClick={handleFinalize} className="bg-black text-white px-8 py-3 rounded-xl text-sm font-bold shadow-lg hover:bg-gray-800 transition-colors w-full">
+                                확인 완료
+                            </button>
                         </div>
                     )}
                 </div>
@@ -616,6 +199,14 @@ export const CreatorHealthView: React.FC<CreatorHealthViewProps> = ({
         if (result.includes('재검')) return 'bg-purple-50 text-purple-700 border-purple-200';
         if (result.includes('미수검')) return 'bg-gray-50 text-gray-500 border-gray-200';
         return 'bg-blue-50 text-blue-700 border-blue-200';
+    };
+
+    const getIssueBadgeStyle = (category: string) => {
+        if (category.includes('정상')) return 'bg-green-50 text-green-700 border-green-100';
+        if (category.includes('경미')) return 'bg-blue-50 text-blue-700 border-blue-100';
+        if (category.includes('주의')) return 'bg-orange-50 text-orange-700 border-orange-100';
+        if (category.includes('심각')) return 'bg-red-50 text-red-700 border-red-100';
+        return 'bg-gray-50 text-gray-700 border-gray-200';
     };
 
     const handleAddCheckup = () => {
@@ -799,12 +390,9 @@ export const CreatorHealthView: React.FC<CreatorHealthViewProps> = ({
                                 </div>
                                 <div className="mb-2">
                                     <div className="flex items-center gap-2 mb-1.5">
-                                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold border ${
-                                            log.category.includes('PHQ-9') ? 'bg-purple-50 text-purple-700 border-purple-200' :
-                                            log.category.includes('정상') ? 'bg-green-50 text-green-700 border-green-100' :
-                                            log.category.includes('경미') ? 'bg-blue-50 text-blue-700 border-blue-100' :
-                                            'bg-red-50 text-red-700 border-red-100'
-                                        }`}>{log.category}</span>
+                                        <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold border ${getIssueBadgeStyle(log.category)}`}>
+                                            {log.category.replace(/.*\((.*)\).*/, '$1') || log.category}
+                                        </span>
                                     </div>
                                     <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">{log.description}</p>
                                 </div>

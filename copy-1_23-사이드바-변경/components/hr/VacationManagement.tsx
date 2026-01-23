@@ -80,7 +80,18 @@ export const VacationManagement: React.FC<VacationManagementProps> = ({ vacation
             if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
         }
-        return b.startDate.localeCompare(a.startDate);
+        
+        // Default Sorting Logic per Tab
+        const dateA = a.applyDate ? new Date(a.applyDate).getTime() : 0;
+        const dateB = b.applyDate ? new Date(b.applyDate).getTime() : 0;
+
+        if (activeTab === 'pending') {
+            // 미승인 탭: 오래된 신청일이 위로 (Ascending)
+            return dateA - dateB;
+        } else {
+            // 전체, 승인, 반려 탭: 최근 신청한 것이 위로 (Descending)
+            return dateB - dateA;
+        }
     });
 
     const activeLogs = vacationLogs.filter(v => v.status !== '사용완료' && v.type !== '워케이션');
@@ -186,6 +197,7 @@ export const VacationManagement: React.FC<VacationManagementProps> = ({ vacation
                 <table className="w-full text-left">
                     <thead className="bg-gray-50 border-b border-gray-200 text-xs font-medium text-gray-500 uppercase select-none">
                         <tr>
+                            <th className="px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('applyDate')}><div className="flex items-center gap-1">신청일 {getSortIcon('applyDate')}</div></th>
                             <th className="px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('name')}><div className="flex items-center gap-1">신청자 {getSortIcon('name')}</div></th>
                             <th className="px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('type')}><div className="flex items-center gap-1">유형 {getSortIcon('type')}</div></th>
                             <th className="px-6 py-3 cursor-pointer hover:bg-gray-100 transition-colors" onClick={() => handleSort('startDate')}><div className="flex items-center gap-1">시작일 {getSortIcon('startDate')}</div></th>
@@ -197,6 +209,7 @@ export const VacationManagement: React.FC<VacationManagementProps> = ({ vacation
                     <tbody className="divide-y divide-gray-100 text-sm">
                         {filteredAndSorted.length > 0 ? filteredAndSorted.map(vac => (
                             <tr key={vac.id} className="hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => setSelectedDetailLog(vac)}>
+                                <td className="px-6 py-4 text-xs text-gray-500 font-mono">{vac.applyDate || '-'}</td>
                                 <td className="px-6 py-4 font-bold text-gray-900">{vac.name}</td>
                                 <td className="px-6 py-4">
                                     <span className={`text-xs px-2 py-0.5 rounded border ${vac.type === '반차' ? 'bg-purple-50 border-purple-100 text-purple-700' : vac.type === '병가' ? 'bg-red-50 border-red-100 text-red-700' : 'bg-blue-50 border-blue-100 text-blue-700'}`}>
@@ -214,7 +227,7 @@ export const VacationManagement: React.FC<VacationManagementProps> = ({ vacation
                             </tr>
                         )) : (
                             <tr>
-                                <td colSpan={6} className="px-6 py-8 text-center text-gray-400 text-sm">해당하는 휴가 내역이 없습니다.</td>
+                                <td colSpan={7} className="px-6 py-8 text-center text-gray-400 text-sm">해당하는 휴가 내역이 없습니다.</td>
                             </tr>
                         )}
                     </tbody>
@@ -248,6 +261,9 @@ export const VacationManagement: React.FC<VacationManagementProps> = ({ vacation
                             </div>
 
                             <div>
+                                <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5 tracking-wider">신청일</label>
+                                <div className="text-sm text-gray-900 font-medium ml-1 mb-3">{selectedDetailLog.applyDate || '-'}</div>
+
                                 <label className="block text-[11px] font-bold text-gray-400 uppercase mb-1.5 tracking-wider">휴가 기간</label>
                                 <div className="text-sm font-bold text-gray-900 bg-white border border-gray-200 px-4 py-3 rounded-xl flex items-center justify-between">
                                     <div className="flex flex-col"><span className="text-[10px] text-gray-400 mb-0.5">시작일</span><span>{selectedDetailLog.startDate}</span></div>

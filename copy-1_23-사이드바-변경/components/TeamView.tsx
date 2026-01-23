@@ -56,12 +56,17 @@ export const TeamView: React.FC<TeamViewProps> = ({ user, teams, employees, vaca
       job: creator.category || 'Creator', // Map Category to Job
       rank: 'Creator',
       avatarUrl: creator.avatarUrl || '',
-      coverUrl: creator.coverUrl
+      coverUrl: creator.coverUrl,
+      // Creator specific mapping
+      subscribers: creator.subscribers,
+      platform: creator.platform,
+      category: creator.category,
+      manager: creator.manager
   });
 
   // Level 3: Profile Detail
   if (selectedMember) {
-    const isCreator = selectedMember.job === 'Creator' || selectedMember.rank === 'Creator';
+    const isCreator = selectedMember.job === 'Creator' || selectedMember.rank === 'Creator' || !!selectedMember.platform;
     return (
       <ProfileView 
         profile={selectedMember} 

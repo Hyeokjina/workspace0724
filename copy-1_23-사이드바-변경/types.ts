@@ -32,6 +32,11 @@ export interface UserProfile {
   rank: string;
   avatarUrl: string;
   coverUrl?: string;
+  // Creator Specific Fields
+  subscribers?: string;
+  platform?: string;
+  category?: string;
+  manager?: string;
 }
 
 export interface ScheduleTemplate {
@@ -60,6 +65,7 @@ export interface VacationLog {
   id: number;
   name: string;
   type: string;
+  applyDate: string; // 신청일 추가
   startDate: string;
   endDate: string;
   days: number;

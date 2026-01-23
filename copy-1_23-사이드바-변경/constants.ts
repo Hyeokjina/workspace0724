@@ -7,7 +7,7 @@ export const USERS: Record<string, User> = {
     username: 'qwer',
     name: '이채연',
     role: UserRole.EMPLOYEE,
-    jobTitle: 'Product Owner',
+    jobTitle: 'Manager', // Changed from Product Owner
     avatarUrl: 'https://picsum.photos/id/64/200/200',
     status: '재직중',
     tags: ['플랫폼팀', '재직중']
@@ -58,7 +58,7 @@ export const EMPLOYEE_PROFILE_DATA: UserProfile = {
   tenure: '2년 1개월 재직',
   groupJoinDate: '2022년 01월 10일',
   org: '기술본부 (Tech Div)',
-  job: 'Product Owner',
+  job: 'Manager', // Changed from Product Owner
   rank: '매니저 / Level 3',
   avatarUrl: 'https://picsum.photos/id/64/400/400',
   coverUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'
@@ -83,18 +83,18 @@ export const ADMIN_PROFILE_DATA: UserProfile = {
 };
 
 export const INITIAL_VACATION_LOGS: VacationLog[] = [
-  { id: 101, name: '손흥민', type: '연차', startDate: '2026-02-14', endDate: '2026-02-15', days: 2, status: '대기중', reason: '개인 사정으로 인한 휴가' },
-  { id: 102, name: '김민재', type: '워케이션', startDate: '2026-02-20', endDate: '2026-02-24', days: 5, status: '대기중', reason: '제주도 워케이션', location: '제주 오피스', emergencyContact: '010-1111-2222', workGoals: '백엔드 마이그레이션 기획' },
-  { id: 103, name: '박지성', type: '반차', startDate: '2026-02-10', endDate: '2026-02-10', days: 0.5, status: '대기중', reason: '오후 병원 진료' },
-  { id: 201, name: '이채연', type: '연차', startDate: '2026-01-20', endDate: '2026-01-22', days: 3, status: '승인됨', reason: '겨울 가족 여행' },
-  { id: 203, name: '박지성', type: '병가', startDate: '2026-01-05', endDate: '2026-01-07', days: 3, status: '승인됨', reason: '독감', symptoms: '고열 및 근육통', hospital: '서울대병원' },
-  { id: 301, name: '이강인', type: '워케이션', startDate: '2026-01-08', endDate: '2026-01-12', days: 5, status: '반려됨', reason: '강릉 워케이션', rejectionReason: '해당 기간 팀 내 주요 프로젝트 런칭 일정과 겹쳐 부재가 불가능합니다.' },
-  { id: 401, name: '김유연', type: '연차', startDate: '2025-12-20', endDate: '2025-12-22', days: 3, status: '사용완료', reason: '크리스마스 휴가' },
+  { id: 101, name: '손흥민', type: '연차', applyDate: '2026-02-01', startDate: '2026-02-14', endDate: '2026-02-15', days: 2, status: '대기중', reason: '개인 사정으로 인한 휴가' },
+  { id: 102, name: '김민재', type: '워케이션', applyDate: '2026-02-02', startDate: '2026-02-20', endDate: '2026-02-24', days: 5, status: '대기중', reason: '제주도 워케이션', location: '제주 오피스', emergencyContact: '010-1111-2222', workGoals: '백엔드 마이그레이션 기획' },
+  { id: 103, name: '박지성', type: '반차', applyDate: '2026-02-03', startDate: '2026-02-10', endDate: '2026-02-10', days: 0.5, status: '대기중', reason: '오후 병원 진료' },
+  { id: 201, name: '이채연', type: '연차', applyDate: '2026-01-10', startDate: '2026-01-20', endDate: '2026-01-22', days: 3, status: '승인됨', reason: '겨울 가족 여행' },
+  { id: 203, name: '박지성', type: '병가', applyDate: '2026-01-04', startDate: '2026-01-05', endDate: '2026-01-07', days: 3, status: '승인됨', reason: '독감', symptoms: '고열 및 근육통', hospital: '서울대병원' },
+  { id: 301, name: '이강인', type: '워케이션', applyDate: '2026-01-01', startDate: '2026-01-08', endDate: '2026-01-12', days: 5, status: '반려됨', reason: '강릉 워케이션', rejectionReason: '해당 기간 팀 내 주요 프로젝트 런칭 일정과 겹쳐 부재가 불가능합니다.' },
+  { id: 401, name: '김유연', type: '연차', applyDate: '2025-12-10', startDate: '2025-12-20', endDate: '2025-12-22', days: 3, status: '사용완료', reason: '크리스마스 휴가' },
 ];
 
 export const INITIAL_EMPLOYEES: Employee[] = [
   { id: 'HR001', name: '김유연', engName: 'Jenny Kim', dept: '인사문화팀 (HR Team)', role: 'Senior Manager', workStatus: '출근', email: 'jenny@company.com', phone: '010-1234-5678', joinDate: '2019-03-15', avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80', nickname: '제니', rank: '팀장 / Level 5' },
-  { id: 'LP125', name: '이채연', engName: 'Sophia Lee', dept: '기술본부 (Tech Div)', role: 'Product Owner', workStatus: '출근', email: 'sophia@company.com', phone: '010-9876-5432', joinDate: '2022-01-10', avatarUrl: 'https://picsum.photos/id/64/200/200', nickname: '소피아', rank: '매니저 / Level 3' },
+  { id: 'LP125', name: '이채연', engName: 'Sophia Lee', dept: '기술본부 (Tech Div)', role: 'Manager', workStatus: '출근', email: 'sophia@company.com', phone: '010-9876-5432', joinDate: '2022-01-10', avatarUrl: 'https://picsum.photos/id/64/200/200', nickname: '소피아', rank: '매니저 / Level 3' }, // Changed from Product Owner
   { id: 'DV022', name: '박지성', engName: 'Jisung Park', dept: '기술본부 (Tech Div)', role: 'Frontend Dev', workStatus: '휴가', email: 'park@company.com', phone: '010-1111-2222', joinDate: '2021-05-20', avatarUrl: 'https://picsum.photos/id/10/200/200', nickname: '지성', rank: '시니어 / Level 4' },
   { id: 'DV023', name: '손흥민', engName: 'Sonny', dept: '기술본부 (Tech Div)', role: 'Backend Dev', workStatus: '퇴근', email: 'son@company.com', phone: '010-3333-4444', joinDate: '2021-06-01', avatarUrl: 'https://picsum.photos/id/55/200/200', nickname: '쏘니', rank: '시니어 / Level 4' },
   { id: 'MK005', name: '이강인', engName: 'Kangin Lee', dept: '마케팅팀 (Marketing)', role: 'Marketer', workStatus: '병가', email: 'lee@company.com', phone: '010-5555-6666', joinDate: '2023-01-01', avatarUrl: 'https://picsum.photos/id/33/200/200', nickname: '강인', rank: '주니어 / Level 2' },

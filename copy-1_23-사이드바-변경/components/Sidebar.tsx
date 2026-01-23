@@ -4,7 +4,8 @@ import { User, UserRole, UserProfile } from '../types';
 import { 
   Settings, PanelLeftClose, PanelLeftOpen, LayoutGrid, Calendar, 
   Clock, Users, UserCircle, Briefcase, 
-  Plane, Network, Star, LogOut, Activity, Palmtree, BarChart4, ClipboardList, Scale
+  Plane, Network, Star, LogOut, Activity, Palmtree, BarChart4, ClipboardList, Scale, FileText, Megaphone, Link as LinkIcon,
+  ChevronDown, ChevronRight
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -101,6 +102,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   
   const [isClockedIn, setIsClockedIn] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  
+  // Section toggle state
+  const [expanded, setExpanded] = useState({
+    personal: true,
+    hr: true,
+    creator: true
+  });
+
+  const toggleSection = (section: keyof typeof expanded) => {
+    if (isCollapsed) return; // Don't toggle if sidebar is collapsed
+    setExpanded(prev => ({ ...prev, [section]: !prev[section] }));
+  };
   
   // Timer & Attendance State
   const [workSeconds, setWorkSeconds] = useState(0);
@@ -215,6 +228,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const handleSettings = () => {
     alert("설정 페이지는 준비 중입니다.");
   };
+
+  const renderSectionHeader = (title: string, sectionKey: keyof typeof expanded) => {
+    if (isCollapsed) return <div className="h-px bg-gray-200 my-4" />;
+    return (
+      <div 
+        onClick={() => toggleSection(sectionKey)}
+        className="flex items-center justify-between group cursor-pointer hover:bg-gray-200/50 py-1 px-2 rounded -mx-1 mt-6 mb-1 transition-colors"
+      >
+        <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+          {title}
+        </div>
+        <div className="text-gray-400 group-hover:text-gray-600">
+          {expanded[sectionKey] ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`${isCollapsed ? 'w-[80px]' : 'w-[280px]'} h-screen bg-[#F7F7F5] border-r border-gray-200 flex flex-col p-4 sidebar-scroll overflow-y-auto shrink-0 transition-all duration-300 ease-in-out`}>
@@ -361,74 +391,85 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {isAdmin ? (
           /* ============ ADMIN LAYOUT ============ */
           <>
-            {!isCollapsed && <div className="text-[11px] font-bold text-gray-500 mb-2 mt-4 px-2 uppercase tracking-wider">개인 업무</div>}
-            
-            <nav className="space-y-0.5">
-              <div onClick={() => onNavigate('mypage')} className={getMenuItemClass('mypage')} title="마이페이지">
-                <LayoutGrid size={16} />
-                {!isCollapsed && <span className="text-sm">마이페이지</span>}
-              </div>
-              <div onClick={() => onNavigate('schedule')} className={getMenuItemClass('schedule')} title="나의 일정">
-                <Calendar size={16} />
-                {!isCollapsed && <span className="text-sm">나의 일정</span>}
-              </div>
-              <div onClick={() => onNavigate('attendance')} className={getMenuItemClass('attendance')} title="나의 근태/휴가">
-                <Clock size={16} />
-                {!isCollapsed && <span className="text-sm">나의 근태/휴가</span>}
-              </div>
-            </nav>
+            {renderSectionHeader('개인 업무', 'personal')}
+            {(expanded.personal || isCollapsed) && (
+              <nav className="space-y-0.5">
+                <div onClick={() => onNavigate('mypage')} className={getMenuItemClass('mypage')} title="마이페이지">
+                  <LayoutGrid size={16} />
+                  {!isCollapsed && <span className="text-sm">마이페이지</span>}
+                </div>
+                <div onClick={() => onNavigate('schedule')} className={getMenuItemClass('schedule')} title="나의 일정">
+                  <Calendar size={16} />
+                  {!isCollapsed && <span className="text-sm">나의 일정</span>}
+                </div>
+                <div onClick={() => onNavigate('attendance')} className={getMenuItemClass('attendance')} title="나의 근태/휴가">
+                  <Clock size={16} />
+                  {!isCollapsed && <span className="text-sm">나의 근태/휴가</span>}
+                </div>
+              </nav>
+            )}
 
-            {!isCollapsed && <div className="text-[11px] font-bold text-gray-500 mb-2 mt-6 px-2 uppercase tracking-wider">인사/운영 관리</div>}
+            {renderSectionHeader('인사/운영 관리', 'hr')}
+            {(expanded.hr || isCollapsed) && (
+              <nav className="space-y-0.5">
+                <div onClick={() => onNavigate('hr-staff')} className={getMenuItemClass('hr-staff')} title="직원 관리">
+                    <Users size={16} />
+                    {!isCollapsed && <span className="text-sm">직원 관리</span>}
+                </div>
 
-            <nav className="space-y-0.5">
-               <div onClick={() => onNavigate('hr-staff')} className={getMenuItemClass('hr-staff')} title="직원 관리">
-                  <Users size={16} />
-                  {!isCollapsed && <span className="text-sm">직원 관리</span>}
-               </div>
+                <div onClick={() => onNavigate('hr-attendance')} className={getMenuItemClass('hr-attendance')} title="근태 관리">
+                    <BarChart4 size={16} />
+                    {!isCollapsed && <span className="text-sm">근태 관리</span>}
+                </div>
+                
+                <div onClick={() => onNavigate('hr-health')} className={getMenuItemClass('hr-health')} title="건강 관리">
+                    <Activity size={16} />
+                    {!isCollapsed && <span className="text-sm">건강 관리</span>}
+                </div>
 
-               <div onClick={() => onNavigate('hr-attendance')} className={getMenuItemClass('hr-attendance')} title="근태 관리">
-                  <BarChart4 size={16} />
-                  {!isCollapsed && <span className="text-sm">근태 관리</span>}
-               </div>
-               
-               <div onClick={() => onNavigate('hr-health')} className={getMenuItemClass('hr-health')} title="건강 관리">
-                  <Activity size={16} />
-                  {!isCollapsed && <span className="text-sm">건강 관리</span>}
-               </div>
+                <div onClick={() => onNavigate('hr-vacation')} className={getMenuItemClass('hr-vacation')} title="휴가 관리">
+                    <Palmtree size={16} />
+                    {!isCollapsed && <span className="text-sm">휴가 관리</span>}
+                    {pendingApprovals > 0 && (
+                        <span className={`absolute ${isCollapsed ? 'top-1 right-1' : 'right-2'} bg-orange-50 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm`}>
+                          {pendingApprovals}
+                        </span>
+                    )}
+                </div>
 
-               <div onClick={() => onNavigate('hr-vacation')} className={getMenuItemClass('hr-vacation')} title="휴가 관리">
-                  <Palmtree size={16} />
-                  {!isCollapsed && <span className="text-sm">휴가 관리</span>}
-                  {pendingApprovals > 0 && (
-                      <span className={`absolute ${isCollapsed ? 'top-1 right-1' : 'right-2'} bg-orange-50 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm`}>
-                        {pendingApprovals}
-                      </span>
-                  )}
-               </div>
+                <div onClick={() => onNavigate('hr-teams')} className={getMenuItemClass('hr-teams')} title="팀 관리">
+                    <Network size={16} />
+                    {!isCollapsed && <span className="text-sm">팀 관리</span>}
+                </div>
 
-               <div onClick={() => onNavigate('hr-teams')} className={getMenuItemClass('hr-teams')} title="팀 관리">
-                  <Network size={16} />
-                  {!isCollapsed && <span className="text-sm">팀 관리</span>}
-               </div>
+                <div onClick={() => onNavigate('org-chart')} className={getMenuItemClass('org-chart')} title="부서 관리">
+                    <Briefcase size={16} />
+                    {!isCollapsed && <span className="text-sm">부서 관리</span>}
+                </div>
+              </nav>
+            )}
 
-               <div onClick={() => onNavigate('org-chart')} className={getMenuItemClass('org-chart')} title="회사 조직도">
-                  <Briefcase size={16} />
-                  {!isCollapsed && <span className="text-sm">회사 조직도</span>}
-               </div>
-            </nav>
-
-            {!isCollapsed && <div className="text-[11px] font-bold text-gray-500 mb-2 mt-6 px-2 uppercase tracking-wider">크리에이터 관리</div>}
-            
-            <nav className="space-y-0.5">
-               <div onClick={() => onNavigate('creator')} className={getMenuItemClass('creator')} title="전체 관리">
-                  <UserCircle size={16} />
-                  {!isCollapsed && <span className="text-sm">전체 관리</span>}
-               </div>
-               <div onClick={() => onNavigate('hr-support')} className={getMenuItemClass('hr-support')} title="법률/세무 지원 관리">
-                  <Scale size={16} />
-                  {!isCollapsed && <span className="text-sm">법률/세무 지원 관리</span>}
-               </div>
-            </nav>
+            {renderSectionHeader('크리에이터 관리', 'creator')}
+            {(expanded.creator || isCollapsed) && (
+              <nav className="space-y-0.5">
+                <div onClick={() => onNavigate('hr-creator-list')} className={getMenuItemClass('hr-creator-list')} title="크리에이터 목록관리">
+                    <Users size={16} />
+                    {!isCollapsed && <span className="text-sm">크리에이터 목록관리</span>}
+                </div>
+                <div onClick={() => onNavigate('hr-creator-contract')} className={getMenuItemClass('hr-creator-contract')} title="크리에이터 계약관리">
+                    <FileText size={16} />
+                    {!isCollapsed && <span className="text-sm">크리에이터 계약관리</span>}
+                </div>
+                <div onClick={() => onNavigate('hr-creator-health')} className={getMenuItemClass('hr-creator-health')} title="크리에이터 건강관리">
+                    <Activity size={16} />
+                    {!isCollapsed && <span className="text-sm">크리에이터 건강관리</span>}
+                </div>
+                <div onClick={() => onNavigate('hr-support')} className={getMenuItemClass('hr-support')} title="법률/세무 지원 관리">
+                    <Scale size={16} />
+                    {!isCollapsed && <span className="text-sm">법률/세무 지원 관리</span>}
+                </div>
+              </nav>
+            )}
             
             {!isCollapsed && <div className="text-[11px] font-bold text-gray-500 mb-2 mt-6 px-2 uppercase tracking-wider">즐겨찾기</div>}
             <nav className="space-y-0.5">
@@ -441,51 +482,74 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ) : isCreator ? (
             /* ============ CREATOR LAYOUT ============ */
             <>
-              {!isCollapsed && <div className="text-[11px] font-bold text-gray-500 mb-2 mt-4 px-2 uppercase tracking-wider">활동 관리</div>}
-              
-              <nav className="space-y-0.5">
-                <div onClick={() => onNavigate('mypage')} className={getMenuItemClass('mypage')} title="마이페이지">
-                   <LayoutGrid size={16} />
-                   {!isCollapsed && <span className="text-sm">마이페이지</span>}
-                </div>
-                <div onClick={() => onNavigate('creator-schedule')} className={getMenuItemClass('creator-schedule')} title="나의 일정">
-                   <Calendar size={16} />
-                   {!isCollapsed && <span className="text-sm">나의 일정</span>}
-                </div>
-                <div onClick={() => onNavigate('creator-health')} className={getMenuItemClass('creator-health')} title="건강 관리">
-                   <Activity size={16} />
-                   {!isCollapsed && <span className="text-sm">건강 관리</span>}
-                </div>
-              </nav>
+              {renderSectionHeader('활동 관리', 'personal')}
+              {(expanded.personal || isCollapsed) && (
+                <nav className="space-y-0.5">
+                  <div onClick={() => onNavigate('mypage')} className={getMenuItemClass('mypage')} title="마이페이지">
+                    <LayoutGrid size={16} />
+                    {!isCollapsed && <span className="text-sm">마이페이지</span>}
+                  </div>
+                  <div onClick={() => onNavigate('creator-schedule')} className={getMenuItemClass('creator-schedule')} title="나의 일정">
+                    <Calendar size={16} />
+                    {!isCollapsed && <span className="text-sm">나의 일정</span>}
+                  </div>
+                  <div onClick={() => onNavigate('creator-health')} className={getMenuItemClass('creator-health')} title="건강 관리">
+                    <Activity size={16} />
+                    {!isCollapsed && <span className="text-sm">건강 관리</span>}
+                  </div>
+                </nav>
+              )}
             </>
         ) : (
           /* ============ EMPLOYEE LAYOUT ============ */
           <>
-            {!isCollapsed && <div className="text-[11px] font-bold text-gray-500 mb-2 mt-4 px-2 uppercase tracking-wider">업무 관리</div>}
-            
-            <nav className="space-y-0.5">
-              <div onClick={() => onNavigate('mypage')} className={getMenuItemClass('mypage')} title="마이페이지">
-                 <LayoutGrid size={16} />
-                 {!isCollapsed && <span className="text-sm">마이페이지</span>}
-              </div>
-              <div onClick={() => onNavigate('schedule')} className={getMenuItemClass('schedule')} title="나의 일정">
-                <Calendar size={16} />
-                {!isCollapsed && <span className="text-sm">나의 일정</span>}
-              </div>
-              <div onClick={() => onNavigate('attendance')} className={getMenuItemClass('attendance')} title="나의 근태/휴가">
-                <Clock size={16} />
-                {!isCollapsed && <span className="text-sm">나의 근태/휴가</span>}
-              </div>
-              
-              <div onClick={() => onNavigate('team')} className={getMenuItemClass('team')} title="팀 현황">
-                <Users size={16} />
-                {!isCollapsed && <span className="text-sm">팀 현황</span>}
-              </div>
-              <div onClick={() => onNavigate('my-creator')} className={getMenuItemClass('my-creator')} title="나의 크리에이터">
-                <UserCircle size={16} />
-                {!isCollapsed && <span className="text-sm">나의 크리에이터</span>}
-              </div>
-            </nav>
+            {renderSectionHeader('개인 업무', 'personal')}
+            {(expanded.personal || isCollapsed) && (
+              <nav className="space-y-0.5">
+                <div onClick={() => onNavigate('mypage')} className={getMenuItemClass('mypage')} title="마이페이지">
+                  <LayoutGrid size={16} />
+                  {!isCollapsed && <span className="text-sm">마이페이지</span>}
+                </div>
+                <div onClick={() => onNavigate('schedule')} className={getMenuItemClass('schedule')} title="나의 일정">
+                  <Calendar size={16} />
+                  {!isCollapsed && <span className="text-sm">나의 일정</span>}
+                </div>
+                <div onClick={() => onNavigate('attendance')} className={getMenuItemClass('attendance')} title="나의 근태/휴가">
+                  <Clock size={16} />
+                  {!isCollapsed && <span className="text-sm">나의 근태/휴가</span>}
+                </div>
+              </nav>
+            )}
+
+            {renderSectionHeader('크리에이터 관리', 'creator')}
+            {(expanded.creator || isCollapsed) && (
+              <nav className="space-y-0.5">
+                <div onClick={() => onNavigate('team')} className={getMenuItemClass('team')} title="팀 현황">
+                  <Users size={16} />
+                  {!isCollapsed && <span className="text-sm">팀 현황</span>}
+                </div>
+                <div onClick={() => onNavigate('creator-calendar')} className={getMenuItemClass('creator-calendar')} title="일정 캘린더">
+                  <Calendar size={16} />
+                  {!isCollapsed && <span className="text-sm">일정 캘린더</span>}
+                </div>
+                <div onClick={() => onNavigate('creator-list')} className={getMenuItemClass('creator-list')} title="내 담당 크리에이터">
+                  <Users size={16} />
+                  {!isCollapsed && <span className="text-sm">내 담당 크리에이터</span>}
+                </div>
+                <div onClick={() => onNavigate('creator-ads')} className={getMenuItemClass('creator-ads')} title="광고 캠페인 관리">
+                  <Megaphone size={16} />
+                  {!isCollapsed && <span className="text-sm">광고 캠페인 관리</span>}
+                </div>
+                <div onClick={() => onNavigate('creator-health')} className={getMenuItemClass('creator-health')} title="크리에이터 건강관리">
+                  <Activity size={16} />
+                  {!isCollapsed && <span className="text-sm">크리에이터 건강관리</span>}
+                </div>
+                <div onClick={() => onNavigate('creator-support')} className={getMenuItemClass('creator-support')} title="법률/세무 연결">
+                  <LinkIcon size={16} />
+                  {!isCollapsed && <span className="text-sm">법률/세무 연결</span>}
+                </div>
+              </nav>
+            )}
           </>
         )}
 

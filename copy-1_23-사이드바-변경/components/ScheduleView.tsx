@@ -36,13 +36,6 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
   // UI State
   const [isTemplateMenuOpen, setIsTemplateMenuOpen] = useState(false);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
-  const [isTemplateCreatorOpen, setIsTemplateCreatorOpen] = useState(false);
-
-  // Template Creator State
-  const [newTemplateData, setNewTemplateData] = useState<{name: string, color: keyof typeof EVENT_COLORS}>({
-      name: '',
-      color: 'gray'
-  });
 
   // Event Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -91,14 +84,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
       setIsModalOpen(true);
       setIsTemplateMenuOpen(false); 
       setIsOptionsMenuOpen(false);
-      setIsTemplateCreatorOpen(false);
   }
-
-  const openTemplateCreator = () => {
-      setNewTemplateData({ name: '', color: 'gray' });
-      setIsTemplateCreatorOpen(true);
-      setIsTemplateMenuOpen(false);
-  };
 
   // Event Handlers
   const handleAddEvent = () => {
@@ -138,22 +124,9 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
     }
   };
 
-  const handleCreateTemplate = () => {
-      if (!newTemplateData.name) return alert('템플릿 이름을 입력해주세요.');
-      const newId = Date.now().toString();
-      const newTemplate: ScheduleTemplate = {
-          id: newId,
-          name: newTemplateData.name,
-          color: newTemplateData.color
-      };
-      onUpdateTemplates([...templates, newTemplate]);
-      setIsTemplateCreatorOpen(false);
-  };
-
   const handleModalClose = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       setIsModalOpen(false);
-      setIsTemplateCreatorOpen(false);
     }
   };
 
@@ -337,17 +310,6 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                                 );
                             })}
                         </div>
-                        {isAdmin && (
-                            <div className="border-t border-gray-100 mt-1 pt-1">
-                                <button 
-                                    onClick={openTemplateCreator}
-                                    className="w-full text-left px-3 py-2 text-sm text-gray-500 hover:bg-gray-50 flex items-center gap-2 hover:text-gray-900"
-                                >
-                                    <Plus size={14} />
-                                    새 템플릿 만들기
-                                </button>
-                            </div>
-                        )}
                     </div>
                 )}
             </div>
@@ -370,56 +332,6 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
             </div>
         </div>
       </div>
-
-      {/* Template Creator Modal */}
-      {isTemplateCreatorOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center p-4 backdrop-blur-[1px]"
-          onClick={handleModalClose}
-        >
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden border border-gray-200" onClick={e => e.stopPropagation()}>
-             <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <span className="font-semibold text-sm">새 템플릿 만들기</span>
-                <button onClick={() => setIsTemplateCreatorOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={16} /></button>
-             </div>
-             <div className="p-4 space-y-4">
-                <div>
-                   <label className="block text-xs font-medium text-gray-500 mb-1">템플릿 이름</label>
-                   <input 
-                      type="text" 
-                      placeholder="예: 프로젝트 마감, 운동 등"
-                      value={newTemplateData.name}
-                      onChange={(e) => setNewTemplateData({...newTemplateData, name: e.target.value})}
-                      className="w-full text-sm border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:border-blue-500"
-                      autoFocus
-                   />
-                </div>
-                <div>
-                   <label className="block text-xs font-medium text-gray-500 mb-2">색상 선택</label>
-                   <div className="flex flex-wrap gap-2">
-                      {Object.entries(EVENT_COLORS).map(([key, value]) => (
-                         <button
-                            key={key}
-                            type="button"
-                            onClick={() => setNewTemplateData({...newTemplateData, color: key as any})}
-                            className={`w-6 h-6 rounded-full border-2 transition-all ${value.dot} ${newTemplateData.color === key ? 'border-gray-500 scale-110 shadow-sm' : 'border-transparent'}`}
-                            title={value.label}
-                         />
-                      ))}
-                   </div>
-                </div>
-             </div>
-             <div className="px-4 py-3 bg-gray-50 flex justify-end">
-                <button 
-                   onClick={handleCreateTemplate}
-                   className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
-                >
-                   생성하기
-                </button>
-             </div>
-          </div>
-        </div>
-      )}
 
       {/* Event Add/Edit Modal */}
       {isModalOpen && (
@@ -481,15 +393,6 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
                                 </button>
                             );
                         })}
-                        {isAdmin && (
-                            <button 
-                                type="button"
-                                onClick={() => { setIsModalOpen(false); setIsTemplateCreatorOpen(true); }}
-                                className="px-2 py-0.5 text-sm rounded text-gray-400 hover:bg-gray-100 hover:text-gray-600 border border-dashed border-gray-300"
-                            >
-                                + 추가
-                            </button>
-                        )}
                       </div>
                   </div>
 
