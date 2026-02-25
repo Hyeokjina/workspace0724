@@ -1,0 +1,17 @@
+{
+  "sessionCount": 2,
+  "lastSession": {
+    "startedAt": "2026-02-24T01:08:41.683Z",
+    "platform": "claude",
+    "level": "Starter"
+  },
+  "currentFeature": "todo-app",
+  "phase": "plan",
+  "features": {
+    "todo-app": {
+      "phase": "plan",
+      "startedAt": "2026-02-24",
+      "planPath": "docs/01-plan/features/todo-app.plan.md"
+    }
+  }
+}
